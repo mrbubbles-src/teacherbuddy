@@ -7,4 +7,3 @@ export default function RetrieveLocalStorageData() {
     }
     return studentNamesArr;
 }
-// export { studentNamesArr };

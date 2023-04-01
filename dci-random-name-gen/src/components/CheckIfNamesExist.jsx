@@ -15,4 +15,3 @@ export default function CheckIfNamesExist() {
         document.getElementById("reset").style.display = "inline-block";
     }
 }
-// CheckIfNamesExist();
