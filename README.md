@@ -1,1 +1,1 @@
-# dci-random-name-gen
+# WIP! Will update once finished!
