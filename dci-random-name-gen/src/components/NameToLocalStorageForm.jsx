@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CheckIfNamesExist from "./CheckIfNamesExist";
 
 export default function NameToLocalStorageForm() {
     const [studentName, setStudentName] = useState("");
@@ -6,6 +7,7 @@ export default function NameToLocalStorageForm() {
     const saveToStorage = () => {
         localStorage.setItem(studentName, studentName);
         setStudentName("");
+        CheckIfNamesExist();
     };
 
     return (
