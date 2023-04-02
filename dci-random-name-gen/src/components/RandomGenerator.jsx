@@ -17,5 +17,16 @@ export default function RandomGenerator() {
         studentNamesArr = studentNamesArr.filter(
             (name) => name !== studentNamesArr[student]
         );
+
+        const studentNameInLi = document.querySelectorAll(".student");
+        const studentNameInH2 = document.getElementById("name");
+
+        studentNameInLi.forEach((student) => {
+            if (student.textContent === studentNameInH2.textContent) {
+                student.style.textDecoration = "line-through";
+                student.style.textDecorationColor = "#FDD92E";
+                student.style.color = "#A2C6FF";
+            }
+        });
     }
 }

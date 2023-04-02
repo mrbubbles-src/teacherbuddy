@@ -1,5 +1,4 @@
 import RetrieveLocalStorageData from "./RetrieveLocalStorageData";
-import RandomGenerator from "./RandomGenerator";
 import CapitalizeNames from "./CapitalizeNames";
 
 export default function StudentNameList() {
@@ -18,7 +17,9 @@ export default function StudentNameList() {
     return (
         <ul className="studentNameList">
             {sortedStudentNames.map((name, i) => (
-                <li key={i}>{CapitalizeNames(name)}</li>
+                <li className="student" key={i}>
+                    {CapitalizeNames(name)}
+                </li>
             ))}
         </ul>
     );

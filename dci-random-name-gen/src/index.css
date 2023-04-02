@@ -13,3 +13,6 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
 }
+li {
+    font-size: 1.5rem;
+}
