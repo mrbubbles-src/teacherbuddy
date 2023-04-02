@@ -13,17 +13,45 @@ function App() {
     }, []);
 
     return (
-        <main className="main-container">
-            <NameToLocalStorageForm />
-            <button id="generate" onClick={RandomGenerator}>
-                Generate!
-            </button>{" "}
-            <button id="reset" onClick={() => window.location.reload()}>
-                Reset Generator
-            </button>
-            <h2 id="name"></h2>
-            <StudentNameList />
-        </main>
+        <>
+            <header className="input-student-name">
+                <NameToLocalStorageForm />
+            </header>
+            <main className="main-container">
+                <section className="name-output">
+                    <button id="generate" onClick={RandomGenerator}>
+                        Generate!
+                    </button>
+                    <h2 id="name"></h2>
+                    <button id="reset" onClick={() => window.location.reload()}>
+                        Reset Generator
+                    </button>
+                </section>
+                <section className="student-list">
+                    <StudentNameList />
+                </section>
+            </main>
+            <footer>
+                <p>
+                    Created by student{" "}
+                    <a
+                        href="https://github.com/mrbubbles-src"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Manuel Fahrenholz
+                    </a>{" "}
+                    in class 'FBW WD D07 A' of the{" "}
+                    <a
+                        href="https://digitalcareerinstitute.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Digital Career Institute
+                    </a>
+                </p>
+            </footer>
+        </>
     );
 }
 
