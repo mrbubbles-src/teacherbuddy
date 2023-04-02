@@ -17,8 +17,7 @@ export default function NameToLocalStorageForm() {
                 value={studentName}
                 onChange={(event) => setStudentName(event.target.value)}
                 placeholder="Input a Student Name"
-            />
-
+            />{" "}
             <button type="submit" onClick={saveToStorage}>
                 Submit Student Name
             </button>

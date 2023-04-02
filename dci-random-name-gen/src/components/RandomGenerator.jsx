@@ -1,3 +1,4 @@
+import CapitalizeNames from "./CapitalizeNames";
 import RetrieveLocalStorageData from "./RetrieveLocalStorageData";
 
 let studentNamesArr = RetrieveLocalStorageData();
@@ -11,11 +12,7 @@ export default function RandomGenerator() {
     } else {
         let student = Math.floor(Math.random() * studentNamesArr.length);
 
-        const studentName =
-            studentNamesArr[student].charAt(0).toUpperCase() +
-            studentNamesArr[student].slice(1);
-
-        nameOutputField.innerHTML = studentName;
+        nameOutputField.innerHTML = CapitalizeNames(studentNamesArr[student]);
 
         studentNamesArr = studentNamesArr.filter(
             (name) => name !== studentNamesArr[student]
