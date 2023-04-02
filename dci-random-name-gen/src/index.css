@@ -14,5 +14,6 @@
     -webkit-text-size-adjust: 100%;
 }
 li {
-    font-size: 1.5rem;
+    list-style-type: none;
+    font-size: 1.1rem;
 }
