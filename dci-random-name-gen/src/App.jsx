@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
 import NameToLocalStorageForm from "./components/NameToLocalStorageForm";
 import RetrieveLocalStorageData from "./components/RetrieveLocalStorageData";
 import RandomGenerator from "./components/RandomGenerator";
 import CheckIfNamesExist from "./components/CheckIfNamesExist";
+import StudentNameList from "./components/StudentNameList";
 
 function App() {
     useEffect(() => {
@@ -13,7 +13,7 @@ function App() {
     }, []);
 
     return (
-        <div className="App">
+        <main className="main-container">
             <NameToLocalStorageForm />
             <button id="generate" onClick={RandomGenerator}>
                 Generate!
@@ -22,7 +22,8 @@ function App() {
                 Reset Generator
             </button>
             <h2 id="name"></h2>
-        </div>
+            <StudentNameList />
+        </main>
     );
 }
 
