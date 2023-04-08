@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import "./App.css";
-import NameToLocalStorageForm from "./components/NameToLocalStorageForm";
-import RetrieveLocalStorageData from "./components/RetrieveLocalStorageData";
-import RandomGenerator from "./components/RandomGenerator";
-import CheckIfNamesExist from "./components/CheckIfNamesExist";
-import StudentNameList from "./components/StudentNameList";
+import "./App.scss";
+import NameToLocalStorageForm from "./components/NameToLocalStorageForm/NameToLocalStorageForm";
+import RetrieveLocalStorageData from "./components/RetrieveLocalStorageData/RetrieveLocalStorageData";
+import RandomGenerator from "./components/RandomGenerator/RandomGenerator";
+import CheckIfNamesExist from "./components/CheckIfNameExist/CheckIfNamesExist";
+import StudentNameList from "./components/StudentNameList/StudentNameList";
 
 function App() {
     useEffect(() => {
