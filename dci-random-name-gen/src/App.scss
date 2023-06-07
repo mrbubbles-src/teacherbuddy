@@ -1,6 +1,47 @@
-#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+@import "./fonts";
+@import "./colors";
+@import "./sizes";
+
+:root {
+    font: {
+        size: 62.5%;
+    }
 }
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style-type: none;
+}
+
+body {
+    font: {
+        size: $m;
+        family: PoppinsRegular, sans-serif;
+    }
+    background-color: $white;
+    .main-container {
+        padding: $xs;
+        .title {
+            color: $blue;
+            text-align: center;
+        }
+        #name {
+            font: {
+                size: $l;
+            }
+        }
+    }
+}
+.orange-span {
+    color: $orange;
+}
+.blue-span {
+    color: $blue;
+}
+
+// li {
+//     font-size: 1.1rem;
+// }
