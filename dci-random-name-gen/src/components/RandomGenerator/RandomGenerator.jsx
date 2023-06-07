@@ -23,8 +23,8 @@ export default function RandomGenerator() {
         studentNameInLi.forEach((student) => {
             if (student.textContent === studentNameInH2.textContent) {
                 student.style.textDecoration = "line-through";
-                student.style.textDecorationColor = "#FDD92E";
-                student.style.color = "#A2C6FF";
+                student.style.textDecorationColor = "#ff6001";
+                student.style.color = "#1b39c9";
             }
         });
     }

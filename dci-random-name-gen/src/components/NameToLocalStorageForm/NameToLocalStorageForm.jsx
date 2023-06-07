@@ -13,6 +13,7 @@ export default function NameToLocalStorageForm() {
     return (
         <form onSubmit={(event) => event.preventDefault()}>
             <input
+                className="input-student"
                 type="text"
                 value={studentName}
                 onChange={(event) => setStudentName(event.target.value)}
@@ -23,7 +24,7 @@ export default function NameToLocalStorageForm() {
                 type="submit"
                 onClick={saveToStorage}
             >
-                Submit Student Name
+                Submit Student
             </button>
         </form>
     );
