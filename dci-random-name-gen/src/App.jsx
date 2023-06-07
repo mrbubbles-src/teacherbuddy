@@ -18,7 +18,10 @@ function App() {
                 <NameToLocalStorageForm />
             </header>
             <main className="main-container">
-                <h1 className="title">DCI Random Student-Name Generator</h1>
+                <h1 className="title">
+                    <span className="orange-span">Random-</span>Student-Name
+                    <span className="orange-span">-Generator</span>
+                </h1>
                 <section className="name-output">
                     <button id="generate" onClick={RandomGenerator}>
                         Generate!
