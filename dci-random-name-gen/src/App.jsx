@@ -23,11 +23,19 @@ function App() {
                     <span className="orange-span">-Generator</span>
                 </h1>
                 <section className="name-output">
-                    <button id="generate" onClick={RandomGenerator}>
+                    <button
+                        id="generate"
+                        className="btn"
+                        onClick={RandomGenerator}
+                    >
                         Generate!
                     </button>
                     <h2 id="name"></h2>
-                    <button id="reset" onClick={() => window.location.reload()}>
+                    <button
+                        id="reset"
+                        className="btn"
+                        onClick={() => window.location.reload()}
+                    >
                         Reset Generator
                     </button>
                 </section>
