@@ -8,6 +8,8 @@ To make things easier for the teachers to pick a student, I came up with the ide
 
 This is now the final version, which I began working on just when we started with our REACT/SPA module, so please be nice about the level of code and structure I use in most of the project 😁! I promise, my code looks a lot nicer now and whenever I have the time and mental space for it, I will update the whole code to represent that and fix left-over bugs!
 
+Try it out! [> Click me <](https://random-student-name-generator.vercel.app/)
+
 ## How to use
 
 ### The initial setup:
