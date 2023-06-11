@@ -31,7 +31,7 @@ If the unfortunate event happens that a student drops out of the course and you 
 
 -   Option to also import a batch of student names (for example via a file)
 -   Option to delete student name via input field
-    -   maybe a clear all?
+    -   maybe a clear all button?
 -   Remove the need for a reload so that names can be reloaded
 -   Dark mode! 😎
     -   With a toggle
