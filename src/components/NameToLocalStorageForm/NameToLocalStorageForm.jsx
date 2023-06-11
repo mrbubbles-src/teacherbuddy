@@ -17,7 +17,7 @@ export default function NameToLocalStorageForm() {
                 type="text"
                 value={studentName}
                 onChange={(event) => setStudentName(event.target.value)}
-                placeholder="Input a Student Name"
+                placeholder="Input a Student's Name"
             />{" "}
             <button
                 className="submit-student btn"
