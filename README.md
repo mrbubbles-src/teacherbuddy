@@ -17,7 +17,7 @@ Try it out! [> Click me <](https://random-student-name-generator.vercel.app/)
 -   Enter the names of your students **one at a time** with the input field at the top and press submit **after each name**
     -   This will save each individual student name in your **local storage**, so unless you delete that, you'll only need to do that once
 -   Either press the 'Reset Generator' button or reload the page
-    -   You only need to do this **once** after you've entered all names. This is currently a sort-of bug that is on my to-do list
+    -   You only need to do this **once** after you've entered all names (if you add a name additional name later or clear out your local storage/delete an individual Name while on the page, you also need to press 'Reset Generator' once again). This is currently a sort-of bug that is on my to-do list
 
 ### Using the Generator after the setup
 
