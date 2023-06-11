@@ -65,6 +65,15 @@ function App() {
                     >
                         Digital Career Institute
                     </a>
+                    . Check out the documentation{" "}
+                    <a
+                        href="https://github.com/mrbubbles-src/random-student-name-generator"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        here
+                    </a>
+                    .
                 </p>
             </footer>
         </>
