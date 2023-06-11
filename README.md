@@ -25,13 +25,15 @@ Try it out! [> Click me <](https://random-student-name-generator.vercel.app/)
     -   The student name you generate will be crossed out in the list, so you can take a quick glance at who hasn't been chosen yet
 -   Once every name is used up, the 'Generate!' button disappears and a message tells you that there are no more names. Just press the 'Reset Generator' button or reload the page, so you can start generating again
 
-If the unfortunate event happens that a student drops out of the course and you want to remove their name from the list, currently you need to **manually** remove the **individual** name from your local storage.
+If the unfortunate event happens that a student drops out of the course and you want to remove their name from the list, currently you need to **manually** remove the **individual** name (or clear all of course) from your local storage.
 
 ## On my to-do list
 
 -   Option to also import a batch of student names (for example via a file)
 -   Option to delete student name via input field
+    -   maybe a clear all?
 -   Remove the need for a reload so that names can be reloaded
 -   Dark mode! 😎
     -   With a toggle
     -   And preference saved
+-   Rework app to be in line with my own current standards
