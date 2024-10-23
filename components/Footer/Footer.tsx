@@ -1,7 +1,23 @@
 const Footer = () => {
   return (
     <footer>
-      <h3>footer</h3>
+      <p>
+        Created by{' '}
+        <a
+          href="https://github.com/mrbubbles-src"
+          target="_blank"
+          rel="noopener noreferrer">
+          Manuel Fahrenholz
+        </a>
+        . Check out the documentation{' '}
+        <a
+          href="https://github.com/mrbubbles-src/random-student-name-generator"
+          target="_blank"
+          rel="noopener noreferrer">
+          here
+        </a>
+        .
+      </p>
     </footer>
   );
 };
