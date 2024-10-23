@@ -1,0 +1,9 @@
+- Option to also import a batch of student names (for example via a file)
+- Option to delete student name via input field
+  - maybe a clear all button?
+- Remove the need for a reload so that names can be reloaded
+- group generator (generate random groups from existing names)
+- timer (timer to use for exams for example)
+- Dark mode! 😎
+  - With a toggle
+  - And preference saved
