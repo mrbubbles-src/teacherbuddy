@@ -5,8 +5,9 @@ import Footer from '@/components/Footer/Footer';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Teachers helpdesk',
-  description: 'The ultimate teachers helpdesk to organize your class.',
+  title: 'TeacherBuddy',
+  description:
+    'TeacherBuddy, the ultimate companion app for your teaching needs! And the best part? It is completely free and none of your data will EVER leave your local machine!',
 };
 
 const poppins = Poppins({
