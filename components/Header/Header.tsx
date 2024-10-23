@@ -1,7 +1,9 @@
+import SaveStudents from '../SaveStudents/SaveStudents';
+
 const Header = () => {
   return (
     <header>
-      <h3>header</h3>
+      <SaveStudents />
     </header>
   );
 };
