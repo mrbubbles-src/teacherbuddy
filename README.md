@@ -1,4 +1,6 @@
-# Random-Student-Name-Generator
+# under construction
+
+<!-- # Random-Student-Name-Generator
 
 ## Introduction
 
@@ -36,4 +38,4 @@ If the unfortunate event happens that a student drops out of the course and you 
 -   Dark mode! 😎
     -   With a toggle
     -   And preference saved
--   Rework app to be in line with my own current standards
+-   Rework app to be in line with my own current standards -->
