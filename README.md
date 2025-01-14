@@ -1,4 +1,4 @@
-# _!! UNDER CONSTRUCTION !!_ Formerly known as 'Random-Student-Name Generator'. This project will undergo a lot of changes once I find the time. It is still usable in it's old form with the linked vercel app. The repo name has already been changed to the new project name 'Teacherbuddy'. Stay tuned.
+# _!! UNDER CONSTRUCTION !!_ Formerly known as 'Random-Student-Name Generator'. This project will undergo many changes once I find the time. It is still usable in its old form with the linked Vercel app. The repo name has already been changed to the new project name 'Teacherbuddy'. Stay tuned.
 
 > The following is the old README. The README will be updated once the updated App is Live.
 
