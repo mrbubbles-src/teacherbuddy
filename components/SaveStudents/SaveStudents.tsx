@@ -1,26 +1,21 @@
 'use client';
 
-import { useReducer, useState, useEffect } from 'react';
-import { reducer, initialState, ACTIONS } from '@/utils/reducer/reducer';
-import { saveStudentsToLocalStorage } from '@/utils/saveToLocalStorage/saveToLocalStorage';
-import { getStudents } from '@/utils/getLocalStorage/getLocalStorage';
+import { useState } from 'react';
+import { useTeacherBuddy } from '@/context/TeacherBuddyContext';
+import { ACTIONS } from '@/utils/reducer/reducer';
 
 const SaveStudents = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [currentStudentName, setCurrentStudentName] = useState<string>('');
-
-  useEffect(() => {
-    const localStudents = getStudents();
-    if (localStudents.length > 0) {
-      dispatch({ type: ACTIONS.ADD_STUDENTS, payload: localStudents });
-    }
-  }, []);
-
-  useEffect(() => {
-    saveStudentsToLocalStorage(state);
-  }, [state]);
+  const { dispatch } = useTeacherBuddy();
+  const [currentStudentName, setCurrentStudentName] = useState<
+    string | Array<string>
+  >('');
 
   const saveToStorage = () => {
+    if (Array.isArray(currentStudentName)) {
+      dispatch({ type: ACTIONS.ADD_STUDENTS, payload: currentStudentName });
+      setCurrentStudentName('');
+      return;
+    }
     dispatch({ type: ACTIONS.ADD_STUDENT, payload: currentStudentName });
     setCurrentStudentName('');
   };
@@ -31,7 +26,24 @@ const SaveStudents = () => {
         className="input-student"
         type="text"
         value={currentStudentName}
-        onChange={(event) => setCurrentStudentName(event.target.value)}
+        onChange={(event) => {
+          const value: string = event.target.value;
+          if (value.includes(',')) {
+            setCurrentStudentName(
+              value
+                .split(',')
+                .map(
+                  (name) =>
+                    (name.trim().at(0)?.toUpperCase() || '') +
+                    name.trim().slice(1),
+                ),
+            );
+            return;
+          }
+          setCurrentStudentName(
+            (value.trim().at(0)?.toUpperCase() || '') + value.trim().slice(1),
+          );
+        }}
         placeholder="Input a Student's Name"
       />
       <button
