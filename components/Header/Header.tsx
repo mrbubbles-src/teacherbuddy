@@ -1,4 +1,4 @@
-import SaveStudents from '../SaveStudents/SaveStudents';
+import SaveStudents from '../Save/SaveStudents';
 
 const Header = () => {
   return (
