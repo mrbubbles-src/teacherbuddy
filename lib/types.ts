@@ -12,3 +12,10 @@ export interface IAction<T> {
   type: string;
   payload: T;
 }
+
+export interface ITeacherBuddyContextType {
+  state: ISaveToLocalStorage | undefined;
+  dispatch: React.Dispatch<
+    IAction<string | IQuizQuestion | string[] | IQuizQuestion[] | undefined>
+  >;
+}
