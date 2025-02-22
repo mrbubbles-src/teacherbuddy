@@ -1,5 +1,10 @@
+import DisplayStudents from '@/components/DisplayStudents/DisplayStudents';
 const HomePage = () => {
-  return <div></div>;
+  return (
+    <>
+      <DisplayStudents />
+    </>
+  );
 };
 
 export default HomePage;

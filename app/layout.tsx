@@ -1,3 +1,4 @@
+import { TeacherBuddyProvider } from '@/context/TeacherBuddyContext';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import Header from '@/components/Header/Header';
@@ -17,15 +18,15 @@ const poppins = Poppins({
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${poppins.className} text-brand-font`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <TeacherBuddyProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </TeacherBuddyProvider>
       </body>
     </html>
   );
