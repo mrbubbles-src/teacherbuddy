@@ -36,11 +36,13 @@ export const TeacherBuddyProvider = ({
   useEffect(() => {
     saveStudentsToLocalStorage(state);
     window.dispatchEvent(new Event('storage'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.studentNames]);
 
   useEffect(() => {
     saveQuizToLocalStorage(state);
     window.dispatchEvent(new Event('storage'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.quizQuestions]);
 
   return (
