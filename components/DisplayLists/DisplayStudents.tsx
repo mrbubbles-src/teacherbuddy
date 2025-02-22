@@ -1,24 +1,24 @@
 'use client';
 
 import { useTeacherBuddy } from '@/context/TeacherBuddyContext';
-import RemoveSingleStudent from '../RemoveSingle/RemoveSingleStudent';
-import ClearAllStudents from '../ClearAll/ClearAllStudents';
+import RemoveSingle from '../RemoveSingle/RemoveSingle';
+import ClearAll from '../ClearAll/ClearAll';
+import { ACTIONS } from '@/utils/reducer/reducer';
 
 const DisplayStudents = () => {
   const { state } = useTeacherBuddy();
 
   if (!state) {
-    return null; // or handle the undefined state case appropriately
+    return null;
   }
 
   const students: Array<string> = state.studentNames;
 
-  // Sort the student names alphabetically
   const sortedStudents = [...students].sort((a, b) => a.localeCompare(b));
 
   return (
     <>
-      <ClearAllStudents />
+      <ClearAll typeAction={ACTIONS.CLEAR_STUDENTS} sectionName="Students" />
       <section
       // className="border-3 flex h-[100vh] gap-3"
       >
@@ -28,7 +28,12 @@ const DisplayStudents = () => {
               // className="rounded-2xl border border-brand-primary p-2"
               key={index}>
               {student}
-              {<RemoveSingleStudent student={student} />}
+              {
+                <RemoveSingle
+                  typeAction={ACTIONS.REMOVE_STUDENT}
+                  payloadToBeRemoved={student}
+                />
+              }
             </p>
           ))}
       </section>

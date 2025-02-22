@@ -1,10 +1,15 @@
 import { useTeacherBuddy } from '@/context/TeacherBuddyContext';
-import { ACTIONS } from '@/utils/reducer/reducer';
 
-const RemoveSingleStudent = ({ student }: { student: string }) => {
+const RemoveSingle = ({
+  typeAction,
+  payloadToBeRemoved,
+}: {
+  typeAction: string;
+  payloadToBeRemoved: string;
+}) => {
   const { dispatch } = useTeacherBuddy();
   const removeHandler = () => {
-    dispatch({ type: ACTIONS.REMOVE_STUDENT, payload: student });
+    dispatch({ type: typeAction, payload: payloadToBeRemoved });
   };
 
   return (
@@ -16,4 +21,4 @@ const RemoveSingleStudent = ({ student }: { student: string }) => {
   );
 };
 
-export default RemoveSingleStudent;
+export default RemoveSingle;

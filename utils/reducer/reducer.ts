@@ -1,4 +1,4 @@
-import { IAction, IQuizQuestion, ISaveToLocalStorage } from '@/lib/types';
+import { IAction, /*IQuizQuestion,*/ ISaveToLocalStorage } from '@/lib/types';
 
 export const ACTIONS = {
   ADD_STUDENT: 'ADD_STUDENT',
@@ -7,6 +7,8 @@ export const ACTIONS = {
   CLEAR_STUDENTS: 'CLEAR_STUDENTS',
   ADD_QUESTION: 'ADD_QUESTION',
   ADD_QUESTIONS: 'ADD_QUESTIONS',
+  REMOVE_QUESTION: 'REMOVE_QUESTION',
+  CLEAR_QUESTIONS: 'CLEAR_QUESTIONS',
 };
 
 export const initialState: ISaveToLocalStorage = {
@@ -17,7 +19,7 @@ export const initialState: ISaveToLocalStorage = {
 export const reducer = (
   state: ISaveToLocalStorage,
   action: IAction<
-    string | IQuizQuestion | string[] | IQuizQuestion[] | undefined
+    string | /*IQuizQuestion |*/ string[] | /*IQuizQuestion[] |*/ undefined
   >,
 ): ISaveToLocalStorage => {
   switch (action.type) {
@@ -50,7 +52,8 @@ export const reducer = (
         ...state,
         quizQuestions: [
           ...state.quizQuestions,
-          action.payload as IQuizQuestion,
+          action.payload as string,
+          // action.payload as IQuizQuestion,
         ],
       };
     case ACTIONS.ADD_QUESTIONS:
@@ -58,8 +61,23 @@ export const reducer = (
         ...state,
         quizQuestions: [
           ...state.quizQuestions,
-          ...(action.payload as IQuizQuestion[]),
+          ...(action.payload as string[]),
+          // ...(action.payload as IQuizQuestion[]),
         ],
+      };
+    case ACTIONS.REMOVE_QUESTION:
+      return {
+        ...state,
+        quizQuestions: state.quizQuestions.filter(
+          (question) =>
+            question.toLocaleLowerCase() !==
+            (action.payload as string).toLocaleLowerCase(),
+        ),
+      };
+    case ACTIONS.CLEAR_QUESTIONS:
+      return {
+        ...state,
+        quizQuestions: [],
       };
     default:
       return state;

@@ -10,7 +10,7 @@ const SaveStudents = () => {
     string | Array<string>
   >('');
 
-  const saveToStorage = () => {
+  const storeStudentsHandler = () => {
     if (Array.isArray(currentStudentName)) {
       dispatch({ type: ACTIONS.ADD_STUDENTS, payload: currentStudentName });
       setCurrentStudentName('');
@@ -49,8 +49,8 @@ const SaveStudents = () => {
       <button
         className="submit-student btn"
         type="submit"
-        onClick={saveToStorage}>
-        Submit Student
+        onClick={storeStudentsHandler}>
+        Submit
       </button>
     </form>
   );
