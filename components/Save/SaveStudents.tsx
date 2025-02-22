@@ -10,7 +10,29 @@ const SaveStudents = () => {
     string | Array<string>
   >('');
 
+  const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    const value: string = event.target.value;
+    if (value.includes(',')) {
+      setCurrentStudentName(
+        value
+          .split(',')
+          .map(
+            (name) =>
+              (name.trim().at(0)?.toUpperCase() || '') + name.trim().slice(1),
+          ),
+      );
+      return;
+    }
+    setCurrentStudentName(
+      (value.trim().at(0)?.toUpperCase() || '') + value.trim().slice(1),
+    );
+  };
+
   const storeStudentsHandler = () => {
+    if (currentStudentName.length === 0) return;
+
     if (Array.isArray(currentStudentName)) {
       dispatch({ type: ACTIONS.ADD_STUDENTS, payload: currentStudentName });
       setCurrentStudentName('');
@@ -26,24 +48,7 @@ const SaveStudents = () => {
         className="input-student"
         type="text"
         value={currentStudentName}
-        onChange={(event) => {
-          const value: string = event.target.value;
-          if (value.includes(',')) {
-            setCurrentStudentName(
-              value
-                .split(',')
-                .map(
-                  (name) =>
-                    (name.trim().at(0)?.toUpperCase() || '') +
-                    name.trim().slice(1),
-                ),
-            );
-            return;
-          }
-          setCurrentStudentName(
-            (value.trim().at(0)?.toUpperCase() || '') + value.trim().slice(1),
-          );
-        }}
+        onChange={onChangeHandler}
         placeholder="Input a Student's Name"
       />
       <button
