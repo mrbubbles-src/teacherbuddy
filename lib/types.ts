@@ -1,11 +1,12 @@
-export interface IQuizQuestion {
-  question: string;
-  answer: string;
-}
+// export interface IQuizQuestion {
+//   question: string;
+//   answer: string;
+// }
 
 export interface ISaveToLocalStorage {
   studentNames: string[];
-  quizQuestions: IQuizQuestion[];
+  quizQuestions: string[];
+  // quizQuestions: IQuizQuestion[];
 }
 
 export interface IAction<T> {
@@ -16,6 +17,8 @@ export interface IAction<T> {
 export interface ITeacherBuddyContextType {
   state: ISaveToLocalStorage | undefined;
   dispatch: React.Dispatch<
-    IAction<string | IQuizQuestion | string[] | IQuizQuestion[] | undefined>
+    IAction<
+      string | /*IQuizQuestion |*/ string[] | /*IQuizQuestion[] |*/ undefined
+    >
   >;
 }

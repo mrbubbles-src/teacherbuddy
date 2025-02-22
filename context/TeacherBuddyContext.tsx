@@ -1,8 +1,14 @@
 'use client';
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import { reducer, initialState, ACTIONS } from '@/utils/reducer/reducer';
-import { getStudents } from '@/utils/getLocalStorage/getLocalStorage';
-import { saveStudentsToLocalStorage } from '@/utils/saveToLocalStorage/saveToLocalStorage';
+import {
+  getQuestions,
+  getStudents,
+} from '@/utils/getLocalStorage/getLocalStorage';
+import {
+  saveQuizToLocalStorage,
+  saveStudentsToLocalStorage,
+} from '@/utils/saveToLocalStorage/saveToLocalStorage';
 import { ITeacherBuddyContextType } from '@/lib/types';
 
 const TeacherBuddyContext = createContext<ITeacherBuddyContextType | undefined>(
@@ -18,15 +24,24 @@ export const TeacherBuddyProvider = ({
 
   useEffect(() => {
     const localStudents = getStudents();
+    const localQuestions = getQuestions();
     if (localStudents.length > 0) {
       dispatch({ type: ACTIONS.ADD_STUDENTS, payload: localStudents });
+    }
+    if (localQuestions.length > 0) {
+      dispatch({ type: ACTIONS.ADD_QUESTIONS, payload: localQuestions });
     }
   }, []);
 
   useEffect(() => {
     saveStudentsToLocalStorage(state);
     window.dispatchEvent(new Event('storage'));
-  }, [state]);
+  }, [state.studentNames]);
+
+  useEffect(() => {
+    saveQuizToLocalStorage(state);
+    window.dispatchEvent(new Event('storage'));
+  }, [state.quizQuestions]);
 
   return (
     <TeacherBuddyContext.Provider value={{ state, dispatch }}>
