@@ -35,4 +35,12 @@ export const TeacherBuddyProvider = ({
   );
 };
 
-export const useTeacherBuddy = () => useContext(TeacherBuddyContext);
+export const useTeacherBuddy = (): ITeacherBuddyContextType => {
+  const context = useContext(TeacherBuddyContext);
+  if (!context) {
+    throw new Error(
+      'useTeacherBuddy must be used within a TeacherBuddyProvider',
+    );
+  }
+  return context;
+};

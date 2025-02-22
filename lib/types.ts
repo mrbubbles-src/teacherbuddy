@@ -10,7 +10,7 @@ export interface ISaveToLocalStorage {
 
 export interface IAction<T> {
   type: string;
-  payload: T;
+  payload?: T;
 }
 
 export interface ITeacherBuddyContextType {
