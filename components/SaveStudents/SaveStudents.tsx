@@ -50,7 +50,7 @@ const SaveStudents = () => {
         className="submit-student btn"
         type="submit"
         onClick={saveToStorage}>
-        Submit Student
+        Submit
       </button>
     </form>
   );
