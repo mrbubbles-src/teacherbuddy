@@ -17,10 +17,12 @@ const DisplayQuestions = () => {
   return (
     <>
       <ClearAll typeAction={ACTIONS.CLEAR_QUESTIONS} sectionName="Questions" />
-      <section>
+      <section className="flex flex-wrap gap-3">
         {questions &&
           questions.map((question, index) => (
-            <p key={index}>
+            <p
+              key={index}
+              className="m-1 rounded-2xl border border-brand-primary p-2">
               {question}
               {
                 <RemoveSingle
