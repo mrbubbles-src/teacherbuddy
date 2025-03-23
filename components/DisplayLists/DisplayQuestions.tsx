@@ -25,7 +25,13 @@ const DisplayQuestions = () => {
               key={index}
               className="m-1 rounded-2xl border border-brand-primary p-2">
               {question}
-              {<EditContent />}
+              {
+                <EditContent
+                  typeAction={ACTIONS.EDIT_QUESTION}
+                  payloadToBeEdited={question}
+                  index={index}
+                />
+              }
               {
                 <RemoveSingle
                   typeAction={ACTIONS.REMOVE_QUESTION}

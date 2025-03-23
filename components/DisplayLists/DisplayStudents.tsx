@@ -31,7 +31,13 @@ const DisplayStudents = () => {
               className="m-1 rounded-2xl border border-brand-primary p-2"
               key={index}>
               {formatName(student)}
-              {<EditContent />}
+              {
+                <EditContent
+                  typeAction={ACTIONS.EDIT_STUDENT}
+                  payloadToBeEdited={student}
+                  index={index}
+                />
+              }
               {
                 <RemoveSingle
                   typeAction={ACTIONS.REMOVE_STUDENT}
