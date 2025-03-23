@@ -4,6 +4,7 @@ import { useTeacherBuddy } from '@/context/TeacherBuddyContext';
 import RemoveSingle from '../RemoveSingle/RemoveSingle';
 import ClearAll from '../ClearAll/ClearAll';
 import { ACTIONS } from '@/utils/reducer/reducer';
+import EditContent from '../EditContent/EditContent';
 
 const DisplayQuestions = () => {
   const { state } = useTeacherBuddy();
@@ -24,6 +25,7 @@ const DisplayQuestions = () => {
               key={index}
               className="m-1 rounded-2xl border border-brand-primary p-2">
               {question}
+              {<EditContent />}
               {
                 <RemoveSingle
                   typeAction={ACTIONS.REMOVE_QUESTION}
