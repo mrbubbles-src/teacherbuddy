@@ -51,6 +51,12 @@ export const TeacherBuddyProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.quizQuestions]);
 
+  /**
+   * * Currently, no matter what data is used, if the data is used in more than one ('DisplayRandomData') component, both
+   * * display the same data.
+   * TODO: Refactor random generation to save data in an obj to save both names and questions seperately in one state variable.
+   * TODO: Return said data depending on what category was passed with 'displaySelectedData'
+   * */
   const [randomData, setRandomData] = useState<Array<string> | null>(null);
   const [displaySelectedData, setDisplaySelectedData] = useState<string | null>(
     null,
