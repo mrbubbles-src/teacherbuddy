@@ -1,5 +1,11 @@
 'use client';
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useState,
+} from 'react';
 import { reducer, initialState, ACTIONS } from '@/utils/reducer/reducer';
 import {
   getQuestions,
@@ -9,7 +15,7 @@ import {
   saveQuizToLocalStorage,
   saveStudentsToLocalStorage,
 } from '@/utils/saveToLocalStorage/saveToLocalStorage';
-import { ITeacherBuddyContextType } from '@/lib/types';
+import { ITeacherBuddyContextType, TRandomGenerator } from '@/lib/types';
 
 const TeacherBuddyContext = createContext<ITeacherBuddyContextType | undefined>(
   undefined,
@@ -45,8 +51,66 @@ export const TeacherBuddyProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.quizQuestions]);
 
+  const [randomData, setRandomData] = useState<Array<string> | null>(null);
+  const [displaySelectedData, setDisplaySelectedData] = useState<string | null>(
+    null,
+  );
+  const randomGenerator = (category: TRandomGenerator): string | null => {
+    if (randomData === null) {
+      const initialData =
+        category === 'students'
+          ? [...state.studentNames]
+          : category === 'questions'
+            ? [...state.quizQuestions]
+            : [];
+      if (initialData.length === 0) {
+        setDisplaySelectedData(
+          `${category === 'students' ? "You've selected all students! Press 'Reset' to start over." : "All questions done! Press 'Reset' to start over."}`,
+        );
+        return null;
+      }
+      const randomIndex = Math.floor(Math.random() * initialData.length);
+      const randomElement = initialData[randomIndex];
+      setDisplaySelectedData(randomElement);
+      const updatedData = initialData.filter(
+        (_, index) => index !== randomIndex,
+      );
+      setRandomData(updatedData);
+      return randomElement;
+    }
+    if (randomData.length > 0) {
+      const randomIndex = Math.floor(Math.random() * randomData.length);
+      const randomElement = randomData[randomIndex];
+      setDisplaySelectedData(randomElement);
+
+      const updatedData = randomData.filter(
+        (_, index) => index !== randomIndex,
+      );
+      setRandomData(updatedData);
+      return randomElement;
+    }
+    setDisplaySelectedData(
+      `${category === 'students' ? "You've selected all students! Press 'Reset' to start over." : "All questions done! Press 'Reset' to start over."}`,
+    );
+    return null;
+  };
+  const resetRandomData = (): void => {
+    setRandomData(null);
+    setDisplaySelectedData(null);
+  };
+
+  console.log('randomData', randomData);
+  console.log('displaySelectedData', displaySelectedData);
   return (
-    <TeacherBuddyContext.Provider value={{ state, dispatch }}>
+    <TeacherBuddyContext.Provider
+      value={{
+        state,
+        dispatch,
+        randomGenerator,
+        randomData,
+        resetRandomData,
+        displaySelectedData,
+      }}>
       {children}
     </TeacherBuddyContext.Provider>
   );
