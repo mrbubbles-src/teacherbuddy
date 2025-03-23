@@ -16,6 +16,10 @@ const DisplayStudents = () => {
 
   const sortedStudents = [...students].sort((a, b) => a.localeCompare(b));
 
+  const formatName = (name: string) => {
+    return (name.trim().at(0)?.toUpperCase() || '') + name.trim().slice(1);
+  };
+
   return (
     <>
       <ClearAll typeAction={ACTIONS.CLEAR_STUDENTS} sectionName="Students" />
@@ -27,7 +31,7 @@ const DisplayStudents = () => {
             <p
               // className="rounded-2xl border border-brand-primary p-2"
               key={index}>
-              {student}
+              {formatName(student)}
               {
                 <RemoveSingle
                   typeAction={ACTIONS.REMOVE_STUDENT}
