@@ -19,10 +19,15 @@ export interface ITeacherBuddyContextType {
   dispatch: React.Dispatch<
     IAction<
       | string
-      | /*IQuizQuestion |*/ string[]
-      | /*IQuizQuestion[] |*/ number
+      | /*IQuizQuestion |*/ string[] /*IQuizQuestion[] |*/
       | { index: number; newName?: string; newQuestion?: string }
       | undefined
     >
   >;
+  randomGenerator: (category: TRandomGenerator) => string | null;
+  resetRandomData: () => void;
+  randomData: Array<string> | null;
+  displaySelectedData: string | null;
 }
+
+export type TRandomGenerator = 'students' | 'questions';
