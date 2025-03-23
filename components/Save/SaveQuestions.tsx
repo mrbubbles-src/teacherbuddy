@@ -10,36 +10,38 @@ const SaveQuestions = () => {
     string | Array<string>
   >('');
 
-  const storeQuestionsHandler = () => {
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value: string = event.target.value;
+    if (value.includes(',')) {
+      setCurrentQuestion(value.split(','));
+      return;
+    }
+    setCurrentQuestion(value);
+  };
+  const storeQuestionsHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (Array.isArray(currentQuestion)) {
-      dispatch({ type: ACTIONS.ADD_QUESTIONS, payload: currentQuestion });
+      const cleanedQuestions: Array<string> = currentQuestion
+        .map((question) => question.trim())
+        .filter((question) => question !== '');
+      dispatch({ type: ACTIONS.ADD_QUESTIONS, payload: cleanedQuestions });
       setCurrentQuestion('');
       return;
     }
-    dispatch({ type: ACTIONS.ADD_QUESTION, payload: currentQuestion });
+    dispatch({ type: ACTIONS.ADD_QUESTION, payload: currentQuestion.trim() });
     setCurrentQuestion('');
   };
 
   return (
-    <form onSubmit={(event) => event.preventDefault()}>
+    <form onSubmit={storeQuestionsHandler}>
       <input
         className="input-student"
         type="text"
         value={currentQuestion}
-        onChange={(event) => {
-          const value: string = event.target.value;
-          if (value.includes(',')) {
-            setCurrentQuestion(value.split(',').map((name) => name.trim()));
-            return;
-          }
-          setCurrentQuestion(value.trim());
-        }}
+        onChange={onChangeHandler}
         placeholder="Input a Question"
       />
-      <button
-        className="submit-question btn"
-        type="submit"
-        onClick={storeQuestionsHandler}>
+      <button className="submit-question btn" type="submit">
         Submit
       </button>
     </form>
