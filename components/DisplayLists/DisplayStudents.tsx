@@ -17,19 +17,17 @@ const DisplayStudents = () => {
   const sortedStudents = [...students].sort((a, b) => a.localeCompare(b));
 
   const formatName = (name: string) => {
-    return (name.trim().at(0)?.toUpperCase() || '') + name.trim().slice(1);
+    return (name.at(0)?.toUpperCase() || '') + name.slice(1);
   };
 
   return (
     <>
       <ClearAll typeAction={ACTIONS.CLEAR_STUDENTS} sectionName="Students" />
-      <section
-      // className="border-3 flex h-[100vh] gap-3"
-      >
+      <section className="flex flex-wrap gap-3">
         {sortedStudents &&
           sortedStudents.map((student, index) => (
             <p
-              // className="rounded-2xl border border-brand-primary p-2"
+              className="m-1 rounded-2xl border border-brand-primary p-2"
               key={index}>
               {formatName(student)}
               {
