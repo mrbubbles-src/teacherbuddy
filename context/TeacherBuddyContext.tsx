@@ -23,8 +23,8 @@ export const TeacherBuddyProvider = ({
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const localStudents = getStudents();
-    const localQuestions = getQuestions();
+    const localStudents: Array<string> = getStudents();
+    const localQuestions: Array<string> = getQuestions();
     if (localStudents.length > 0) {
       dispatch({ type: ACTIONS.ADD_STUDENTS, payload: localStudents });
     }
