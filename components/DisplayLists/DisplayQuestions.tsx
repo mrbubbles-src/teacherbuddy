@@ -16,7 +16,7 @@ const DisplayQuestions = () => {
   const questions: Array<string> = state.quizQuestions;
 
   return (
-    <>
+    <section>
       <ClearAll typeAction={ACTIONS.CLEAR_QUESTIONS} sectionName="Questions" />
       <ul className="flex flex-wrap gap-3">
         {questions &&
@@ -41,7 +41,7 @@ const DisplayQuestions = () => {
             </li>
           ))}
       </ul>
-    </>
+    </section>
   );
 };
 
