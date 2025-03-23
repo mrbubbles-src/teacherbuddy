@@ -18,7 +18,11 @@ export interface ITeacherBuddyContextType {
   state: ISaveToLocalStorage | undefined;
   dispatch: React.Dispatch<
     IAction<
-      string | /*IQuizQuestion |*/ string[] | /*IQuizQuestion[] |*/ undefined
+      | string
+      | /*IQuizQuestion |*/ string[]
+      | /*IQuizQuestion[] |*/ number
+      | { index: number; newName?: string; newQuestion?: string }
+      | undefined
     >
   >;
 }
