@@ -5,6 +5,7 @@ import RemoveSingle from '../RemoveSingle/RemoveSingle';
 import ClearAll from '../ClearAll/ClearAll';
 import { ACTIONS } from '@/utils/reducer/reducer';
 import EditContent from '../EditContent/EditContent';
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 
 const DisplayStudents = () => {
   const { state } = useTeacherBuddy();
@@ -17,12 +18,8 @@ const DisplayStudents = () => {
 
   const sortedStudents = [...students].sort((a, b) => a.localeCompare(b));
 
-  const formatName = (name: string) => {
-    return (name.at(0)?.toUpperCase() || '') + name.slice(1);
-  };
-
   return (
-    <>
+    <section>
       <ClearAll typeAction={ACTIONS.CLEAR_STUDENTS} sectionName="Students" />
       <ul className="flex flex-wrap gap-3">
         {sortedStudents &&
@@ -30,7 +27,7 @@ const DisplayStudents = () => {
             <li
               className="m-1 rounded-2xl border border-brand-primary p-2"
               key={index}>
-              {formatName(student)}
+              {capitalizeFirstLetter(student)}
               {
                 <EditContent
                   typeAction={ACTIONS.EDIT_STUDENT}
@@ -47,7 +44,7 @@ const DisplayStudents = () => {
             </li>
           ))}
       </ul>
-    </>
+    </section>
   );
 };
 
