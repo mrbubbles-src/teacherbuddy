@@ -18,10 +18,10 @@ const DisplayQuestions = () => {
   return (
     <>
       <ClearAll typeAction={ACTIONS.CLEAR_QUESTIONS} sectionName="Questions" />
-      <section className="flex flex-wrap gap-3">
+      <ul className="flex flex-wrap gap-3">
         {questions &&
           questions.map((question, index) => (
-            <p
+            <li
               key={index}
               className="m-1 rounded-2xl border border-brand-primary p-2">
               {question}
@@ -38,9 +38,9 @@ const DisplayQuestions = () => {
                   payloadToBeRemoved={question}
                 />
               }
-            </p>
+            </li>
           ))}
-      </section>
+      </ul>
     </>
   );
 };

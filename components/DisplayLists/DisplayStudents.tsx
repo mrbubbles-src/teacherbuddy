@@ -24,10 +24,10 @@ const DisplayStudents = () => {
   return (
     <>
       <ClearAll typeAction={ACTIONS.CLEAR_STUDENTS} sectionName="Students" />
-      <section className="flex flex-wrap gap-3">
+      <ul className="flex flex-wrap gap-3">
         {sortedStudents &&
           sortedStudents.map((student, index) => (
-            <p
+            <li
               className="m-1 rounded-2xl border border-brand-primary p-2"
               key={index}>
               {formatName(student)}
@@ -44,9 +44,9 @@ const DisplayStudents = () => {
                   payloadToBeRemoved={student}
                 />
               }
-            </p>
+            </li>
           ))}
-      </section>
+      </ul>
     </>
   );
 };
