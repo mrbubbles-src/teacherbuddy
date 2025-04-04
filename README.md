@@ -2,7 +2,7 @@
 
 > The following is the old README. The README will be updated once the updated App is Live.
 
-## Random-Student-Name-Generator
+## Random-Student-Name-Generato
 
 ## Introduction
 
