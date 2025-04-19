@@ -18,6 +18,46 @@ export const initialState: ISaveToLocalStorage = {
   quizQuestions: [],
 };
 
+/**
+ * Reducer function to manage the state of a local storage object.
+ *
+ * @param state - The current state of the local storage object.
+ * @param action - The action to be performed on the state, containing a type and an optional payload.
+ *
+ * @returns The updated state after applying the specified action.
+ *
+ * ### Action Types:
+ * - `ACTIONS.ADD_STUDENT`: Adds a single student name to the `studentNames` array.
+ * - `ACTIONS.ADD_STUDENTS`: Adds multiple student names to the `studentNames` array.
+ * - `ACTIONS.EDIT_STUDENT`: Edits a student name at a specific index in the `studentNames` array.
+ * - `ACTIONS.REMOVE_STUDENT`: Removes a student name from the `studentNames` array, ignoring case.
+ * - `ACTIONS.CLEAR_STUDENTS`: Clears all student names from the `studentNames` array.
+ * - `ACTIONS.ADD_QUESTION`: Adds a single quiz question to the `quizQuestions` array.
+ * - `ACTIONS.ADD_QUESTIONS`: Adds multiple quiz questions to the `quizQuestions` array.
+ * - `ACTIONS.EDIT_QUESTION`: Edits a quiz question at a specific index in the `quizQuestions` array.
+ * - `ACTIONS.REMOVE_QUESTION`: Removes a quiz question from the `quizQuestions` array, ignoring case.
+ * - `ACTIONS.CLEAR_QUESTIONS`: Clears all quiz questions from the `quizQuestions` array.
+ * - `default`: Returns the current state if the action type is not recognized.
+ *
+ * ### Payload Types:
+ * - `string`: Used for adding or removing a single student name or quiz question.
+ * - `string[]`: Used for adding multiple student names or quiz questions.
+ * - `{ index: number; newName?: string; newQuestion?: string }`: Used for editing a student name or quiz question at a specific index.
+ * - `undefined`: Used for actions that do not require a payload (e.g., clearing all students or questions).
+ *
+ * ### State Interface:
+ * - `ISaveToLocalStorage`: Represents the structure of the state object, which includes:
+ *   - `studentNames: string[]`: An array of student names.
+ *   - `quizQuestions: string[]`: An array of quiz questions.
+ *
+ * ### Example Usage:
+ * ```typescript
+ * const newState = reducer(currentState, {
+ *   type: ACTIONS.ADD_STUDENT,
+ *   payload: "John Doe",
+ * });
+ * ```
+ */
 export const reducer = (
   state: ISaveToLocalStorage,
   action: IAction<

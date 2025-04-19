@@ -21,6 +21,40 @@ const TeacherBuddyContext = createContext<ITeacherBuddyContextType | undefined>(
   undefined,
 );
 
+/**
+ * Provides the TeacherBuddy context to its children, managing state and functionality
+ * for handling students and quiz questions.
+ *
+ * @param props - The props for the provider component.
+ * @param children - The child components that will have access to the context.
+ *
+ * @returns The context provider wrapping the children.
+ *
+ * @remarks
+ * - Initializes state using a reducer and manages side effects with `useEffect`.
+ * - Loads students and questions from local storage on mount and updates the state.
+ * - Saves students and quiz questions to local storage whenever they change.
+ * - Provides functionality to generate random data (students or questions) and reset the random data.
+ *
+ * @context
+ * - `state`: The current state of the application.
+ * - `dispatch`: The dispatch function to update the state.
+ * - `randomGenerator`: A function to generate random data (students or questions) based on the category.
+ * - `randomData`: The current list of remaining random data.
+ * - `resetRandomData`: A function to reset the random data to its initial state.
+ * - `displaySelectedData`: The currently selected random data or a message indicating all data has been used.
+ *
+ * @example
+ * ```tsx
+ * import { TeacherBuddyProvider } from './TeacherBuddyContext';
+ *
+ * const App = () => (
+ *   <TeacherBuddyProvider>
+ *     <YourComponent />
+ *   </TeacherBuddyProvider>
+ * );
+ * ```
+ */
 export const TeacherBuddyProvider = ({
   children,
 }: {
@@ -122,6 +156,16 @@ export const TeacherBuddyProvider = ({
   );
 };
 
+/**
+ * Custom hook to access the TeacherBuddy context.
+ *
+ * This hook provides access to the `TeacherBuddyContext` and ensures that it is used
+ * within a `TeacherBuddyProvider`. If the hook is called outside of a valid provider,
+ * it will throw an error.
+ *
+ * @throws `Error` If the hook is used outside of a `TeacherBuddyProvider`.
+ * @returns `ITeacherBuddyContextType` The context value provided by `TeacherBuddyProvider`.
+ */
 export const useTeacherBuddy = (): ITeacherBuddyContextType => {
   const context = useContext(TeacherBuddyContext);
   if (!context) {

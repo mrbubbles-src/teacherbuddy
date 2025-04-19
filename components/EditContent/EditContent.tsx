@@ -18,7 +18,21 @@ const EditContent = ({
   const [isEditing, setIsEditing] = useState(false);
   const [newContent, setNewContent] = useState(payloadToBeEdited);
 
-  const saveEditHandler = () => {
+  /**
+   * Handles the save action for editing content. Depending on the `typeAction`,
+   * it constructs a payload for either editing a student's name or a question,
+   * and dispatches the corresponding action to update the state.
+   *
+   * @returns void
+   *
+   * @remarks
+   * - If `typeAction` is `'EDIT_STUDENT'`, the payload will include the `index` and `newName`.
+   * - If `typeAction` is not `'EDIT_STUDENT'`, the payload will include the `index` and `newQuestion`.
+   *
+   * @example
+   * saveEditHandler();
+   */
+  const saveEditHandler = (): void => {
     const payload =
       typeAction === 'EDIT_STUDENT'
         ? { index, newName: newContent }
