@@ -1,5 +1,12 @@
 import Link from "next/link"
-import { LayoutGridIcon, UsersIcon, ShuffleIcon, ClipboardListIcon, PlayCircleIcon } from "lucide-react"
+import {
+  ClipboardListIcon,
+  FolderKanbanIcon,
+  LayoutGridIcon,
+  PlayCircleIcon,
+  ShuffleIcon,
+  UsersIcon,
+} from "lucide-react"
 
 import { badgeVariants } from "@/components/ui/badge-variants"
 import { buttonVariants } from "@/components/ui/button-variants"
@@ -34,6 +41,13 @@ const cards = [
     icon: PlayCircleIcon,
     badge: "Live",
   },
+  {
+    title: "Projects",
+    description: "Build student lists and manage grouped project teams.",
+    href: "/projects",
+    icon: FolderKanbanIcon,
+    badge: "Lists",
+  },
 ]
 
 export default function DashboardCards() {
@@ -46,7 +60,7 @@ export default function DashboardCards() {
             Central Dashboard
           </CardTitle>
           <CardDescription>
-            Choose a workflow to manage students or run your next quiz.
+            Choose a workflow to manage students, projects, or run your next quiz.
           </CardDescription>
         </CardHeader>
       </Card>
