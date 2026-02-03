@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName, normalizeStudentName, studentNameKey } from "@/lib/students"
+import StudentTableSkeleton from "@/components/loading/student-table-skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -87,6 +88,10 @@ export default function StudentTable() {
       actions.updateStudent(editingStudentId, normalized)
     }
     handleCloseEdit()
+  }
+
+  if (!state.ui.isHydrated) {
+    return <StudentTableSkeleton />
   }
 
   return (

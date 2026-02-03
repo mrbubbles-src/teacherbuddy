@@ -1,10 +1,8 @@
-"use client"
-
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { LayoutGridIcon, UsersIcon, ShuffleIcon, ClipboardListIcon, PlayCircleIcon } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { badgeVariants } from "@/components/ui/badge-variants"
+import { buttonVariants } from "@/components/ui/button-variants"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 const cards = [
@@ -39,8 +37,6 @@ const cards = [
 ]
 
 export default function DashboardCards() {
-  const router = useRouter()
-
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <Card className="lg:col-span-2">
@@ -63,17 +59,19 @@ export default function DashboardCards() {
                 <Icon className="size-4 text-primary" />
                 <CardTitle className="text-base">{card.title}</CardTitle>
               </div>
-              <Badge variant="secondary">{card.badge}</Badge>
+              <span className={badgeVariants({ variant: "secondary" })}>
+                {card.badge}
+              </span>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <p className="text-sm text-muted-foreground">{card.description}</p>
-              <Button
-                onClick={() => router.push(card.href)}
-                className="w-fit"
-                size="sm"
+              <Link
+                data-slot="button"
+                href={card.href}
+                className={buttonVariants({ size: "sm", className: "w-fit" })}
               >
                 Open {card.title}
-              </Button>
+              </Link>
             </CardContent>
           </Card>
         )

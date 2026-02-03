@@ -4,6 +4,7 @@ import { useState, type FormEvent, type ChangeEvent } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { normalizeStudentName, studentNameKey } from "@/lib/students"
+import StudentFormSkeleton from "@/components/loading/student-form-skeleton"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -84,6 +85,10 @@ export default function StudentForm() {
     } finally {
       event.target.value = ""
     }
+  }
+
+  if (!state.ui.isHydrated) {
+    return <StudentFormSkeleton />
   }
 
   return (

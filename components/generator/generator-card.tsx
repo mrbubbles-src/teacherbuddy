@@ -4,6 +4,7 @@ import { useMemo } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName } from "@/lib/students"
+import GeneratorCardSkeleton from "@/components/loading/generator-card-skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,6 +32,10 @@ export default function GeneratorCard() {
     : null
 
   const canGenerate = remainingStudents.length > 0
+
+  if (!state.ui.isHydrated) {
+    return <GeneratorCardSkeleton />
+  }
 
   return (
     <Card>

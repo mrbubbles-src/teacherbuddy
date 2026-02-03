@@ -17,8 +17,8 @@ const ThemeToggle = () => {
   const isDark = resolvedTheme === 'dark';
   const buttonLabel = isHydrated
     ? isDark
-      ? 'Switch to light mode'
-      : 'Switch to dark mode'
+      ? 'Switch to light theme'
+      : 'Switch to dark theme'
     : 'Toggle theme';
 
   return (
@@ -53,20 +53,12 @@ const ThemeToggle = () => {
                 } absolute size-6 drop-shadow-xs transition-all duration-300 ease-in-out`}
                 aria-hidden='true'
               />
-              <span className='sr-only'>
-                {theme === 'dark'
-                  ? 'Switch to light theme'
-                  : 'Switch to dark theme'}
-              </span>
+              <span className='sr-only'>{buttonLabel}</span>
             </Button>
           }
         />
         <TooltipContent side='right'>
-          <span className='font-bold text-lg'>
-            {theme === 'dark'
-              ? 'Switch to light theme'
-              : 'Switch to dark theme'}
-          </span>
+          <span className='font-bold text-lg'>{buttonLabel}</span>
         </TooltipContent>
       </Tooltip>
     </>

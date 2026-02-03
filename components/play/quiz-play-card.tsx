@@ -4,6 +4,7 @@ import { useMemo } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName } from "@/lib/students"
+import QuizPlayCardSkeleton from "@/components/loading/quiz-play-card-skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -42,6 +43,10 @@ export default function QuizPlayCard() {
 
   const canDraw =
     !!quiz && availableQuestionIds.length > 0 && availableStudentIds.length > 0
+
+  if (!state.ui.isHydrated) {
+    return <QuizPlayCardSkeleton />
+  }
 
   return (
     <Card>

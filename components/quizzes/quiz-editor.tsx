@@ -5,6 +5,7 @@ import { PencilIcon, Trash2Icon, PlusIcon } from "lucide-react"
 
 import type { Question } from "@/lib/models"
 import { useAppStore } from "@/context/app-store"
+import QuizEditorSkeleton from "@/components/loading/quiz-editor-skeleton"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
@@ -234,6 +235,10 @@ export default function QuizEditor() {
       setImportError("Invalid JSON. Please check the format and try again.")
       setImportNotice(null)
     }
+  }
+
+  if (!state.ui.isHydrated) {
+    return <QuizEditorSkeleton />
   }
 
   return (
