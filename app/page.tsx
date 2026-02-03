@@ -1,5 +1,9 @@
-import { ComponentExample } from "@/components/component-example";
+import StudentNameGenerator from "@/components/student-name-generator";
 
 export default function Page() {
-return <ComponentExample />;
+  return (
+    <main className="min-h-screen bg-background">
+      <StudentNameGenerator />
+    </main>
+  );
 }
