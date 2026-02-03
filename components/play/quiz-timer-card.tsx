@@ -58,11 +58,11 @@ export default function QuizTimerCard() {
   useEffect(() => {
     if (!isRunning) return
     if (remainingSeconds === null) {
-      setRemainingSeconds(configuredTotalSeconds)
+      queueMicrotask(() => setRemainingSeconds(configuredTotalSeconds))
       return
     }
     if (remainingSeconds <= 0) {
-      setIsRunning(false)
+      queueMicrotask(() => setIsRunning(false))
       return
     }
 
@@ -78,7 +78,7 @@ export default function QuizTimerCard() {
     if (!alertThresholds.includes(remainingSeconds)) return
     if (alertedThresholdsRef.current.has(remainingSeconds)) return
     alertedThresholdsRef.current.add(remainingSeconds)
-    setIsAlerting(true)
+    queueMicrotask(() => setIsAlerting(true))
 
     if (alertTimeoutRef.current !== null) {
       window.clearTimeout(alertTimeoutRef.current)
@@ -156,7 +156,7 @@ export default function QuizTimerCard() {
           <span
             className={cn(
               "text-foreground",
-              isAlerting && "text-destructive animate-timer-wiggle"
+              isAlerting && "text-destructive animate-ping"
             )}
           >
             {formatTime(displaySeconds)}
