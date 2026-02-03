@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -149,9 +150,9 @@ export default function QuizTimerCard() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 rounded-md border border-border/60 bg-background/70 px-3 py-1 text-sm font-semibold tabular-nums shadow-xs">
+        <DropdownMenuTrigger className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/70 px-4 py-2 text-lg font-semibold tabular-nums shadow-xs">
           <span
             className={cn(
               "text-foreground",
@@ -160,92 +161,97 @@ export default function QuizTimerCard() {
           >
             {formatTime(displaySeconds)}
           </span>
-          <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+          <ChevronDownIcon className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="w-72 p-3">
-          <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Set timer
-          </DropdownMenuLabel>
-          <div className="mt-2 grid gap-3 sm:grid-cols-3">
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={`${timerId}-hours`}
-                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-              >
-                Hours
-              </label>
-              <Input
-                id={`${timerId}-hours`}
-                type="number"
-                min={0}
-                max={99}
-                value={hoursInput}
-                onChange={(event) => handleHoursChange(event.target.value)}
-                placeholder="0"
-              />
+        <DropdownMenuContent align="center" className="w-96 p-4">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Set timer
+            </DropdownMenuLabel>
+            <div className="mt-3 grid gap-4 sm:grid-cols-3">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor={`${timerId}-hours`}
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+                >
+                  Hours
+                </label>
+                <Input
+                  id={`${timerId}-hours`}
+                  type="number"
+                  min={0}
+                  max={99}
+                  value={hoursInput}
+                  onChange={(event) => handleHoursChange(event.target.value)}
+                  placeholder="0"
+                  className="h-9 text-base"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor={`${timerId}-minutes`}
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+                >
+                  Minutes
+                </label>
+                <Input
+                  id={`${timerId}-minutes`}
+                  type="number"
+                  min={0}
+                  max={59}
+                  value={minutesInput}
+                  onChange={(event) => handleMinutesChange(event.target.value)}
+                  placeholder="0"
+                  className="h-9 text-base"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor={`${timerId}-seconds`}
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+                >
+                  Seconds
+                </label>
+                <Input
+                  id={`${timerId}-seconds`}
+                  type="number"
+                  min={0}
+                  max={59}
+                  value={secondsInput}
+                  onChange={(event) => handleSecondsChange(event.target.value)}
+                  placeholder="0"
+                  className="h-9 text-base"
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={`${timerId}-minutes`}
-                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-              >
-                Minutes
-              </label>
-              <Input
-                id={`${timerId}-minutes`}
-                type="number"
-                min={0}
-                max={59}
-                value={minutesInput}
-                onChange={(event) => handleMinutesChange(event.target.value)}
-                placeholder="0"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={`${timerId}-seconds`}
-                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-              >
-                Seconds
-              </label>
-              <Input
-                id={`${timerId}-seconds`}
-                type="number"
-                min={0}
-                max={59}
-                value={secondsInput}
-                onChange={(event) => handleSecondsChange(event.target.value)}
-                placeholder="0"
-              />
-            </div>
-          </div>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
       <Button
-        size="icon-sm"
+        size="icon-lg"
         variant="ghost"
         onClick={handleStart}
         disabled={!hasTimeConfigured || isRunning}
         aria-label="Start timer"
       >
-        <PlayIcon />
+        <PlayIcon className="size-5" />
       </Button>
       <Button
-        size="icon-sm"
+        size="icon-lg"
         variant="ghost"
         onClick={handlePause}
         disabled={!isRunning}
         aria-label="Pause timer"
       >
-        <PauseIcon />
+        <PauseIcon className="size-5" />
       </Button>
       <Button
-        size="icon-sm"
+        size="icon-lg"
         variant="ghost"
         onClick={handleReset}
         aria-label="Reset timer"
       >
-        <RotateCcwIcon />
+        <RotateCcwIcon className="size-5" />
       </Button>
     </div>
   )
