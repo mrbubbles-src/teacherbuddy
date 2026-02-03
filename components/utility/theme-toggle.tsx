@@ -17,14 +17,9 @@ const ThemeToggle = () => {
   const isDark = resolvedTheme === 'dark';
   const buttonLabel = isHydrated
     ? isDark
-      ? 'Wechsle zu hellem Modus'
-      : 'Wechsle zu dunklem Modus'
-    : 'Theme wechseln';
-  const nextThemeLabel = isHydrated
-    ? isDark
-      ? 'Wechsel zum Hellen-Theme'
-      : 'Wechsel zum Dunklen-Theme'
-    : 'Theme wechseln';
+      ? 'Switch to light theme'
+      : 'Switch to dark theme'
+    : 'Toggle theme';
 
   return (
     <>
@@ -58,14 +53,12 @@ const ThemeToggle = () => {
                 } absolute size-6 drop-shadow-xs transition-all duration-300 ease-in-out`}
                 aria-hidden='true'
               />
-              <span className='sr-only'>
-                {nextThemeLabel}
-              </span>
+              <span className='sr-only'>{buttonLabel}</span>
             </Button>
           }
         />
         <TooltipContent side='right'>
-          <span className='font-bold text-base'>{nextThemeLabel}</span>
+          <span className='font-bold text-lg'>{buttonLabel}</span>
         </TooltipContent>
       </Tooltip>
     </>
