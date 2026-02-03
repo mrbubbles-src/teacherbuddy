@@ -2,8 +2,16 @@ import type { Quiz, QuizIndexEntry, Student } from "@/lib/models"
 
 const STUDENTS_KEY = "teacherbuddy:students"
 const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
+const TIMER_KEY = "teacherbuddy:timer"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
+
+export type PersistedTimerState = {
+  configuredTotalSeconds: number
+  remainingSeconds: number
+  isRunning: boolean
+  savedAt: number
+}
 
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback
@@ -132,4 +140,32 @@ export function persistAllQuizzes(
       removeQuiz(id)
     }
   }
+}
+
+export function loadTimer(): PersistedTimerState | null {
+  if (typeof window === "undefined") return null
+  const parsed = safeParse<unknown>(localStorage.getItem(TIMER_KEY), null)
+  if (
+    !parsed ||
+    typeof parsed !== "object" ||
+    typeof (parsed as PersistedTimerState).configuredTotalSeconds !== "number" ||
+    typeof (parsed as PersistedTimerState).remainingSeconds !== "number" ||
+    typeof (parsed as PersistedTimerState).isRunning !== "boolean" ||
+    typeof (parsed as PersistedTimerState).savedAt !== "number"
+  ) {
+    return null
+  }
+  const state = parsed as PersistedTimerState
+  if (state.remainingSeconds <= 0) return null
+  return state
+}
+
+export function saveTimer(state: PersistedTimerState) {
+  if (typeof window === "undefined") return
+  localStorage.setItem(TIMER_KEY, JSON.stringify(state))
+}
+
+export function clearTimer() {
+  if (typeof window === "undefined") return
+  localStorage.removeItem(TIMER_KEY)
 }

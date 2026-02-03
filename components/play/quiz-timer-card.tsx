@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react"
 import { ChevronDownIcon, PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react"
 
+import { clearTimer, loadTimer, saveTimer } from "@/lib/storage"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -44,6 +45,11 @@ export default function QuizTimerCard() {
   const timerId = useId()
   const alertTimeoutRef = useRef<number | null>(null)
   const alertedThresholdsRef = useRef(new Set<number>())
+  const remainingSecondsRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    remainingSecondsRef.current = remainingSeconds
+  }, [remainingSeconds])
 
   const configuredTotalSeconds = useMemo(() => {
     const hours = normalizeTimeValue(hoursInput, 99)
@@ -55,6 +61,29 @@ export default function QuizTimerCard() {
   const displaySeconds =
     remainingSeconds === null ? configuredTotalSeconds : remainingSeconds
 
+  // Restore timer from localStorage on mount
+  useEffect(() => {
+    const stored = loadTimer()
+    if (!stored) return
+    const total = stored.configuredTotalSeconds
+    const hours = Math.floor(total / 3600)
+    const minutes = Math.floor((total % 3600) / 60)
+    const seconds = total % 60
+    let remaining = stored.remainingSeconds
+    if (stored.isRunning && stored.savedAt) {
+      const elapsed = Math.floor((Date.now() - stored.savedAt) / 1000)
+      remaining = Math.max(0, stored.remainingSeconds - elapsed)
+    }
+    queueMicrotask(() => {
+      setHoursInput(String(hours))
+      setMinutesInput(String(minutes))
+      setSecondsInput(String(seconds))
+      setRemainingSeconds(remaining <= 0 ? null : remaining)
+      setIsRunning(remaining > 0 && stored.isRunning)
+      if (remaining <= 0) clearTimer()
+    })
+  }, [])
+
   useEffect(() => {
     if (!isRunning) return
     if (remainingSeconds === null) {
@@ -62,7 +91,10 @@ export default function QuizTimerCard() {
       return
     }
     if (remainingSeconds <= 0) {
-      queueMicrotask(() => setIsRunning(false))
+      queueMicrotask(() => {
+        setIsRunning(false)
+        clearTimer()
+      })
       return
     }
 
@@ -70,7 +102,22 @@ export default function QuizTimerCard() {
       setRemainingSeconds((current) => (current === null ? null : current - 1))
     }, 1000)
 
-    return () => window.clearInterval(interval)
+    const saveInterval = window.setInterval(() => {
+      const current = remainingSecondsRef.current
+      if (current !== null && current > 0) {
+        saveTimer({
+          configuredTotalSeconds,
+          remainingSeconds: current,
+          isRunning: true,
+          savedAt: Date.now(),
+        })
+      }
+    }, 60_000)
+
+    return () => {
+      window.clearInterval(interval)
+      window.clearInterval(saveInterval)
+    }
   }, [configuredTotalSeconds, isRunning, remainingSeconds])
 
   useEffect(() => {
@@ -111,21 +158,37 @@ export default function QuizTimerCard() {
 
   const handleStart = () => {
     if (!hasTimeConfigured) return
+    const startFrom = remainingSeconds === null || remainingSeconds === 0 ? configuredTotalSeconds : remainingSeconds
     if (remainingSeconds === null || remainingSeconds === 0) {
       resetAlerts()
       setRemainingSeconds(configuredTotalSeconds)
     }
     setIsRunning(true)
+    saveTimer({
+      configuredTotalSeconds,
+      remainingSeconds: startFrom,
+      isRunning: true,
+      savedAt: Date.now(),
+    })
   }
 
   const handlePause = () => {
     setIsRunning(false)
+    if (remainingSeconds !== null && remainingSeconds > 0) {
+      saveTimer({
+        configuredTotalSeconds,
+        remainingSeconds,
+        isRunning: false,
+        savedAt: Date.now(),
+      })
+    }
   }
 
   const handleReset = () => {
     setIsRunning(false)
     setRemainingSeconds(null)
     resetAlerts()
+    clearTimer()
   }
 
   const handleHoursChange = (value: string) => {
@@ -133,6 +196,7 @@ export default function QuizTimerCard() {
     setIsRunning(false)
     setRemainingSeconds(null)
     resetAlerts()
+    clearTimer()
   }
 
   const handleMinutesChange = (value: string) => {
@@ -140,6 +204,7 @@ export default function QuizTimerCard() {
     setIsRunning(false)
     setRemainingSeconds(null)
     resetAlerts()
+    clearTimer()
   }
 
   const handleSecondsChange = (value: string) => {
@@ -147,6 +212,7 @@ export default function QuizTimerCard() {
     setIsRunning(false)
     setRemainingSeconds(null)
     resetAlerts()
+    clearTimer()
   }
 
   return (
