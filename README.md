@@ -1,43 +1,36 @@
-# _!! UNDER CONSTRUCTION !!_ Formerly known as 'Random-Student-Name Generator'. This project will undergo many changes once I find the time. It is still usable in its old form with the linked Vercel app. The repo name has already been changed to the new project name 'Teacherbuddy'. Stay tuned.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-> The following is the old README. The README will be updated once the updated App is Live.
+## Getting Started
 
-## Random-Student-Name-Generator
+First, run the development server:
 
-## Introduction
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-When I started the Web Development course at the [Digital Career Institute](https://github.com/DigitalCareerInstitute), I quickly noticed that students (myself included) felt too shy to put their hands up when the teacher asked a question about what we had learned the previous day or when it was time to present our solutions for our afternoon assignments.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To make things easier for the teachers to pick a student, I came up with the idea of a generator ([v1](https://github.com/mrbubbles-src/random-name-gen-v1), [v2](https://github.com/mrbubbles-src/random-name-gen-v2)) that randomly picks a student for the teacher to choose.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This is now the final version, which I began working on just when we started with our REACT/SPA module, so please be nice about the level of code and structure I use in most of the project 😁! I promise, my code looks a lot nicer now and whenever I have the time and mental space for it, I will update the whole code to represent that and fix left-over bugs!
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Try it out! [> Click me <](https://random-student-name-generator.vercel.app/)
+## Learn More
 
-## How to use
+To learn more about Next.js, take a look at the following resources:
 
-### The initial setup:
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Enter the names of your students **one at a time** with the input field at the top and press submit **after each name**
-  - This will save each individual student name in your **local storage**, so unless you delete that, you'll only need to do that once
-- Either press the 'Reset Generator' button or reload the page
-  - You only need to do this **once** after you've entered all names (if you add an additional name later on or clear out your local storage/delete an individual Name while on the page, you also need to press 'Reset Generator' once again). This is currently a sort-of bug that is on my to-do list
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### Using the Generator after the setup
+## Deploy on Vercel
 
-- Just press the 'Generate!' button and the magic happens!
-  - The student name you generate will be crossed out in the list, so you can take a quick glance at who hasn't been chosen yet
-- Once every name is used up, the 'Generate!' button disappears and a message tells you that there are no more names. Just press the 'Reset Generator' button or reload the page, so you can start generating again
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-If the unfortunate event happens that a student drops out of the course and you want to remove their name from the list, currently you need to **manually** remove the **individual** name (or clear all of course) from your local storage.
-
-## On my to-do list
-
-- Option to also import a batch of student names (for example via a file)
-- Option to delete student name via input field
-  - maybe a clear all button?
-- Remove the need for a reload so that names can be reloaded
-- Dark mode! 😎
-  - With a toggle
-  - And preference saved
-- Rework app to be in line with my own current standards
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
