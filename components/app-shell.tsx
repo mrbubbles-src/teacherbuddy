@@ -78,7 +78,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </SidebarContent>
         <SidebarFooter>
-          <QuizTimerCard variant="sidebar" className="mx-2" />
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground">
             <span>v0.1</span>
             <span className="uppercase tracking-[0.2em]">Classroom</span>
@@ -87,19 +86,26 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <header className="flex items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="h-5" />
-          <div className="flex flex-1 flex-col">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              TeacherBuddy
-            </p>
-            <h1 className="text-xl font-semibold text-foreground">{meta.title}</h1>
-            {meta.description ? (
-              <p className="text-sm text-muted-foreground">{meta.description}</p>
-            ) : null}
+        <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="h-5" />
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                TeacherBuddy
+              </p>
+              <h1 className="text-xl font-semibold text-foreground">{meta.title}</h1>
+              {meta.description ? (
+                <p className="text-sm text-muted-foreground">{meta.description}</p>
+              ) : null}
+            </div>
           </div>
-          <ThemeToggle />
+          <div className="flex justify-center">
+            <QuizTimerCard />
+          </div>
+          <div className="flex justify-end">
+            <ThemeToggle />
+          </div>
         </header>
         <section className="flex-1 px-4 py-6 sm:px-6 lg:px-8 container mx-auto">
           {children}

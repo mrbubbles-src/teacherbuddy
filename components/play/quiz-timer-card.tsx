@@ -1,10 +1,17 @@
 "use client"
 
-import { useEffect, useId, useMemo, useState } from "react"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
+import { ChevronDownIcon, PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const clampToRange = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max)
@@ -16,31 +23,33 @@ const normalizeTimeValue = (value: string, max: number) => {
 }
 
 const formatTime = (totalSeconds: number) => {
-  const minutes = Math.floor(totalSeconds / 60)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = totalSeconds % 60
-  return `${minutes.toString().padStart(2, "0")}:${seconds
+  return `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
-    .padStart(2, "0")}`
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
 }
 
-type QuizTimerCardProps = {
-  variant?: "card" | "sidebar"
-  className?: string
-}
+const alertThresholds = [600, 300, 60, 0]
 
-export default function QuizTimerCard({ variant = "card", className }: QuizTimerCardProps) {
+export default function QuizTimerCard() {
+  const [hoursInput, setHoursInput] = useState("0")
   const [minutesInput, setMinutesInput] = useState("0")
   const [secondsInput, setSecondsInput] = useState("0")
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
   const [isRunning, setIsRunning] = useState(false)
+  const [isAlerting, setIsAlerting] = useState(false)
   const timerId = useId()
-  const isSidebar = variant === "sidebar"
+  const alertTimeoutRef = useRef<number | null>(null)
+  const alertedThresholdsRef = useRef(new Set<number>())
 
   const configuredTotalSeconds = useMemo(() => {
-    const minutes = normalizeTimeValue(minutesInput, 180)
+    const hours = normalizeTimeValue(hoursInput, 99)
+    const minutes = normalizeTimeValue(minutesInput, 59)
     const seconds = normalizeTimeValue(secondsInput, 59)
-    return minutes * 60 + seconds
-  }, [minutesInput, secondsInput])
+    return hours * 3600 + minutes * 60 + seconds
+  }, [hoursInput, minutesInput, secondsInput])
 
   const displaySeconds =
     remainingSeconds === null ? configuredTotalSeconds : remainingSeconds
@@ -63,116 +72,181 @@ export default function QuizTimerCard({ variant = "card", className }: QuizTimer
     return () => window.clearInterval(interval)
   }, [configuredTotalSeconds, isRunning, remainingSeconds])
 
+  useEffect(() => {
+    if (remainingSeconds === null) return
+    if (!alertThresholds.includes(remainingSeconds)) return
+    if (alertedThresholdsRef.current.has(remainingSeconds)) return
+    alertedThresholdsRef.current.add(remainingSeconds)
+    setIsAlerting(true)
+
+    if (alertTimeoutRef.current !== null) {
+      window.clearTimeout(alertTimeoutRef.current)
+    }
+
+    alertTimeoutRef.current = window.setTimeout(() => {
+      setIsAlerting(false)
+      alertTimeoutRef.current = null
+    }, 5000)
+  }, [remainingSeconds])
+
+  useEffect(() => {
+    return () => {
+      if (alertTimeoutRef.current !== null) {
+        window.clearTimeout(alertTimeoutRef.current)
+      }
+    }
+  }, [])
+
   const hasTimeConfigured = configuredTotalSeconds > 0
 
-  const handleStartPause = () => {
-    if (!hasTimeConfigured && remainingSeconds === null) return
-    if (!isRunning && remainingSeconds === 0) {
-      setRemainingSeconds(null)
+  const resetAlerts = () => {
+    alertedThresholdsRef.current.clear()
+    if (alertTimeoutRef.current !== null) {
+      window.clearTimeout(alertTimeoutRef.current)
+      alertTimeoutRef.current = null
     }
-    setIsRunning((prev) => !prev)
+    setIsAlerting(false)
+  }
+
+  const handleStart = () => {
+    if (!hasTimeConfigured) return
+    if (remainingSeconds === null || remainingSeconds === 0) {
+      resetAlerts()
+      setRemainingSeconds(configuredTotalSeconds)
+    }
+    setIsRunning(true)
+  }
+
+  const handlePause = () => {
+    setIsRunning(false)
   }
 
   const handleReset = () => {
     setIsRunning(false)
     setRemainingSeconds(null)
+    resetAlerts()
+  }
+
+  const handleHoursChange = (value: string) => {
+    setHoursInput(value)
+    setIsRunning(false)
+    setRemainingSeconds(null)
+    resetAlerts()
   }
 
   const handleMinutesChange = (value: string) => {
     setMinutesInput(value)
+    setIsRunning(false)
     setRemainingSeconds(null)
+    resetAlerts()
   }
 
   const handleSecondsChange = (value: string) => {
     setSecondsInput(value)
+    setIsRunning(false)
     setRemainingSeconds(null)
+    resetAlerts()
   }
 
   return (
-    <Card className={className}>
-      <CardHeader className={isSidebar ? "pb-2" : undefined}>
-        <CardTitle className={isSidebar ? "text-sm" : undefined}>Quick Timer</CardTitle>
-        {!isSidebar ? (
-          <CardDescription>
-            Set a countdown timer for practice rounds or timed quizzes.
-          </CardDescription>
-        ) : null}
-      </CardHeader>
-      <CardContent className={isSidebar ? "flex flex-col gap-3" : "flex flex-col gap-4"}>
-        <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor={`${timerId}-minutes`}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              Minutes
-            </label>
-            <Input
-              id={`${timerId}-minutes`}
-              type="number"
-              min={0}
-              max={180}
-              value={minutesInput}
-              onChange={(event) => handleMinutesChange(event.target.value)}
-              placeholder="0"
-            />
-          </div>
-          <div className="hidden text-center text-sm font-semibold text-muted-foreground sm:block">
-            :
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor={`${timerId}-seconds`}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              Seconds
-            </label>
-            <Input
-              id={`${timerId}-seconds`}
-              type="number"
-              min={0}
-              max={59}
-              value={secondsInput}
-              onChange={(event) => handleSecondsChange(event.target.value)}
-              placeholder="0"
-            />
-          </div>
-        </div>
-
-        <div
-          className={
-            isSidebar
-              ? "rounded-lg border border-dashed border-border/60 bg-background/60 px-3 py-4 text-center"
-              : "rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center"
-          }
-        >
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Remaining
-          </p>
-          <p
-            className={
-              isSidebar
-                ? "mt-2 text-2xl font-semibold tabular-nums"
-                : "mt-2 text-3xl font-semibold tabular-nums"
-            }
+    <div className="flex items-center gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center gap-2 rounded-md border border-border/60 bg-background/70 px-3 py-1 text-sm font-semibold tabular-nums shadow-xs">
+          <span
+            className={cn(
+              "text-foreground",
+              isAlerting && "text-destructive animate-timer-wiggle"
+            )}
           >
             {formatTime(displaySeconds)}
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Button
-            onClick={handleStartPause}
-            disabled={!hasTimeConfigured && remainingSeconds === null}
-            className="sm:flex-1"
-          >
-            {isRunning ? "Pause" : "Start"}
-          </Button>
-          <Button variant="secondary" onClick={handleReset} className="sm:flex-1">
-            Reset
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          </span>
+          <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" className="w-72 p-3">
+          <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Set timer
+          </DropdownMenuLabel>
+          <div className="mt-2 grid gap-3 sm:grid-cols-3">
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor={`${timerId}-hours`}
+                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+              >
+                Hours
+              </label>
+              <Input
+                id={`${timerId}-hours`}
+                type="number"
+                min={0}
+                max={99}
+                value={hoursInput}
+                onChange={(event) => handleHoursChange(event.target.value)}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor={`${timerId}-minutes`}
+                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+              >
+                Minutes
+              </label>
+              <Input
+                id={`${timerId}-minutes`}
+                type="number"
+                min={0}
+                max={59}
+                value={minutesInput}
+                onChange={(event) => handleMinutesChange(event.target.value)}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor={`${timerId}-seconds`}
+                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+              >
+                Seconds
+              </label>
+              <Input
+                id={`${timerId}-seconds`}
+                type="number"
+                min={0}
+                max={59}
+                value={secondsInput}
+                onChange={(event) => handleSecondsChange(event.target.value)}
+                placeholder="0"
+              />
+            </div>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Button
+        size="icon-sm"
+        variant="ghost"
+        onClick={handleStart}
+        disabled={!hasTimeConfigured || isRunning}
+        aria-label="Start timer"
+      >
+        <PlayIcon />
+      </Button>
+      <Button
+        size="icon-sm"
+        variant="ghost"
+        onClick={handlePause}
+        disabled={!isRunning}
+        aria-label="Pause timer"
+      >
+        <PauseIcon />
+      </Button>
+      <Button
+        size="icon-sm"
+        variant="ghost"
+        onClick={handleReset}
+        aria-label="Reset timer"
+      >
+        <RotateCcwIcon />
+      </Button>
+    </div>
   )
 }
