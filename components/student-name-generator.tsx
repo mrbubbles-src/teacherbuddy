@@ -25,18 +25,29 @@ function capitalizeName(name: string) {
     .join(" ");
 }
 
+const STORAGE_KEY = "teacherbuddy:students";
+
 function loadNamesFromStorage() {
   if (typeof window === "undefined") return [] as string[];
 
-  const names: string[] = [];
-  for (let index = 0; index < localStorage.length; index += 1) {
-    const key = localStorage.key(index);
-    if (!key) continue;
-    const value = localStorage.getItem(key);
-    if (value) names.push(value);
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((entry): entry is string => typeof entry === "string");
+    }
+  } catch (error) {
+    console.error("Failed to parse stored students", error);
   }
 
-  return names;
+  return [];
+}
+
+function saveNamesToStorage(names: string[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
 }
 
 export default function StudentNameGenerator() {
@@ -94,9 +105,13 @@ export default function StudentNameGenerator() {
     const normalized = normalizeName(studentName);
     if (!normalized) return;
 
-    localStorage.setItem(normalized, normalized);
+    const nextNames = Array.from(new Set([...students, normalized]));
+    saveNamesToStorage(nextNames);
     setStudentName("");
-    syncFromStorage();
+    setStudents(nextNames);
+    setGeneratedNames((prev) =>
+      new Set([...prev].filter((name) => nextNames.includes(name)))
+    );
   };
 
   const handleGenerate = () => {
