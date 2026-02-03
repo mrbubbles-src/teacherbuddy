@@ -31,6 +31,7 @@ export type ProjectList = {
   id: string
   name: string
   projectType: string
+  description: string
   studentIds: string[]
   groups: string[][]
   createdAt: number

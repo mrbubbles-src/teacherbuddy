@@ -93,6 +93,18 @@ type AppAction =
         id: string
         name: string
         projectType: string
+        description: string
+        studentIds: string[]
+        groups: string[][]
+      }
+    }
+  | {
+      type: "UPDATE_PROJECT_LIST"
+      payload: {
+        id: string
+        name: string
+        projectType: string
+        description: string
         studentIds: string[]
         groups: string[][]
       }
@@ -311,6 +323,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         id: action.payload.id,
         name,
         projectType,
+        description: action.payload.description.trim(),
         studentIds,
         groups: action.payload.groups,
         createdAt: Date.now(),
@@ -320,6 +333,32 @@ function appReducer(state: AppState, action: AppAction): AppState {
         persisted: {
           ...state.persisted,
           projectLists: [projectList, ...state.persisted.projectLists],
+        },
+      }
+    }
+    case "UPDATE_PROJECT_LIST": {
+      const name = action.payload.name.trim()
+      const projectType = action.payload.projectType.trim()
+      if (!name || !projectType) return state
+      const studentIds = action.payload.studentIds
+      if (!studentIds.length) return state
+      const projectLists = state.persisted.projectLists.map((list) =>
+        list.id === action.payload.id
+          ? {
+              ...list,
+              name,
+              projectType,
+              description: action.payload.description.trim(),
+              studentIds,
+              groups: action.payload.groups,
+            }
+          : list
+      )
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          projectLists,
         },
       }
     }
@@ -613,6 +652,15 @@ const AppStoreContext = React.createContext<{
     createProjectList: (
       name: string,
       projectType: string,
+      description: string,
+      studentIds: string[],
+      groups: string[][]
+    ) => void
+    updateProjectList: (
+      id: string,
+      name: string,
+      projectType: string,
+      description: string,
       studentIds: string[],
       groups: string[][]
     ) => void
@@ -664,6 +712,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       createProjectList: (
         name: string,
         projectType: string,
+        description: string,
         studentIds: string[],
         groups: string[][]
       ) =>
@@ -673,6 +722,26 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
             id: crypto.randomUUID(),
             name,
             projectType,
+            description,
+            studentIds,
+            groups,
+          },
+        }),
+      updateProjectList: (
+        id: string,
+        name: string,
+        projectType: string,
+        description: string,
+        studentIds: string[],
+        groups: string[][]
+      ) =>
+        dispatch({
+          type: "UPDATE_PROJECT_LIST",
+          payload: {
+            id,
+            name,
+            projectType,
+            description,
             studentIds,
             groups,
           },

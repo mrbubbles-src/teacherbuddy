@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName } from "@/lib/students"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -17,6 +17,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -34,6 +35,7 @@ export default function ProjectListBuilder() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [name, setName] = useState("")
   const [projectType, setProjectType] = useState("")
+  const [description, setDescription] = useState("")
   const [groupMode, setGroupMode] = useState<GroupMode>("none")
   const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE)
   const [includeExcluded, setIncludeExcluded] = useState(false)
@@ -116,9 +118,16 @@ export default function ProjectListBuilder() {
       }
     }
 
-    actions.createProjectList(trimmedName, trimmedType, orderedSelectedIds, groups)
+    actions.createProjectList(
+      trimmedName,
+      trimmedType,
+      description,
+      orderedSelectedIds,
+      groups
+    )
     setName("")
     setProjectType("")
+    setDescription("")
     setSelectedIds([])
     setGroupMode("none")
     setGroupSize(DEFAULT_GROUP_SIZE)
@@ -173,6 +182,21 @@ export default function ProjectListBuilder() {
                 <FieldDescription>
                   Use a type to organize lists by assignment style.
                 </FieldDescription>
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="project-description">Description</FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="project-description"
+                  value={description}
+                  onChange={(event) => {
+                    setDescription(event.target.value)
+                    if (error) setError(null)
+                    if (notice) setNotice(null)
+                  }}
+                  placeholder="Optional notes about the project or grouping."
+                />
               </FieldContent>
             </Field>
             <Field>
@@ -245,14 +269,12 @@ export default function ProjectListBuilder() {
               >
                 Clear
               </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                asChild
+              <Link
+                href="/students"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
               >
-                <Link href="/students">Add students</Link>
-              </Button>
+                Add students
+              </Link>
             </div>
             <FieldSeparator>Student roster</FieldSeparator>
             <div className="flex items-center gap-2">

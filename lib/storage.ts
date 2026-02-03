@@ -64,18 +64,23 @@ export function loadProjectLists(): ProjectList[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(PROJECT_LISTS_KEY), [])
   if (!Array.isArray(parsed)) return []
-  return parsed.filter((entry): entry is ProjectList => {
-    return (
-      typeof entry === "object" &&
-      entry !== null &&
-      typeof (entry as ProjectList).id === "string" &&
-      typeof (entry as ProjectList).name === "string" &&
-      typeof (entry as ProjectList).projectType === "string" &&
-      Array.isArray((entry as ProjectList).studentIds) &&
-      Array.isArray((entry as ProjectList).groups) &&
-      typeof (entry as ProjectList).createdAt === "number"
-    )
-  })
+  return parsed
+    .filter((entry): entry is ProjectList => {
+      return (
+        typeof entry === "object" &&
+        entry !== null &&
+        typeof (entry as ProjectList).id === "string" &&
+        typeof (entry as ProjectList).name === "string" &&
+        typeof (entry as ProjectList).projectType === "string" &&
+        Array.isArray((entry as ProjectList).studentIds) &&
+        Array.isArray((entry as ProjectList).groups) &&
+        typeof (entry as ProjectList).createdAt === "number"
+      )
+    })
+    .map((entry) => ({
+      ...entry,
+      description: entry.description ?? "",
+    }))
 }
 
 export function saveProjectLists(lists: ProjectList[]) {
