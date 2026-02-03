@@ -7,6 +7,7 @@ import { GraduationCapIcon } from "lucide-react"
 
 import ThemeToggle from "@/components/utility/theme-toggle"
 import { SidebarNav } from "@/components/navigation/sidebar-nav"
+import QuizTimerCard from "@/components/play/quiz-timer-card"
 import {
   Sidebar,
   SidebarContent,
@@ -77,6 +78,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </SidebarContent>
         <SidebarFooter>
+          <QuizTimerCard variant="sidebar" className="mx-2" />
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground">
             <span>v0.1</span>
             <span className="uppercase tracking-[0.2em]">Classroom</span>
