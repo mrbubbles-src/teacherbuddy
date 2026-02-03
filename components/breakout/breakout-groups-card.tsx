@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { CopyIcon } from "lucide-react"
 
 import { useAppStore } from "@/context/app-store"
 import type { Student } from "@/lib/models"
@@ -18,6 +19,7 @@ export default function BreakoutGroupsCard() {
   const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE)
   const [groups, setGroups] = useState<Student[][]>([])
   const [isCopied, setIsCopied] = useState(false)
+  const [copiedGroupIndex, setCopiedGroupIndex] = useState<number | null>(null)
 
   const activeStudents = useMemo(
     () => state.persisted.students.filter((student) => student.status === "active"),
@@ -88,6 +90,7 @@ export default function BreakoutGroupsCard() {
               const nextGroups = buildGroups(activeStudents, Math.max(groupSize, 1))
               setGroups(nextGroups)
               setIsCopied(false)
+              setCopiedGroupIndex(null)
             }}
           >
             Generate Groups
@@ -100,6 +103,7 @@ export default function BreakoutGroupsCard() {
               if (!groupSummary) return
               await navigator.clipboard.writeText(groupSummary)
               setIsCopied(true)
+              setCopiedGroupIndex(null)
             }}
           >
             {isCopied ? "Copied!" : "Copy Groups"}
@@ -109,9 +113,31 @@ export default function BreakoutGroupsCard() {
           <div className="space-y-3">
             {groups.map((group, index) => (
               <div key={`group-${index}`} className="rounded-md border border-border/60 px-3 py-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  Group {index + 1}
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Group {index + 1}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={
+                      copiedGroupIndex === index
+                        ? `Copied group ${index + 1}`
+                        : `Copy group ${index + 1}`
+                    }
+                    onClick={async () => {
+                      const names = group
+                        .map((student) => formatStudentName(student.name))
+                        .join(", ")
+                      if (!names) return
+                      await navigator.clipboard.writeText(names)
+                      setCopiedGroupIndex(index)
+                    }}
+                  >
+                    <CopyIcon />
+                  </Button>
+                </div>
                 <p className="mt-1 text-sm text-foreground">
                   {group.map((student) => formatStudentName(student.name)).join(", ")}
                 </p>
