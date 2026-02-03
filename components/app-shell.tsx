@@ -99,7 +99,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <ThemeToggle />
         </header>
-        <section className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <section className="flex-1 px-4 py-6 sm:px-6 lg:px-8 container mx-auto">
           {children}
         </section>
       </SidebarInset>

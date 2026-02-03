@@ -9,13 +9,13 @@ import { buttonVariants } from "@/components/ui/button-variants"
 function Button({
   className,
   variant = "default",
-  size = "default",
+  size = "lg",
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn("text-base shadow-md transition-all duration-150 ease-in-out active:scale-95 active:shadow-none",buttonVariants({ variant, size, className }))}
       {...props}
     />
   )

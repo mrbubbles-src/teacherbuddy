@@ -175,6 +175,9 @@ const pruneDomainState = (
 const getSortedQuizIndex = (index: QuizIndexEntry[]) =>
   [...index].sort((a, b) => b.createdAt - a.createdAt)
 
+const toggleStudentStatus = (status: Student["status"]): Student["status"] =>
+  status === "active" ? "excluded" : "active"
+
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "HYDRATE_PERSISTED": {
@@ -219,7 +222,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         student.id === action.payload.id
           ? {
               ...student,
-              status: student.status === "active" ? "excluded" : "active",
+              status: toggleStudentStatus(student.status),
             }
           : student
       )
