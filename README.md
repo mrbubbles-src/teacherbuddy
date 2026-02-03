@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TeacherBuddy
 
-## Getting Started
+TeacherBuddy is a Next.js app for managing students, building quizzes, and running quick classroom activities from a single dashboard.
 
-First, run the development server:
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+```
+
+## Usage
+
+Run the dev server:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 and use the dashboard to navigate.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Usage examples:
+- Add or import students in `/students`.
+- Draw a random student in `/generator`.
+- Build and edit quizzes in `/quizzes`.
+- Run live quiz play in `/play`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture and Folder Structure
 
-## Learn More
+TeacherBuddy uses the Next.js App Router. Local state is persisted to `localStorage` and hydrated on the client.
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/                 App Router routes, layout, global loading/error
+components/          UI, feature, and layout components
+components/loading/  Hydration skeletons for feature views
+components/ui/       Base UI wrappers and shared UI primitives
+context/             App store and providers
+hooks/               Client hooks (theme, viewport)
+lib/                 Models, storage, and utilities
+public/              Static assets
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Key architectural notes:
+- `AppShell` wraps all routes with sidebar navigation and header meta.
+- `context/app-store.tsx` stores student/quiz data and persists to `localStorage`.
+- The dashboard cards are server-rendered; feature pages remain client-driven.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+More detailed docs live in `documentation/project-docs/`.
 
-## Deploy on Vercel
+## Configuration and Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+No environment variables are required for local development.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Testing and Quality
+
+Run linting:
+
+```bash
+bun run lint
+```
+
+Run TypeScript type checks:
+
+```bash
+bun run typecheck
+```
+
+Build to verify production output:
+
+```bash
+bun run build
+```
+
+## Contribution Guidelines
+
+- Keep changes focused and aligned with existing patterns.
+- Update docs in `documentation/project-docs/` when behavior changes.
+- Update `CHANGELOG.md` for notable changes.
+- Run `bun run lint` and `bun run typecheck` before submitting.
+
+## License
+
+MIT. See `LICENSE`.

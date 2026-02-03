@@ -6,7 +6,8 @@
     "dev": "bun --bun next dev",
     "build": "bun --bun next build",
     "start": "bun --bun next start",
-    "lint": "bun --bun eslint"
+    "lint": "bun --bun eslint",
+    "typecheck": "bun --bun tsc"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
