@@ -1,0 +1,82 @@
+import type { Config } from "tailwindcss";
+
+const config = {
+  darkMode: ["class"],
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        background: "oklch(var(--background))",
+        foreground: "oklch(var(--foreground))",
+        card: "oklch(var(--card))",
+        "card-foreground": "oklch(var(--card-foreground))",
+        popover: "oklch(var(--popover))",
+        "popover-foreground": "oklch(var(--popover-foreground))",
+        primary: "oklch(var(--primary))",
+        "primary-foreground": "oklch(var(--primary-foreground))",
+        secondary: "oklch(var(--secondary))",
+        "secondary-foreground": "oklch(var(--secondary-foreground))",
+        muted: "oklch(var(--muted))",
+        "muted-foreground": "oklch(var(--muted-foreground))",
+        accent: "oklch(var(--accent))",
+        "accent-foreground": "oklch(var(--accent-foreground))",
+        destructive: "oklch(var(--destructive))",
+        "destructive-foreground": "oklch(var(--destructive-foreground))",
+        border: "oklch(var(--border))",
+        input: "oklch(var(--input))",
+        ring: "oklch(var(--ring))",
+        surface: "oklch(var(--surface))",
+        ctp: {
+          rosewater: "oklch(var(--ctp-rosewater))",
+          flamingo: "oklch(var(--ctp-flamingo))",
+          pink: "oklch(var(--ctp-pink))",
+          mauve: "oklch(var(--ctp-mauve))",
+          red: "oklch(var(--ctp-red))",
+          maroon: "oklch(var(--ctp-maroon))",
+          peach: "oklch(var(--ctp-peach))",
+          yellow: "oklch(var(--ctp-yellow))",
+          green: "oklch(var(--ctp-green))",
+          teal: "oklch(var(--ctp-teal))",
+          sky: "oklch(var(--ctp-sky))",
+          sapphire: "oklch(var(--ctp-sapphire))",
+          blue: "oklch(var(--ctp-blue))",
+          lavender: "oklch(var(--ctp-lavender))",
+          text: "oklch(var(--ctp-text))",
+          "subtext-1": "oklch(var(--ctp-subtext-1))",
+          "subtext-0": "oklch(var(--ctp-subtext-0))",
+          "overlay-2": "oklch(var(--ctp-overlay-2))",
+          "overlay-1": "oklch(var(--ctp-overlay-1))",
+          "overlay-0": "oklch(var(--ctp-overlay-0))",
+          "surface-2": "oklch(var(--ctp-surface-2))",
+          "surface-1": "oklch(var(--ctp-surface-1))",
+          "surface-0": "oklch(var(--ctp-surface-0))",
+          base: "oklch(var(--ctp-base))",
+          mantle: "oklch(var(--ctp-mantle))",
+          crust: "oklch(var(--ctp-crust))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-poppins)", "Poppins", "system-ui", "sans-serif"],
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config;
+
+export default config;
