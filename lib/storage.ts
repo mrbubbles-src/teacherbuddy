@@ -1,7 +1,8 @@
-import type { Quiz, QuizIndexEntry, Student } from "@/lib/models"
+import type { BreakoutGroups, Quiz, QuizIndexEntry, Student } from "@/lib/models"
 
 const STUDENTS_KEY = "teacherbuddy:students"
 const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
+const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
 
@@ -59,6 +60,37 @@ export function loadQuizIndex(): QuizIndexEntry[] {
   })
 }
 
+export function loadBreakoutGroups(): BreakoutGroups | null {
+  if (typeof window === "undefined") return null
+  const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
+  if (!parsed || typeof parsed !== "object") return null
+  const breakoutGroups = parsed as BreakoutGroups
+  if (
+    typeof breakoutGroups.groupSize !== "number" ||
+    !Array.isArray(breakoutGroups.groupIds) ||
+    typeof breakoutGroups.createdAt !== "number"
+  ) {
+    return null
+  }
+  if (
+    !breakoutGroups.groupIds.every(
+      (group) => Array.isArray(group) && group.every((id) => typeof id === "string")
+    )
+  ) {
+    return null
+  }
+  return breakoutGroups
+}
+
+export function saveBreakoutGroups(groups: BreakoutGroups | null) {
+  if (typeof window === "undefined") return
+  if (!groups) {
+    localStorage.removeItem(BREAKOUT_GROUPS_KEY)
+    return
+  }
+  localStorage.setItem(BREAKOUT_GROUPS_KEY, JSON.stringify(groups))
+}
+
 export function saveQuizIndex(index: QuizIndexEntry[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(QUIZ_INDEX_KEY, JSON.stringify(index))
@@ -95,9 +127,11 @@ export function loadPersistedState(): {
   students: Student[]
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
+  breakoutGroups: BreakoutGroups | null
 } {
   const students = loadStudents()
   const quizIndex = loadQuizIndex()
+  const breakoutGroups = loadBreakoutGroups()
   const quizzes: Record<string, Quiz> = {}
   const cleanedIndex: QuizIndexEntry[] = []
 
@@ -113,6 +147,7 @@ export function loadPersistedState(): {
     students,
     quizIndex: cleanedIndex,
     quizzes,
+    breakoutGroups,
   }
 }
 

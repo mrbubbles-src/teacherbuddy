@@ -2,14 +2,21 @@
 
 import * as React from "react"
 
-import type { Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
-import { loadPersistedState, persistAllQuizzes, saveQuizIndex, saveStudents } from "@/lib/storage"
+import type { BreakoutGroups, Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
+import {
+  loadPersistedState,
+  persistAllQuizzes,
+  saveBreakoutGroups,
+  saveQuizIndex,
+  saveStudents,
+} from "@/lib/storage"
 import { normalizeStudentName, studentNameKey } from "@/lib/students"
 
 export type PersistedState = {
   students: Student[]
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
+  breakoutGroups: BreakoutGroups | null
 }
 
 export type GeneratorState = {
@@ -48,6 +55,7 @@ const initialState: AppState = {
     students: [],
     quizIndex: [],
     quizzes: {},
+    breakoutGroups: null,
   },
   domain: {
     generator: {
@@ -79,6 +87,8 @@ type AppAction =
   | { type: "DELETE_STUDENT"; payload: { id: string } }
   | { type: "CLEAR_STUDENTS" }
   | { type: "UPDATE_STUDENT"; payload: { id: string; name: string } }
+  | { type: "SET_BREAKOUT_GROUPS"; payload: BreakoutGroups }
+  | { type: "CLEAR_BREAKOUT_GROUPS" }
   | { type: "RESET_GENERATOR" }
   | { type: "DRAW_STUDENT" }
   | {
@@ -280,6 +290,24 @@ function appReducer(state: AppState, action: AppAction): AppState {
           students,
         },
         domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+      }
+    }
+    case "SET_BREAKOUT_GROUPS": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          breakoutGroups: action.payload,
+        },
+      }
+    }
+    case "CLEAR_BREAKOUT_GROUPS": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          breakoutGroups: null,
+        },
       }
     }
     case "RESET_GENERATOR": {
@@ -557,6 +585,8 @@ const AppStoreContext = React.createContext<{
     deleteStudent: (id: string) => void
     clearStudents: () => void
     updateStudent: (id: string, name: string) => void
+    setBreakoutGroups: (groups: BreakoutGroups) => void
+    clearBreakoutGroups: () => void
     resetGenerator: () => void
     drawStudent: () => void
     createQuiz: (title: string, questions: Question[]) => void
@@ -583,6 +613,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     if (!state.ui.isHydrated) return
     saveStudents(state.persisted.students)
     saveQuizIndex(state.persisted.quizIndex)
+    saveBreakoutGroups(state.persisted.breakoutGroups)
     persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
   }, [state.persisted, state.ui.isHydrated])
 
@@ -600,6 +631,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       clearStudents: () => dispatch({ type: "CLEAR_STUDENTS" }),
       updateStudent: (id: string, name: string) =>
         dispatch({ type: "UPDATE_STUDENT", payload: { id, name } }),
+      setBreakoutGroups: (groups: BreakoutGroups) =>
+        dispatch({ type: "SET_BREAKOUT_GROUPS", payload: groups }),
+      clearBreakoutGroups: () => dispatch({ type: "CLEAR_BREAKOUT_GROUPS" }),
       resetGenerator: () => dispatch({ type: "RESET_GENERATOR" }),
       drawStudent: () => dispatch({ type: "DRAW_STUDENT" }),
       createQuiz: (title: string, questions: Question[]) =>

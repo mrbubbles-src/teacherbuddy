@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { CopyIcon } from "lucide-react"
 
 import { useAppStore } from "@/context/app-store"
@@ -15,9 +15,8 @@ import { Input } from "@/components/ui/input"
 const DEFAULT_GROUP_SIZE = 3
 
 export default function BreakoutGroupsCard() {
-  const { state } = useAppStore()
+  const { state, actions } = useAppStore()
   const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE)
-  const [groups, setGroups] = useState<Student[][]>([])
   const [isCopied, setIsCopied] = useState(false)
   const [copiedGroupIndex, setCopiedGroupIndex] = useState<number | null>(null)
 
@@ -26,18 +25,34 @@ export default function BreakoutGroupsCard() {
     [state.persisted.students]
   )
 
+  const persistedGroups = state.persisted.breakoutGroups
   const canGenerateGroups = activeStudents.length > 0 && groupSize > 0
 
-  const groupSummary = useMemo(
-    () =>
-      groups
-        .map((group, index) => {
-          const names = group.map((student) => formatStudentName(student.name)).join(", ")
-          return `Group ${index + 1}: ${names}`
-        })
-        .join("\n"),
-    [groups]
-  )
+  useEffect(() => {
+    if (persistedGroups?.groupSize) {
+      setGroupSize(persistedGroups.groupSize)
+    }
+  }, [persistedGroups?.groupSize])
+
+  const studentById = useMemo(() => {
+    return new Map(state.persisted.students.map((student) => [student.id, student]))
+  }, [state.persisted.students])
+
+  const groups = useMemo(() => {
+    if (!persistedGroups) return []
+    return persistedGroups.groupIds
+      .map((group) => group.map((id) => studentById.get(id)).filter(Boolean) as Student[])
+      .filter((group) => group.length > 0)
+  }, [persistedGroups, studentById])
+
+  const groupSummary = useMemo(() => {
+    return groups
+      .map((group, index) => {
+        const names = group.map((student) => formatStudentName(student.name)).join(", ")
+        return `Group ${index + 1}: ${names}`
+      })
+      .join("\n")
+  }, [groups])
 
   const buildGroups = (students: Student[], size: number) => {
     const shuffled = [...students]
@@ -88,7 +103,11 @@ export default function BreakoutGroupsCard() {
             disabled={!canGenerateGroups}
             onClick={() => {
               const nextGroups = buildGroups(activeStudents, Math.max(groupSize, 1))
-              setGroups(nextGroups)
+              actions.setBreakoutGroups({
+                groupSize: Math.max(groupSize, 1),
+                groupIds: nextGroups.map((group) => group.map((student) => student.id)),
+                createdAt: Date.now(),
+              })
               setIsCopied(false)
               setCopiedGroupIndex(null)
             }}

@@ -26,3 +26,9 @@ export type QuizIndexEntry = {
   title: string
   createdAt: number
 }
+
+export type BreakoutGroups = {
+  groupSize: number
+  groupIds: string[][]
+  createdAt: number
+}
