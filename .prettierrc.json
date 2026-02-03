@@ -1,0 +1,44 @@
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "tailwindFunctions": ["cn", "cva"],
+  "importOrderParserPlugins": [
+    "typescript",
+    "jsx",
+    "explicitResourceManagement"
+  ],
+  "importOrder": [
+    "",
+    "<TYPES>",
+    "",
+    "^\@/lib/",
+    "",
+    "<BUILTIN_MODULES>",
+    "",
+    "^(react/(.*)$)|^(react$)",
+    "",
+    "^(next/(.*)$)|^(next$)",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "<TYPES>^[.|..|~]",
+    "^@/",
+    "^[../]",
+    "^[./]",
+    "",
+    "^(?!.*[.]css$)[./].*$",
+    "",
+    ".css$",
+    ""
+  ],
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports"
+  ]
+}
