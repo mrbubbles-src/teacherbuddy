@@ -1,9 +1,7 @@
-import StudentNameGenerator from "@/components/student-name-generator";
+import DashboardCards from "@/components/dashboard/dashboard-cards"
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background">
-      <StudentNameGenerator />
-    </main>
-  );
+    <DashboardCards />
+  )
 }

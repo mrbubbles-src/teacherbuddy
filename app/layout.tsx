@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/context/theme-provider';
-import ThemeToggle from '@/components/utility/theme-toggle';
+import { AppStoreProvider } from '@/context/app-store';
+import AppShell from '@/components/app-shell';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Random Studentname Generator',
-  description: 'Keep student names in local storage, then generate a random pick until everyone has been called.',
+  title: 'TeacherBuddy',
+  description:
+    'Manage students, build quizzes, and draw random pairs without repeats.',
 };
 
 export default function RootLayout({
@@ -25,17 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='de' suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <head>
-      <meta name="apple-mobile-web-app-title" content="Random Studentname Generator" />
+        <meta name="apple-mobile-web-app-title" content="TeacherBuddy" />
       </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <ThemeProvider attribute='class' defaultTheme='dark'>
-          <ThemeToggle />
-          {children}
-      </ThemeProvider>
-        </body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider attribute='class' defaultTheme='dark'>
+          <AppStoreProvider>
+            <AppShell>{children}</AppShell>
+          </AppStoreProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

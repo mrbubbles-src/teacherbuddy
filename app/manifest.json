@@ -1,6 +1,6 @@
 {
-  "name": "Random Studentname Generator",
-  "short_name": "RSNG",
+  "name": "TeacherBuddy",
+  "short_name": "TeacherBuddy",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

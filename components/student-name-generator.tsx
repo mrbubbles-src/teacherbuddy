@@ -137,14 +137,14 @@ export default function StudentNameGenerator() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-10 sm:px-6">
       <header className="flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           Teacherbuddy
         </p>
-        <h1 className="text-2xl font-semibold sm:text-3xl">
+        <h1 className="text-3xl font-semibold sm:text-4xl">
           <span className="text-primary">Random-</span>Student-Name
           <span className="text-primary">-Generator</span>
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           Keep student names in local storage, then generate a random pick until
           everyone has been called.
         </p>
@@ -182,10 +182,10 @@ export default function StudentNameGenerator() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Selected Student
             </p>
-            <p className="mt-3 text-2xl font-semibold sm:text-3xl">
+            <p className="mt-3 text-3xl font-semibold sm:text-4xl">
               {currentName ? capitalizeName(currentName) : "—"}
             </p>
           </div>
@@ -225,7 +225,7 @@ export default function StudentNameGenerator() {
                   <li
                     key={name}
                     className={cn(
-                      "rounded-md border border-border/60 px-3 py-2 text-xs/relaxed",
+                      "rounded-md border border-border/60 px-3 py-2 text-sm/relaxed",
                       isGenerated
                         ? "border-primary/50 text-primary line-through"
                         : "bg-background/70"
@@ -237,14 +237,14 @@ export default function StudentNameGenerator() {
               })}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               Your student list will appear here once you add names.
             </p>
           )}
         </CardContent>
       </Card>
 
-      <footer className="text-xs text-muted-foreground">
+      <footer className="text-sm text-muted-foreground">
         <p>
           Created by student{" "}
           <a

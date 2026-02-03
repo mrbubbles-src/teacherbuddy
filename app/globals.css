@@ -188,7 +188,7 @@
     height: 100%;
     min-width: 44px;
     min-height: 44px;
-    z-index: 9999;
+    z-index: 1;
   }
 }
 @property --cx {
