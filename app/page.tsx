@@ -1,9 +1,5 @@
-import StudentNameGenerator from "@/components/student-name-generator";
+import AppShell from "@/components/app-shell";
 
 export default function Page() {
-  return (
-    <main className="min-h-screen bg-background">
-      <StudentNameGenerator />
-    </main>
-  );
+  return <AppShell />;
 }

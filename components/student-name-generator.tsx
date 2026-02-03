@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +12,27 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useStudentGenerator } from "@/hooks/use-student-generator";
 
-function normalizeName(name: string) {
-  return name.replace(/\s+/g, " ").trim();
-}
+type AddStudentCardProps = {
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+};
+
+type GeneratorCardProps = {
+  currentName: string | null;
+  statusContent: ReactNode;
+  canGenerate: boolean;
+  canReset: boolean;
+  onGenerate: () => void;
+  onReset: () => void;
+};
+
+type StudentListCardProps = {
+  students: string[];
+  generatedSet: Set<string>;
+};
 
 function capitalizeName(name: string) {
   return name
@@ -25,131 +42,27 @@ function capitalizeName(name: string) {
     .join(" ");
 }
 
-const STORAGE_KEY = "teacherbuddy:students";
-
-function loadNamesFromStorage() {
-  if (typeof window === "undefined") return [] as string[];
-
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return parsed.filter((entry): entry is string => typeof entry === "string");
-    }
-  } catch (error) {
-    console.error("Failed to parse stored students", error);
-  }
-
-  return [];
-}
-
-function saveNamesToStorage(names: string[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
-}
-
-export default function StudentNameGenerator() {
-  const [studentName, setStudentName] = useState("");
-  const [students, setStudents] = useState<string[]>([]);
-  const [generatedNames, setGeneratedNames] = useState<Set<string>>(
-    () => new Set()
-  );
-  const [currentName, setCurrentName] = useState<string | null>(null);
-
-  const syncFromStorage = () => {
-    const storedNames = loadNamesFromStorage();
-    setStudents(storedNames);
-    setGeneratedNames(
-      (prev) => new Set([...prev].filter((name) => storedNames.includes(name)))
-    );
-    setCurrentName((prev) =>
-      prev && storedNames.includes(prev) ? prev : null
-    );
-  };
-
-  useEffect(() => {
-    syncFromStorage();
-  }, []);
-
-  const remaining = useMemo(
-    () => students.filter((name) => !generatedNames.has(name)),
-    [students, generatedNames]
-  );
-
-  const sortedStudents = useMemo(
-    () => [...students].sort((a, b) => a.localeCompare(b)),
-    [students]
-  );
-
-  const statusContent = !students.length ? (
-    <span>
-      Please <span className="text-primary">enter the names of your students</span>{" "}
-      to generate a random pick.
-    </span>
-  ) : remaining.length === 0 ? (
-    <span>
-      No more names! Press <span className="text-primary">Reset Generator</span>{" "}
-      to start generating again.
-    </span>
-  ) : (
-    <span>
-      Press <span className="text-primary">Generate!</span> to pick a random
-      student.
-    </span>
-  );
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const normalized = normalizeName(studentName);
-    if (!normalized) return;
-
-    const nextNames = Array.from(new Set([...students, normalized]));
-    saveNamesToStorage(nextNames);
-    setStudentName("");
-    setStudents(nextNames);
-    setGeneratedNames((prev) =>
-      new Set([...prev].filter((name) => nextNames.includes(name)))
-    );
-  };
-
-  const handleGenerate = () => {
-    if (!remaining.length) return;
-
-    const nextIndex = Math.floor(Math.random() * remaining.length);
-    const nextName = remaining[nextIndex];
-
-    setCurrentName(nextName);
-    setGeneratedNames((prev) => {
-      const updated = new Set(prev);
-      updated.add(nextName);
-      return updated;
-    });
-  };
-
-  const handleReset = () => {
-    setGeneratedNames(new Set());
-    setCurrentName(null);
-    syncFromStorage();
-  };
-
+function GeneratorHeader() {
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-10 sm:px-6">
-      <header className="flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Teacherbuddy
-        </p>
-        <h1 className="text-2xl font-semibold sm:text-3xl">
-          <span className="text-primary">Random-</span>Student-Name
-          <span className="text-primary">-Generator</span>
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Keep student names in local storage, then generate a random pick until
-          everyone has been called.
-        </p>
-      </header>
+    <header className="flex flex-col gap-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        Teacherbuddy
+      </p>
+      <h1 className="text-2xl font-semibold sm:text-3xl">
+        <span className="text-primary">Random-</span>Student-Name
+        <span className="text-primary">-Generator</span>
+      </h1>
+      <p className="text-sm text-muted-foreground">
+        Keep student names in local storage, then generate a random pick until
+        everyone has been called.
+      </p>
+    </header>
+  );
+}
 
+function AddStudentCard({ value, onChange, onSubmit }: AddStudentCardProps) {
+  return (
+    <section id="add-students" className="scroll-mt-24">
       <Card>
         <CardHeader>
           <CardTitle>Add Students</CardTitle>
@@ -159,12 +72,12 @@ export default function StudentNameGenerator() {
         </CardHeader>
         <CardContent>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={onSubmit}
             className="flex flex-col gap-3 sm:flex-row sm:items-center"
           >
             <Input
-              value={studentName}
-              onChange={(event) => setStudentName(event.target.value)}
+              value={value}
+              onChange={(event) => onChange(event.target.value)}
               placeholder="Input a student's name"
               aria-label="Student name"
             />
@@ -174,7 +87,20 @@ export default function StudentNameGenerator() {
           </form>
         </CardContent>
       </Card>
+    </section>
+  );
+}
 
+function GeneratorCard({
+  currentName,
+  statusContent,
+  canGenerate,
+  canReset,
+  onGenerate,
+  onReset,
+}: GeneratorCardProps) {
+  return (
+    <section id="generator" className="scroll-mt-24">
       <Card>
         <CardHeader>
           <CardTitle>Generator</CardTitle>
@@ -190,17 +116,13 @@ export default function StudentNameGenerator() {
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              onClick={handleGenerate}
-              disabled={!remaining.length}
-              className="sm:flex-1"
-            >
+            <Button onClick={onGenerate} disabled={!canGenerate} className="sm:flex-1">
               Generate!
             </Button>
             <Button
               variant="secondary"
-              onClick={handleReset}
-              disabled={!students.length}
+              onClick={onReset}
+              disabled={!canReset}
               className="sm:flex-1"
             >
               Reset Generator
@@ -208,7 +130,13 @@ export default function StudentNameGenerator() {
           </div>
         </CardContent>
       </Card>
+    </section>
+  );
+}
 
+function StudentListCard({ students, generatedSet }: StudentListCardProps) {
+  return (
+    <section id="student-list" className="scroll-mt-24">
       <Card>
         <CardHeader>
           <CardTitle>Student List</CardTitle>
@@ -217,10 +145,10 @@ export default function StudentNameGenerator() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {sortedStudents.length ? (
+          {students.length ? (
             <ul className="grid gap-2 sm:grid-cols-2">
-              {sortedStudents.map((name) => {
-                const isGenerated = generatedNames.has(name);
+              {students.map((name) => {
+                const isGenerated = generatedSet.has(name);
                 return (
                   <li
                     key={name}
@@ -243,39 +171,100 @@ export default function StudentNameGenerator() {
           )}
         </CardContent>
       </Card>
+    </section>
+  );
+}
 
-      <footer className="text-xs text-muted-foreground">
-        <p>
-          Created by student{" "}
-          <a
-            className="font-medium text-primary hover:text-primary/70"
-            href="https://github.com/mrbubbles-src"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Manuel Fahrenholz
-          </a>{" "}
-          in class "FBW WD D07 A" of the{" "}
-          <a
-            className="font-medium text-primary hover:text-primary/70"
-            href="https://digitalcareerinstitute.org/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Digital Career Institute
-          </a>
-          . Check out the documentation{" "}
-          <a
-            className="font-medium text-primary hover:text-primary/70"
-            href="https://github.com/mrbubbles-src/random-student-name-generator"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-          .
-        </p>
-      </footer>
+function GeneratorFooter() {
+  const currentYear = new Date().getFullYear();
+  return (
+    <footer id="about" className="scroll-mt-24 text-xs text-muted-foreground">
+      <p>
+        © {currentYear}{" "}
+        <a
+          className="font-medium text-primary hover:text-primary/70"
+          href="https://mrbubbles-src.dev"
+          target="_blank"
+          rel="noreferrer"
+        >
+          mrbubbles-src
+        </a>
+      </p>
+    </footer>
+  );
+}
+
+function getStatusContent(studentsCount: number, remainingCount: number) {
+  if (!studentsCount) {
+    return (
+      <span>
+        Please{" "}
+        <span className="text-primary">enter the names of your students</span>{" "}
+        to generate a random pick.
+      </span>
+    );
+  }
+
+  if (remainingCount === 0) {
+    return (
+      <span>
+        No more names! Press{" "}
+        <span className="text-primary">Reset Generator</span> to start
+        generating again.
+      </span>
+    );
+  }
+
+  return (
+    <span>
+      Press <span className="text-primary">Generate!</span> to pick a random
+      student.
+    </span>
+  );
+}
+
+export default function StudentNameGenerator() {
+  const [studentName, setStudentName] = useState("");
+  const {
+    students,
+    generatedSet,
+    remaining,
+    sortedStudents,
+    currentName,
+    addStudent,
+    generateStudent,
+    resetGenerator,
+  } = useStudentGenerator();
+
+  const statusContent = useMemo(
+    () => getStatusContent(students.length, remaining.length),
+    [students.length, remaining.length]
+  );
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!addStudent(studentName)) return;
+    setStudentName("");
+  };
+
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-10 sm:px-6">
+      <GeneratorHeader />
+      <AddStudentCard
+        value={studentName}
+        onChange={setStudentName}
+        onSubmit={handleSubmit}
+      />
+      <GeneratorCard
+        currentName={currentName}
+        statusContent={statusContent}
+        canGenerate={remaining.length > 0}
+        canReset={students.length > 0}
+        onGenerate={generateStudent}
+        onReset={resetGenerator}
+      />
+      <StudentListCard students={sortedStudents} generatedSet={generatedSet} />
+      <GeneratorFooter />
     </div>
   );
 }
