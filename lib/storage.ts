@@ -13,6 +13,17 @@ export type PersistedTimerState = {
   savedAt: number
 }
 
+import type { ProjectList, Quiz, QuizIndexEntry, Student, BreakoutGroups } from "@/lib/models"
+
+const STUDENTS_KEY = "teacherbuddy:students"
+const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
+const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
+const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
+
+import type { BreakoutGroups, Quiz, QuizIndexEntry, Student } from "@/lib/models"
+
+const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
+
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback
   try {
@@ -67,6 +78,63 @@ export function loadQuizIndex(): QuizIndexEntry[] {
   })
 }
 
+export function loadProjectLists(): ProjectList[] {
+  if (typeof window === "undefined") return []
+  const parsed = safeParse<unknown>(localStorage.getItem(PROJECT_LISTS_KEY), [])
+  if (!Array.isArray(parsed)) return []
+  return parsed
+    .filter((entry): entry is ProjectList => {
+      return (
+        typeof entry === "object" &&
+        entry !== null &&
+        typeof (entry as ProjectList).id === "string" &&
+        typeof (entry as ProjectList).name === "string" &&
+        typeof (entry as ProjectList).projectType === "string" &&
+        Array.isArray((entry as ProjectList).studentIds) &&
+        Array.isArray((entry as ProjectList).groups) &&
+        typeof (entry as ProjectList).createdAt === "number"
+      )
+    })
+    .map((entry) => ({
+      ...entry,
+      description: entry.description ?? "",
+    }))
+}
+
+export function saveProjectLists(lists: ProjectList[]) {
+  if (typeof window === "undefined") return
+  localStorage.setItem(PROJECT_LISTS_KEY, JSON.stringify(lists))
+export function loadBreakoutGroups(): BreakoutGroups | null {
+  if (typeof window === "undefined") return null
+  const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
+  if (!parsed || typeof parsed !== "object") return null
+  const breakoutGroups = parsed as BreakoutGroups
+  if (
+    typeof breakoutGroups.groupSize !== "number" ||
+    !Array.isArray(breakoutGroups.groupIds) ||
+    typeof breakoutGroups.createdAt !== "number"
+  ) {
+    return null
+  }
+  if (
+    !breakoutGroups.groupIds.every(
+      (group) => Array.isArray(group) && group.every((id) => typeof id === "string")
+    )
+  ) {
+    return null
+  }
+  return breakoutGroups
+}
+
+export function saveBreakoutGroups(groups: BreakoutGroups | null) {
+  if (typeof window === "undefined") return
+  if (!groups) {
+    localStorage.removeItem(BREAKOUT_GROUPS_KEY)
+    return
+  }
+  localStorage.setItem(BREAKOUT_GROUPS_KEY, JSON.stringify(groups))
+}
+
 export function saveQuizIndex(index: QuizIndexEntry[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(QUIZ_INDEX_KEY, JSON.stringify(index))
@@ -106,6 +174,16 @@ export function loadPersistedState(): {
 } {
   const students = loadStudents()
   const quizIndex = loadQuizIndex()
+  projectLists: ProjectList[]
+} {
+  const students = loadStudents()
+  const quizIndex = loadQuizIndex()
+  const projectLists = loadProjectLists()
+  breakoutGroups: BreakoutGroups | null
+} {
+  const students = loadStudents()
+  const quizIndex = loadQuizIndex()
+  const breakoutGroups = loadBreakoutGroups()
   const quizzes: Record<string, Quiz> = {}
   const cleanedIndex: QuizIndexEntry[] = []
 
@@ -121,6 +199,8 @@ export function loadPersistedState(): {
     students,
     quizIndex: cleanedIndex,
     quizzes,
+    projectLists,
+    breakoutGroups,
   }
 }
 

@@ -37,6 +37,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "Student Generator",
     description: "Pick a random student without repeats.",
   },
+  "/breakout-rooms": {
+    title: "Breakout Rooms",
+    description: "Create randomized student groups for breakout sessions.",
+  },
   "/quizzes": {
     title: "Quiz Builder",
     description: "Create and update quizzes with custom questions.",
@@ -44,6 +48,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
   "/play": {
     title: "Quiz Play",
     description: "Draw a student and a question, then reveal the answer.",
+  },
+  "/projects": {
+    title: "Project Lists",
+    description: "Build project lists and group students from your roster.",
   },
 }
 
@@ -106,6 +114,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex justify-end">
             <ThemeToggle />
           </div>
+        <header className="flex items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="h-5" />
+          <div className="flex flex-1 flex-col">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              TeacherBuddy
+            </p>
+            <h1 className="text-xl font-semibold text-foreground">{meta.title}</h1>
+            {meta.description ? (
+              <p className="text-sm text-muted-foreground">{meta.description}</p>
+            ) : null}
+          </div>
+          <ThemeToggle />
         </header>
         <section className="flex-1 px-4 py-6 sm:px-6 lg:px-8 container mx-auto">
           {children}

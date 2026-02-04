@@ -72,6 +72,8 @@ export default function StudentNameGenerator() {
   useEffect(() => {
     queueMicrotask(() => syncFromStorage())
   }, [])
+    syncFromStorage();
+  }, []);
 
   const remaining = useMemo(
     () => students.filter((name) => !generatedNames.has(name)),

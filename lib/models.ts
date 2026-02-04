@@ -26,3 +26,16 @@ export type QuizIndexEntry = {
   title: string
   createdAt: number
 }
+
+export type ProjectList = {
+  id: string
+  name: string
+  projectType: string
+  description: string
+  studentIds: string[]
+  groups: string[][]
+export type BreakoutGroups = {
+  groupSize: number
+  groupIds: string[][]
+  createdAt: number
+}
