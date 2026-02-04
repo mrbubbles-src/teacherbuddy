@@ -122,7 +122,6 @@
   --chart-3: oklch(var(--ctp-mocha-yellow));
   --chart-4: oklch(var(--ctp-mocha-peach));
   --chart-5: oklch(var(--ctp-mocha-mauve));
-  --radius: 0.45rem;
   --sidebar: oklch(var(--ctp-mocha-crust));
   --sidebar-foreground: oklch(var(--ctp-mocha-text));
   --sidebar-primary: oklch(var(--ctp-mocha-mauve));
