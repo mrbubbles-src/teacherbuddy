@@ -48,6 +48,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "Quiz Play",
     description: "Draw a student and a question, then reveal the answer.",
   },
+  "/projects": {
+    title: "Project Lists",
+    description: "Build project lists and group students from your roster.",
+  },
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {

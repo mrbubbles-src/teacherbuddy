@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import {
-  LayoutGridIcon,
-  UsersIcon,
-  ShuffleIcon,
   ClipboardListIcon,
+  FolderKanbanIcon,
+  LayoutGridIcon,
   PlayCircleIcon,
+  ShuffleIcon,
+  UsersIcon,
 } from "lucide-react"
 
 import {
@@ -40,6 +41,11 @@ const navItems = [
     title: "Quizzes",
     href: "/quizzes",
     icon: ClipboardListIcon,
+  },
+  {
+    title: "Projects",
+    href: "/projects",
+    icon: FolderKanbanIcon,
   },
   {
     title: "Play",

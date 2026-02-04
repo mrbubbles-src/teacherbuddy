@@ -1,8 +1,12 @@
-import type { BreakoutGroups, Quiz, QuizIndexEntry, Student } from "@/lib/models"
+
+import type { ProjectList, Quiz, QuizIndexEntry, Student, BreakoutGroups } from "@/lib/models"
 
 const STUDENTS_KEY = "teacherbuddy:students"
 const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
+const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
 const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
+
+import type { BreakoutGroups, Quiz, QuizIndexEntry, Student } from "@/lib/models"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
 
@@ -60,6 +64,32 @@ export function loadQuizIndex(): QuizIndexEntry[] {
   })
 }
 
+export function loadProjectLists(): ProjectList[] {
+  if (typeof window === "undefined") return []
+  const parsed = safeParse<unknown>(localStorage.getItem(PROJECT_LISTS_KEY), [])
+  if (!Array.isArray(parsed)) return []
+  return parsed
+    .filter((entry): entry is ProjectList => {
+      return (
+        typeof entry === "object" &&
+        entry !== null &&
+        typeof (entry as ProjectList).id === "string" &&
+        typeof (entry as ProjectList).name === "string" &&
+        typeof (entry as ProjectList).projectType === "string" &&
+        Array.isArray((entry as ProjectList).studentIds) &&
+        Array.isArray((entry as ProjectList).groups) &&
+        typeof (entry as ProjectList).createdAt === "number"
+      )
+    })
+    .map((entry) => ({
+      ...entry,
+      description: entry.description ?? "",
+    }))
+}
+
+export function saveProjectLists(lists: ProjectList[]) {
+  if (typeof window === "undefined") return
+  localStorage.setItem(PROJECT_LISTS_KEY, JSON.stringify(lists))
 export function loadBreakoutGroups(): BreakoutGroups | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
@@ -127,6 +157,11 @@ export function loadPersistedState(): {
   students: Student[]
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
+  projectLists: ProjectList[]
+} {
+  const students = loadStudents()
+  const quizIndex = loadQuizIndex()
+  const projectLists = loadProjectLists()
   breakoutGroups: BreakoutGroups | null
 } {
   const students = loadStudents()
@@ -147,6 +182,7 @@ export function loadPersistedState(): {
     students,
     quizIndex: cleanedIndex,
     quizzes,
+    projectLists,
     breakoutGroups,
   }
 }
