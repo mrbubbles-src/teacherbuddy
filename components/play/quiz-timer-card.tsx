@@ -111,9 +111,9 @@ export default function QuizTimerCard() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+    <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:gap-3 lg:gap-4">
       <Popover>
-        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs sm:w-auto sm:justify-start sm:px-4 sm:text-lg">
+        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs md:w-auto md:justify-start md:px-4 md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl">
           <span
             className={cn(
               'text-foreground',
@@ -125,16 +125,16 @@ export default function QuizTimerCard() {
         </PopoverTrigger>
         <PopoverContent
           align="center"
-          className="w-[min(92vw,24rem)] p-4 sm:w-96">
+          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-[26rem] xl:w-[28rem] 2xl:w-[30rem]">
           <div>
-            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Set timer
             </p>
-            <div className="mt-3 grid gap-4 sm:grid-cols-3">
+            <div className="mt-3 grid gap-4 md:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-hours`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Hours
                 </label>
                 <Input
@@ -146,13 +146,13 @@ export default function QuizTimerCard() {
                   value={hours}
                   onChange={(event) => setHours(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-minutes`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Minutes
                 </label>
                 <Input
@@ -164,13 +164,13 @@ export default function QuizTimerCard() {
                   value={minutes}
                   onChange={(event) => setMinutes(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-seconds`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Seconds
                 </label>
                 <Input
@@ -182,13 +182,13 @@ export default function QuizTimerCard() {
                   value={seconds}
                   onChange={(event) => setSeconds(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
             </div>
           </div>
           <div className="mt-4">
-            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Volume
             </p>
             <div className="mt-3 flex items-center gap-3">
@@ -201,7 +201,7 @@ export default function QuizTimerCard() {
                 className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-foreground"
                 aria-label="Timer volume"
               />
-              <span className="w-8 text-right text-sm tabular-nums text-muted-foreground">
+              <span className="w-8 text-right text-sm tabular-nums text-muted-foreground md:text-base">
                 {Math.round(volume * 100)}%
               </span>
             </div>
