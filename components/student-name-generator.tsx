@@ -70,7 +70,7 @@ export default function StudentNameGenerator() {
   };
 
   useEffect(() => {
-    syncFromStorage();
+    queueMicrotask(() => syncFromStorage());
   }, []);
 
   const remaining = useMemo(
@@ -255,7 +255,7 @@ export default function StudentNameGenerator() {
           >
             Manuel Fahrenholz
           </a>{" "}
-          in class "FBW WD D07 A" of the{" "}
+          in class &quot;FBW WD D07 A&quot; of the{" "}
           <a
             className="font-medium text-primary hover:text-primary/70"
             href="https://digitalcareerinstitute.org/"

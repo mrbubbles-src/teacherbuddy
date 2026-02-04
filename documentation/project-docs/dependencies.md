@@ -2,17 +2,67 @@
 
 ## Runtime
 
-- `next`: App Router framework and server rendering.
-- `react`, `react-dom`: UI runtime.
-- `@base-ui/react`: Headless UI primitives used by `components/ui/*`.
-- `next-themes`: Theme management and system sync.
-- `lucide-react`: Icons.
-- `class-variance-authority`, `clsx`, `tailwind-merge`: Styling helpers.
-- `shadcn`, `tw-animate-css`: Tailwind utilities and animations.
+| Package | Purpose |
+|---------|---------|
+| `next` | App Router framework and server rendering |
+| `react`, `react-dom` | UI runtime (React 19) |
+| `@base-ui/react` | Headless UI primitives for `components/ui/*` |
+| `next-themes` | Theme management and system preference sync |
+| `lucide-react` | Icon library |
+| `class-variance-authority` | Variant-based component styling |
+| `clsx`, `tailwind-merge` | Conditional class name utilities |
+| `tw-animate-css` | Tailwind animation utilities |
 
 ## Development
 
-- `typescript`: Type checking.
-- `eslint`, `eslint-config-next`: Linting.
-- `prettier` and plugins: Formatting and import sorting.
-- `tailwindcss` and `@tailwindcss/postcss`: Styling build pipeline.
+### Build & Tooling
+
+| Package | Purpose |
+|---------|---------|
+| `typescript` | Type checking |
+| `eslint`, `eslint-config-next` | Linting |
+| `prettier` | Code formatting |
+| `@ianvs/prettier-plugin-sort-imports` | Import sorting |
+| `prettier-plugin-tailwindcss` | Tailwind class sorting |
+| `tailwindcss`, `@tailwindcss/postcss` | Styling build pipeline |
+| `babel-plugin-react-compiler` | React Compiler optimization |
+
+### Testing
+
+| Package | Purpose |
+|---------|---------|
+| `vitest` | Test runner |
+| `@vitest/ui` | Interactive test UI |
+| `@vitest/coverage-v8` | Coverage reporting |
+| `@vitejs/plugin-react` | React support for Vitest |
+| `jsdom` | DOM environment for tests |
+| `@testing-library/react` | React component testing utilities |
+| `@testing-library/jest-dom` | Custom DOM matchers |
+| `@testing-library/user-event` | User interaction simulation |
+
+## Package Manager
+
+The project uses [Bun](https://bun.sh/) as the package manager and runtime. All scripts in `package.json` use `bun --bun` for optimal performance.
+
+## Version Requirements
+
+- Node.js: 18+ (for Next.js 16)
+- Bun: 1.0+ (recommended)
+- React: 19.x
+- Next.js: 16.x
+
+## Updating Dependencies
+
+```bash
+# Check for updates
+bunx npm-check-updates
+
+# Update dependencies
+bun update
+
+# Verify after updates
+bun run typecheck
+bun run lint
+bun run test:run
+bun run build
+```

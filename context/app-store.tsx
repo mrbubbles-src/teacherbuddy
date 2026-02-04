@@ -2,14 +2,30 @@
 
 import * as React from "react"
 
-import type { Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
-import { loadPersistedState, persistAllQuizzes, saveQuizIndex, saveStudents } from "@/lib/storage"
+import type {
+  BreakoutGroups,
+  ProjectList,
+  Question,
+  Quiz,
+  QuizIndexEntry,
+  Student,
+} from "@/lib/models"
+import {
+  loadPersistedState,
+  persistAllQuizzes,
+  saveBreakoutGroups,
+  saveProjectLists,
+  saveQuizIndex,
+  saveStudents,
+} from "@/lib/storage"
 import { normalizeStudentName, studentNameKey } from "@/lib/students"
 
 export type PersistedState = {
   students: Student[]
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
+  projectLists: ProjectList[]
+  breakoutGroups: BreakoutGroups | null
 }
 
 export type GeneratorState = {
@@ -48,6 +64,8 @@ const initialState: AppState = {
     students: [],
     quizIndex: [],
     quizzes: {},
+    projectLists: [],
+    breakoutGroups: null,
   },
   domain: {
     generator: {
@@ -79,6 +97,31 @@ type AppAction =
   | { type: "DELETE_STUDENT"; payload: { id: string } }
   | { type: "CLEAR_STUDENTS" }
   | { type: "UPDATE_STUDENT"; payload: { id: string; name: string } }
+  | {
+      type: "CREATE_PROJECT_LIST"
+      payload: {
+        id: string
+        name: string
+        projectType: string
+        description: string
+        studentIds: string[]
+        groups: string[][]
+      }
+    }
+  | {
+      type: "UPDATE_PROJECT_LIST"
+      payload: {
+        id: string
+        name: string
+        projectType: string
+        description: string
+        studentIds: string[]
+        groups: string[][]
+      }
+    }
+  | { type: "DELETE_PROJECT_LIST"; payload: { id: string } }
+  | { type: "SET_BREAKOUT_GROUPS"; payload: BreakoutGroups }
+  | { type: "CLEAR_BREAKOUT_GROUPS" }
   | { type: "RESET_GENERATOR" }
   | { type: "DRAW_STUDENT" }
   | {
@@ -280,6 +323,85 @@ function appReducer(state: AppState, action: AppAction): AppState {
           students,
         },
         domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+      }
+    }
+    case "CREATE_PROJECT_LIST": {
+      const name = action.payload.name.trim()
+      const projectType = action.payload.projectType.trim()
+      if (!name || !projectType) return state
+      const studentIds = action.payload.studentIds
+      if (!studentIds.length) return state
+      const projectList: ProjectList = {
+        id: action.payload.id,
+        name,
+        projectType,
+        description: action.payload.description.trim(),
+        studentIds,
+        groups: action.payload.groups,
+        createdAt: Date.now(),
+      }
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          projectLists: [projectList, ...state.persisted.projectLists],
+        },
+      }
+    }
+    case "UPDATE_PROJECT_LIST": {
+      const name = action.payload.name.trim()
+      const projectType = action.payload.projectType.trim()
+      if (!name || !projectType) return state
+      const studentIds = action.payload.studentIds
+      if (!studentIds.length) return state
+      const projectLists = state.persisted.projectLists.map((list) =>
+        list.id === action.payload.id
+          ? {
+              ...list,
+              name,
+              projectType,
+              description: action.payload.description.trim(),
+              studentIds,
+              groups: action.payload.groups,
+            }
+          : list
+      )
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          projectLists,
+        },
+      }
+    }
+    case "SET_BREAKOUT_GROUPS": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          breakoutGroups: action.payload,
+        },
+      }
+    }
+    case "DELETE_PROJECT_LIST": {
+      const projectLists = state.persisted.projectLists.filter(
+        (list) => list.id !== action.payload.id
+      )
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          projectLists,
+        },
+      }
+    }
+    case "CLEAR_BREAKOUT_GROUPS": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          breakoutGroups: null,
+        },
       }
     }
     case "RESET_GENERATOR": {
@@ -557,6 +679,24 @@ const AppStoreContext = React.createContext<{
     deleteStudent: (id: string) => void
     clearStudents: () => void
     updateStudent: (id: string, name: string) => void
+    createProjectList: (
+      name: string,
+      projectType: string,
+      description: string,
+      studentIds: string[],
+      groups: string[][]
+    ) => void
+    updateProjectList: (
+      id: string,
+      name: string,
+      projectType: string,
+      description: string,
+      studentIds: string[],
+      groups: string[][]
+    ) => void
+    deleteProjectList: (id: string) => void
+    setBreakoutGroups: (groups: BreakoutGroups) => void
+    clearBreakoutGroups: () => void
     resetGenerator: () => void
     drawStudent: () => void
     createQuiz: (title: string, questions: Question[]) => void
@@ -584,6 +724,8 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     saveStudents(state.persisted.students)
     saveQuizIndex(state.persisted.quizIndex)
     persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
+    saveProjectLists(state.persisted.projectLists)
+    saveBreakoutGroups(state.persisted.breakoutGroups)
   }, [state.persisted, state.ui.isHydrated])
 
   const actions = React.useMemo(
@@ -600,6 +742,48 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       clearStudents: () => dispatch({ type: "CLEAR_STUDENTS" }),
       updateStudent: (id: string, name: string) =>
         dispatch({ type: "UPDATE_STUDENT", payload: { id, name } }),
+      createProjectList: (
+        name: string,
+        projectType: string,
+        description: string,
+        studentIds: string[],
+        groups: string[][]
+      ) =>
+        dispatch({
+          type: "CREATE_PROJECT_LIST",
+          payload: {
+            id: crypto.randomUUID(),
+            name,
+            projectType,
+            description,
+            studentIds,
+            groups,
+          },
+        }),
+      updateProjectList: (
+        id: string,
+        name: string,
+        projectType: string,
+        description: string,
+        studentIds: string[],
+        groups: string[][]
+      ) =>
+        dispatch({
+          type: "UPDATE_PROJECT_LIST",
+          payload: {
+            id,
+            name,
+            projectType,
+            description,
+            studentIds,
+            groups,
+          },
+        }),
+      deleteProjectList: (id: string) =>
+        dispatch({ type: "DELETE_PROJECT_LIST", payload: { id } }),
+      setBreakoutGroups: (groups: BreakoutGroups) =>
+        dispatch({ type: "SET_BREAKOUT_GROUPS", payload: groups }),
+      clearBreakoutGroups: () => dispatch({ type: "CLEAR_BREAKOUT_GROUPS" }),
       resetGenerator: () => dispatch({ type: "RESET_GENERATOR" }),
       drawStudent: () => dispatch({ type: "DRAW_STUDENT" }),
       createQuiz: (title: string, questions: Question[]) =>

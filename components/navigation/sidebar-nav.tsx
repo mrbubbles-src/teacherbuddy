@@ -1,7 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { LayoutGridIcon, UsersIcon, ShuffleIcon, ClipboardListIcon, PlayCircleIcon } from "lucide-react"
+import {
+  ClipboardListIcon,
+  FolderKanbanIcon,
+  LayoutGridIcon,
+  PlayCircleIcon,
+  ShuffleIcon,
+  UsersIcon,
+} from "lucide-react"
 
 import {
   SidebarMenu,
@@ -26,9 +33,19 @@ const navItems = [
     icon: ShuffleIcon,
   },
   {
+    title: "Breakout Rooms",
+    href: "/breakout-rooms",
+    icon: UsersIcon,
+  },
+  {
     title: "Quizzes",
     href: "/quizzes",
     icon: ClipboardListIcon,
+  },
+  {
+    title: "Projects",
+    href: "/projects",
+    icon: FolderKanbanIcon,
   },
   {
     title: "Play",
