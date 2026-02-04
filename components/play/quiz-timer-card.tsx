@@ -1,219 +1,116 @@
-"use client"
+'use client';
 
-import { useEffect, useId, useMemo, useRef, useState } from "react"
-import { ChevronDownIcon, PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react"
+import { cn } from '@/lib/utils';
 
-import { clearTimer, loadTimer, saveTimer } from "@/lib/storage"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+
+import {
+  ChevronDownIcon,
+  PauseIcon,
+  PlayIcon,
+  RotateCcwIcon,
+} from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { useTimer } from '@/hooks/use-timer';
 
-const clampToRange = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max)
-
-const normalizeTimeValue = (value: string, max: number) => {
-  const parsed = Number.parseInt(value, 10)
-  if (Number.isNaN(parsed)) return 0
-  return clampToRange(parsed, 0, max)
-}
-
-const formatTime = (totalSeconds: number) => {
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
-}
-
-const alertThresholds = [600, 300, 60, 0]
+const TICKING_SRC = '/sounds/alarm-clock-ticking.mp3';
+const ALARM_SRC = '/sounds/alarm.mp3';
+const DEFAULT_VOLUME = 0.05;
 
 export default function QuizTimerCard() {
-  const [hoursInput, setHoursInput] = useState("0")
-  const [minutesInput, setMinutesInput] = useState("0")
-  const [secondsInput, setSecondsInput] = useState("0")
-  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
-  const [isRunning, setIsRunning] = useState(false)
-  const [isAlerting, setIsAlerting] = useState(false)
-  const timerId = useId()
-  const alertTimeoutRef = useRef<number | null>(null)
-  const alertedThresholdsRef = useRef(new Set<number>())
-  const remainingSecondsRef = useRef<number | null>(null)
+  const timerId = useId();
+  const [volume, setVolume] = useState(DEFAULT_VOLUME);
+  const tickingRef = useRef<HTMLAudioElement | null>(null);
+  const alarmRef = useRef<HTMLAudioElement | null>(null);
+  const prevDisplaySecondsRef = useRef<number | null>(null);
 
+  const {
+    formattedTime,
+    displaySeconds,
+    isRunning,
+    isAlerting,
+    hours,
+    minutes,
+    seconds,
+    setHours,
+    setMinutes,
+    setSeconds,
+    start,
+    pause,
+    reset,
+    hasTimeConfigured,
+  } = useTimer();
+
+  // Create audio elements on the client only
   useEffect(() => {
-    remainingSecondsRef.current = remainingSeconds
-  }, [remainingSeconds])
-
-  const configuredTotalSeconds = useMemo(() => {
-    const hours = normalizeTimeValue(hoursInput, 99)
-    const minutes = normalizeTimeValue(minutesInput, 59)
-    const seconds = normalizeTimeValue(secondsInput, 59)
-    return hours * 3600 + minutes * 60 + seconds
-  }, [hoursInput, minutesInput, secondsInput])
-
-  const displaySeconds =
-    remainingSeconds === null ? configuredTotalSeconds : remainingSeconds
-
-  // Restore timer from localStorage on mount
-  useEffect(() => {
-    const stored = loadTimer()
-    if (!stored) return
-    const total = stored.configuredTotalSeconds
-    const hours = Math.floor(total / 3600)
-    const minutes = Math.floor((total % 3600) / 60)
-    const seconds = total % 60
-    let remaining = stored.remainingSeconds
-    if (stored.isRunning && stored.savedAt) {
-      const elapsed = Math.floor((Date.now() - stored.savedAt) / 1000)
-      remaining = Math.max(0, stored.remainingSeconds - elapsed)
-    }
-    queueMicrotask(() => {
-      setHoursInput(String(hours))
-      setMinutesInput(String(minutes))
-      setSecondsInput(String(seconds))
-      setRemainingSeconds(remaining <= 0 ? null : remaining)
-      setIsRunning(remaining > 0 && stored.isRunning)
-      if (remaining <= 0) clearTimer()
-    })
-  }, [])
-
-  useEffect(() => {
-    if (!isRunning) return
-    if (remainingSeconds === null) {
-      queueMicrotask(() => setRemainingSeconds(configuredTotalSeconds))
-      return
-    }
-    if (remainingSeconds <= 0) {
-      queueMicrotask(() => {
-        setIsRunning(false)
-        clearTimer()
-      })
-      return
-    }
-
-    const interval = window.setInterval(() => {
-      setRemainingSeconds((current) => (current === null ? null : current - 1))
-    }, 1000)
-
-    const saveInterval = window.setInterval(() => {
-      const current = remainingSecondsRef.current
-      if (current !== null && current > 0) {
-        saveTimer({
-          configuredTotalSeconds,
-          remainingSeconds: current,
-          isRunning: true,
-          savedAt: Date.now(),
-        })
-      }
-    }, 60_000)
-
+    if (typeof window === 'undefined') return;
+    tickingRef.current = new Audio(TICKING_SRC);
+    alarmRef.current = new Audio(ALARM_SRC);
     return () => {
-      window.clearInterval(interval)
-      window.clearInterval(saveInterval)
-    }
-  }, [configuredTotalSeconds, isRunning, remainingSeconds])
+      tickingRef.current?.pause();
+      alarmRef.current?.pause();
+      tickingRef.current = null;
+      alarmRef.current = null;
+    };
+  }, []);
 
+  // Sound logic: ticking for warnings, alarm when timer hits 0; stop on pause/reset
   useEffect(() => {
-    if (remainingSeconds === null) return
-    if (!alertThresholds.includes(remainingSeconds)) return
-    if (alertedThresholdsRef.current.has(remainingSeconds)) return
-    alertedThresholdsRef.current.add(remainingSeconds)
-    queueMicrotask(() => setIsAlerting(true))
+    const ticking = tickingRef.current;
+    const alarm = alarmRef.current;
+    if (!ticking || !alarm) return;
 
-    if (alertTimeoutRef.current !== null) {
-      window.clearTimeout(alertTimeoutRef.current)
+    ticking.volume = volume;
+    alarm.volume = volume;
+
+    const prevDisplaySeconds = prevDisplaySecondsRef.current;
+
+    // Stop both sounds when paused or reset (displaySeconds no longer 0 = reset)
+    if (!isRunning) {
+      ticking.pause();
+      ticking.currentTime = 0;
+    }
+    if (displaySeconds !== 0) {
+      alarm.pause();
+      alarm.currentTime = 0;
     }
 
-    alertTimeoutRef.current = window.setTimeout(() => {
-      setIsAlerting(false)
-      alertTimeoutRef.current = null
-    }, 5000)
-  }, [remainingSeconds])
-
-  useEffect(() => {
-    return () => {
-      if (alertTimeoutRef.current !== null) {
-        window.clearTimeout(alertTimeoutRef.current)
-      }
+    // Ticking: play while alerting and running
+    if (isAlerting && isRunning) {
+      ticking.loop = true;
+      ticking.play().catch(() => {});
+    } else {
+      ticking.pause();
+      ticking.currentTime = 0;
     }
-  }, [])
 
-  const hasTimeConfigured = configuredTotalSeconds > 0
-
-  const resetAlerts = () => {
-    alertedThresholdsRef.current.clear()
-    if (alertTimeoutRef.current !== null) {
-      window.clearTimeout(alertTimeoutRef.current)
-      alertTimeoutRef.current = null
+    // Alarm: play once when transitioning from >0 to 0
+    if (
+      displaySeconds === 0 &&
+      prevDisplaySeconds !== null &&
+      prevDisplaySeconds > 0
+    ) {
+      alarm.play().catch(() => {});
     }
-    setIsAlerting(false)
-  }
 
-  const handleStart = () => {
-    if (!hasTimeConfigured) return
-    const startFrom = remainingSeconds === null || remainingSeconds === 0 ? configuredTotalSeconds : remainingSeconds
-    if (remainingSeconds === null || remainingSeconds === 0) {
-      resetAlerts()
-      setRemainingSeconds(configuredTotalSeconds)
-    }
-    setIsRunning(true)
-    saveTimer({
-      configuredTotalSeconds,
-      remainingSeconds: startFrom,
-      isRunning: true,
-      savedAt: Date.now(),
-    })
-  }
+    prevDisplaySecondsRef.current = displaySeconds;
+  }, [isRunning, isAlerting, displaySeconds, volume]);
 
-  const handlePause = () => {
-    setIsRunning(false)
-    if (remainingSeconds !== null && remainingSeconds > 0) {
-      saveTimer({
-        configuredTotalSeconds,
-        remainingSeconds,
-        isRunning: false,
-        savedAt: Date.now(),
-      })
-    }
-  }
-
-  const handleReset = () => {
-    setIsRunning(false)
-    setRemainingSeconds(null)
-    resetAlerts()
-    clearTimer()
-  }
-
-  const handleHoursChange = (value: string) => {
-    setHoursInput(value)
-    setIsRunning(false)
-    setRemainingSeconds(null)
-    resetAlerts()
-    clearTimer()
-  }
-
-  const handleMinutesChange = (value: string) => {
-    setMinutesInput(value)
-    setIsRunning(false)
-    setRemainingSeconds(null)
-    resetAlerts()
-    clearTimer()
-  }
-
-  const handleSecondsChange = (value: string) => {
-    setSecondsInput(value)
-    setIsRunning(false)
-    setRemainingSeconds(null)
-    resetAlerts()
-    clearTimer()
-  }
+  const handleVolumeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setVolume(Number(e.target.value) / 100);
+    },
+    [],
+  );
 
   return (
     <div className="flex items-center gap-3">
@@ -221,11 +118,10 @@ export default function QuizTimerCard() {
         <DropdownMenuTrigger className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/70 px-4 py-2 text-lg font-semibold tabular-nums shadow-xs">
           <span
             className={cn(
-              "text-foreground",
-              isAlerting && "text-destructive animate-ping"
-            )}
-          >
-            {formatTime(displaySeconds)}
+              'text-foreground',
+              isAlerting && 'text-destructive animate-ping',
+            )}>
+            {formattedTime}
           </span>
           <ChevronDownIcon className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>
@@ -238,8 +134,7 @@ export default function QuizTimerCard() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-hours`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-                >
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Hours
                 </label>
                 <Input
@@ -247,8 +142,8 @@ export default function QuizTimerCard() {
                   type="number"
                   min={0}
                   max={99}
-                  value={hoursInput}
-                  onChange={(event) => handleHoursChange(event.target.value)}
+                  value={hours}
+                  onChange={(event) => setHours(event.target.value)}
                   placeholder="0"
                   className="h-9 text-base"
                 />
@@ -256,8 +151,7 @@ export default function QuizTimerCard() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-minutes`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-                >
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Minutes
                 </label>
                 <Input
@@ -265,8 +159,8 @@ export default function QuizTimerCard() {
                   type="number"
                   min={0}
                   max={59}
-                  value={minutesInput}
-                  onChange={(event) => handleMinutesChange(event.target.value)}
+                  value={minutes}
+                  onChange={(event) => setMinutes(event.target.value)}
                   placeholder="0"
                   className="h-9 text-base"
                 />
@@ -274,8 +168,7 @@ export default function QuizTimerCard() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-seconds`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-                >
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Seconds
                 </label>
                 <Input
@@ -283,12 +176,31 @@ export default function QuizTimerCard() {
                   type="number"
                   min={0}
                   max={59}
-                  value={secondsInput}
-                  onChange={(event) => handleSecondsChange(event.target.value)}
+                  value={seconds}
+                  onChange={(event) => setSeconds(event.target.value)}
                   placeholder="0"
                   className="h-9 text-base"
                 />
               </div>
+            </div>
+          </DropdownMenuGroup>
+          <DropdownMenuGroup className="mt-4">
+            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Volume
+            </DropdownMenuLabel>
+            <div className="mt-3 flex items-center gap-3">
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(volume * 100)}
+                onChange={handleVolumeChange}
+                className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-foreground"
+                aria-label="Timer volume"
+              />
+              <span className="w-8 text-right text-sm tabular-nums text-muted-foreground">
+                {Math.round(volume * 100)}%
+              </span>
             </div>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -296,29 +208,26 @@ export default function QuizTimerCard() {
       <Button
         size="icon-lg"
         variant="ghost"
-        onClick={handleStart}
+        onClick={start}
         disabled={!hasTimeConfigured || isRunning}
-        aria-label="Start timer"
-      >
+        aria-label="Start timer">
         <PlayIcon className="size-5" />
       </Button>
       <Button
         size="icon-lg"
         variant="ghost"
-        onClick={handlePause}
+        onClick={pause}
         disabled={!isRunning}
-        aria-label="Pause timer"
-      >
+        aria-label="Pause timer">
         <PauseIcon className="size-5" />
       </Button>
       <Button
         size="icon-lg"
         variant="ghost"
-        onClick={handleReset}
-        aria-label="Reset timer"
-      >
+        onClick={reset}
+        aria-label="Reset timer">
         <RotateCcwIcon className="size-5" />
       </Button>
     </div>
-  )
+  );
 }

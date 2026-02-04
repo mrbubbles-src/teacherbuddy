@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName } from "@/lib/students"
@@ -58,18 +58,10 @@ export default function ProjectListBuilder() {
     [includeExcluded, students]
   )
 
-  useEffect(() => {
-    if (!includeExcluded) {
-      setSelectedIds((prev) =>
-        prev.filter((id) => {
-          const student = students.find((entry) => entry.id === id)
-          return student?.status === "active"
-        })
-      )
-    }
-  }, [includeExcluded, students])
-
-  const selectedCount = selectedIds.length
+  const selectedCount = useMemo(
+    () => visibleStudents.filter((s) => selectedIds.includes(s.id)).length,
+    [visibleStudents, selectedIds]
+  )
 
   const toggleSelection = (id: string) => {
     setSelectedIds((prev) =>
@@ -106,7 +98,7 @@ export default function ProjectListBuilder() {
       return
     }
 
-    let groups: string[][] = []
+    const groups: string[][] = []
     if (groupMode === "grouped") {
       const size = Number.parseInt(groupSize, 10)
       if (!size || size < 2) {

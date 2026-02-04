@@ -11,7 +11,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldError,
   FieldLabel,
   FieldSeparator,
@@ -392,12 +391,13 @@ export default function ProjectListView() {
                                   </span>
                                   <Select
                                     value={`${index}`}
-                                    onValueChange={(value) =>
+                                    onValueChange={(value) => {
+                                      if (value == null) return
                                       moveStudentToGroup(
                                         studentId,
                                         Number.parseInt(value, 10)
                                       )
-                                    }
+                                    }}
                                   >
                                     <SelectTrigger className="w-28">
                                       <SelectValue />

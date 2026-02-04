@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { CopyIcon } from "lucide-react"
 
 import { useAppStore } from "@/context/app-store"
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import type { Student } from "@/lib/models"
 import { formatStudentName } from "@/lib/students"
 import GeneratorCardSkeleton from "@/components/loading/generator-card-skeleton"
@@ -16,9 +17,9 @@ const DEFAULT_GROUP_SIZE = 3
 
 export default function BreakoutGroupsCard() {
   const { state, actions } = useAppStore()
-  const [groupSize, setGroupSize] = useState(DEFAULT_GROUP_SIZE)
-  const [isCopied, setIsCopied] = useState(false)
-  const [copiedGroupIndex, setCopiedGroupIndex] = useState<number | null>(null)
+  const [groupSizeOverride, setGroupSizeOverride] = useState<number | null>(null)
+  const { copy: copyAll, isCopied: isAllCopied, reset: resetAllCopy } = useCopyToClipboard()
+  const { copy: copyGroup, isCopied: isGroupCopied, reset: resetGroupCopy } = useCopyToClipboard()
 
   const activeStudents = useMemo(
     () => state.persisted.students.filter((student) => student.status === "active"),
@@ -26,29 +27,26 @@ export default function BreakoutGroupsCard() {
   )
 
   const persistedGroups = state.persisted.breakoutGroups
-  const canGenerateGroups = activeStudents.length > 0 && groupSize > 0
-
-  useEffect(() => {
-    if (persistedGroups?.groupSize) {
-      setGroupSize(persistedGroups.groupSize)
-    }
-  }, [persistedGroups?.groupSize])
+  const groupSizeToUse = groupSizeOverride ?? persistedGroups?.groupSize ?? DEFAULT_GROUP_SIZE
+  const canGenerateGroups = activeStudents.length > 0 && groupSizeToUse > 0
 
   const studentById = useMemo(() => {
     return new Map(state.persisted.students.map((student) => [student.id, student]))
   }, [state.persisted.students])
 
-  const groups = useMemo(() => {
+  const groups = useMemo((): Student[][] => {
     if (!persistedGroups) return []
     return persistedGroups.groupIds
-      .map((group) => group.map((id) => studentById.get(id)).filter(Boolean) as Student[])
-      .filter((group) => group.length > 0)
+      .map((group: string[]) =>
+        group.map((id: string) => studentById.get(id)).filter(Boolean) as Student[]
+      )
+      .filter((group: Student[]) => group.length > 0)
   }, [persistedGroups, studentById])
 
   const groupSummary = useMemo(() => {
     return groups
-      .map((group, index) => {
-        const names = group.map((student) => formatStudentName(student.name)).join(", ")
+      .map((group: Student[], index: number) => {
+        const names = group.map((student: Student) => formatStudentName(student.name)).join(", ")
         return `Group ${index + 1}: ${names}`
       })
       .join("\n")
@@ -89,11 +87,11 @@ export default function BreakoutGroupsCard() {
             <Input
               type="number"
               min={1}
-              value={groupSize}
+              value={groupSizeToUse}
               onChange={(event) => {
                 const nextValue = Number(event.target.value)
                 if (!Number.isNaN(nextValue)) {
-                  setGroupSize(nextValue)
+                  setGroupSizeOverride(nextValue)
                 }
               }}
             />
@@ -102,14 +100,16 @@ export default function BreakoutGroupsCard() {
             className="sm:w-44"
             disabled={!canGenerateGroups}
             onClick={() => {
-              const nextGroups = buildGroups(activeStudents, Math.max(groupSize, 1))
+              const size = Math.max(groupSizeToUse, 1)
+              const nextGroups = buildGroups(activeStudents, size)
               actions.setBreakoutGroups({
-                groupSize: Math.max(groupSize, 1),
+                groupSize: size,
                 groupIds: nextGroups.map((group) => group.map((student) => student.id)),
                 createdAt: Date.now(),
               })
-              setIsCopied(false)
-              setCopiedGroupIndex(null)
+              setGroupSizeOverride(null)
+              resetAllCopy()
+              resetGroupCopy()
             }}
           >
             Generate Groups
@@ -118,19 +118,14 @@ export default function BreakoutGroupsCard() {
             variant="secondary"
             className="sm:w-44"
             disabled={!groups.length}
-            onClick={async () => {
-              if (!groupSummary) return
-              await navigator.clipboard.writeText(groupSummary)
-              setIsCopied(true)
-              setCopiedGroupIndex(null)
-            }}
+            onClick={() => copyAll(groupSummary)}
           >
-            {isCopied ? "Copied!" : "Copy Groups"}
+            {isAllCopied ? "Copied!" : "Copy Groups"}
           </Button>
         </div>
         {groups.length ? (
           <div className="space-y-3">
-            {groups.map((group, index) => (
+            {groups.map((group: Student[], index: number) => (
               <div key={`group-${index}`} className="rounded-md border border-border/60 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -141,24 +136,22 @@ export default function BreakoutGroupsCard() {
                     variant="ghost"
                     size="icon-sm"
                     aria-label={
-                      copiedGroupIndex === index
+                      isGroupCopied
                         ? `Copied group ${index + 1}`
                         : `Copy group ${index + 1}`
                     }
-                    onClick={async () => {
+                    onClick={() => {
                       const names = group
-                        .map((student) => formatStudentName(student.name))
+                        .map((student: Student) => formatStudentName(student.name))
                         .join(", ")
-                      if (!names) return
-                      await navigator.clipboard.writeText(names)
-                      setCopiedGroupIndex(index)
+                      copyGroup(names)
                     }}
                   >
                     <CopyIcon />
                   </Button>
                 </div>
                 <p className="mt-1 text-sm text-foreground">
-                  {group.map((student) => formatStudentName(student.name)).join(", ")}
+                  {group.map((student: Student) => formatStudentName(student.name)).join(", ")}
                 </p>
               </div>
             ))}
