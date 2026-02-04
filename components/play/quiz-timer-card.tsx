@@ -12,14 +12,12 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { useTimer } from '@/hooks/use-timer';
 
 const TICKING_SRC = '/sounds/alarm-clock-ticking.mp3';
@@ -113,9 +111,9 @@ export default function QuizTimerCard() {
   );
 
   return (
-    <div className="flex items-center gap-3">
-      <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/70 px-4 py-2 text-lg font-semibold tabular-nums shadow-xs">
+    <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+      <Popover>
+        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs sm:w-auto sm:justify-start sm:px-4 sm:text-lg">
           <span
             className={cn(
               'text-foreground',
@@ -124,12 +122,14 @@ export default function QuizTimerCard() {
             {formattedTime}
           </span>
           <ChevronDownIcon className="size-4 text-muted-foreground" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="w-96 p-4">
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        </PopoverTrigger>
+        <PopoverContent
+          align="center"
+          className="w-[min(92vw,24rem)] p-4 sm:w-96">
+          <div>
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Set timer
-            </DropdownMenuLabel>
+            </p>
             <div className="mt-3 grid gap-4 sm:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <label
@@ -140,6 +140,7 @@ export default function QuizTimerCard() {
                 <Input
                   id={`${timerId}-hours`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={99}
                   value={hours}
@@ -157,6 +158,7 @@ export default function QuizTimerCard() {
                 <Input
                   id={`${timerId}-minutes`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={59}
                   value={minutes}
@@ -174,6 +176,7 @@ export default function QuizTimerCard() {
                 <Input
                   id={`${timerId}-seconds`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={59}
                   value={seconds}
@@ -183,11 +186,11 @@ export default function QuizTimerCard() {
                 />
               </div>
             </div>
-          </DropdownMenuGroup>
-          <DropdownMenuGroup className="mt-4">
-            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          </div>
+          <div className="mt-4">
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Volume
-            </DropdownMenuLabel>
+            </p>
             <div className="mt-3 flex items-center gap-3">
               <input
                 type="range"
@@ -202,9 +205,9 @@ export default function QuizTimerCard() {
                 {Math.round(volume * 100)}%
               </span>
             </div>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </div>
+        </PopoverContent>
+      </Popover>
       <Button
         size="icon-lg"
         variant="ghost"

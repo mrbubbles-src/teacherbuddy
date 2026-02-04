@@ -95,7 +95,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
+        <header className="flex flex-col gap-4 border-b border-border/60 px-4 py-3 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:gap-3 sm:px-6">
           <div className="flex items-center gap-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-5" />
@@ -113,10 +113,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               ) : null}
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center sm:justify-center">
             <QuizTimerCard />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end sm:justify-end">
             <ThemeToggle />
           </div>
         </header>
