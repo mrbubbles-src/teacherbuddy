@@ -12,14 +12,12 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { useTimer } from '@/hooks/use-timer';
 
 const TICKING_SRC = '/sounds/alarm-clock-ticking.mp3';
@@ -113,9 +111,9 @@ export default function QuizTimerCard() {
   );
 
   return (
-    <div className="flex items-center gap-3">
-      <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/70 px-4 py-2 text-lg font-semibold tabular-nums shadow-xs">
+    <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:gap-3 lg:gap-4">
+      <Popover>
+        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs md:w-auto md:justify-start md:px-4 md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl">
           <span
             className={cn(
               'text-foreground',
@@ -124,70 +122,75 @@ export default function QuizTimerCard() {
             {formattedTime}
           </span>
           <ChevronDownIcon className="size-4 text-muted-foreground" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="w-96 p-4">
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        </PopoverTrigger>
+        <PopoverContent
+          align="center"
+          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-[26rem] xl:w-[28rem] 2xl:w-[30rem]">
+          <div>
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Set timer
-            </DropdownMenuLabel>
-            <div className="mt-3 grid gap-4 sm:grid-cols-3">
+            </p>
+            <div className="mt-3 grid gap-4 md:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-hours`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Hours
                 </label>
                 <Input
                   id={`${timerId}-hours`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={99}
                   value={hours}
                   onChange={(event) => setHours(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-minutes`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Minutes
                 </label>
                 <Input
                   id={`${timerId}-minutes`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={59}
                   value={minutes}
                   onChange={(event) => setMinutes(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor={`${timerId}-seconds`}
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
                   Seconds
                 </label>
                 <Input
                   id={`${timerId}-seconds`}
                   type="number"
+                  inputMode="numeric"
                   min={0}
                   max={59}
                   value={seconds}
                   onChange={(event) => setSeconds(event.target.value)}
                   placeholder="0"
-                  className="h-9 text-base"
+                  className="h-9 text-base md:text-lg"
                 />
               </div>
             </div>
-          </DropdownMenuGroup>
-          <DropdownMenuGroup className="mt-4">
-            <DropdownMenuLabel className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          </div>
+          <div className="mt-4">
+            <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Volume
-            </DropdownMenuLabel>
+            </p>
             <div className="mt-3 flex items-center gap-3">
               <input
                 type="range"
@@ -198,13 +201,13 @@ export default function QuizTimerCard() {
                 className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-foreground"
                 aria-label="Timer volume"
               />
-              <span className="w-8 text-right text-sm tabular-nums text-muted-foreground">
+              <span className="w-8 text-right text-sm tabular-nums text-muted-foreground md:text-base">
                 {Math.round(volume * 100)}%
               </span>
             </div>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </div>
+        </PopoverContent>
+      </Popover>
       <Button
         size="icon-lg"
         variant="ghost"
