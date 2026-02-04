@@ -5,6 +5,14 @@ import type {
   QuizIndexEntry,
   Student,
 } from "@/lib/models"
+import {
+  isBreakoutGroups,
+  isPersistedTimerState,
+  isProjectList,
+  isQuiz,
+  isQuizIndexEntry,
+  isStudent,
+} from "@/lib/type-guards"
 
 const STUDENTS_KEY = "teacherbuddy:students"
 const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
@@ -35,6 +43,7 @@ export function loadStudents(): Student[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(STUDENTS_KEY), [])
   if (!Array.isArray(parsed)) return []
+  // Handle legacy format (array of strings)
   if (parsed.length && parsed.every((entry) => typeof entry === "string")) {
     return (parsed as string[]).map((name) => ({
       id: crypto.randomUUID(),
@@ -43,16 +52,7 @@ export function loadStudents(): Student[] {
       createdAt: Date.now(),
     }))
   }
-  return parsed.filter((entry): entry is Student => {
-    return (
-      typeof entry === "object" &&
-      entry !== null &&
-      typeof (entry as Student).id === "string" &&
-      typeof (entry as Student).name === "string" &&
-      typeof (entry as Student).status === "string" &&
-      typeof (entry as Student).createdAt === "number"
-    )
-  })
+  return parsed.filter(isStudent)
 }
 
 export function saveStudents(students: Student[]) {
@@ -64,15 +64,7 @@ export function loadQuizIndex(): QuizIndexEntry[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(QUIZ_INDEX_KEY), [])
   if (!Array.isArray(parsed)) return []
-  return parsed.filter((entry): entry is QuizIndexEntry => {
-    return (
-      typeof entry === "object" &&
-      entry !== null &&
-      typeof (entry as QuizIndexEntry).id === "string" &&
-      typeof (entry as QuizIndexEntry).title === "string" &&
-      typeof (entry as QuizIndexEntry).createdAt === "number"
-    )
-  })
+  return parsed.filter(isQuizIndexEntry)
 }
 
 export function loadProjectLists(): ProjectList[] {
@@ -80,18 +72,7 @@ export function loadProjectLists(): ProjectList[] {
   const parsed = safeParse<unknown>(localStorage.getItem(PROJECT_LISTS_KEY), [])
   if (!Array.isArray(parsed)) return []
   return parsed
-    .filter((entry): entry is ProjectList => {
-      const e = entry as Record<string, unknown>
-      return (
-        typeof entry === "object" &&
-        entry !== null &&
-        typeof e.id === "string" &&
-        typeof e.name === "string" &&
-        typeof e.projectType === "string" &&
-        Array.isArray(e.studentIds) &&
-        Array.isArray(e.groups)
-      )
-    })
+    .filter(isProjectList)
     .map((entry) => {
       const e = entry as Record<string, unknown>
       return {
@@ -111,23 +92,8 @@ export function saveProjectLists(lists: ProjectList[]) {
 export function loadBreakoutGroups(): BreakoutGroups | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
-  if (!parsed || typeof parsed !== "object") return null
-  const breakoutGroups = parsed as BreakoutGroups
-  if (
-    typeof breakoutGroups.groupSize !== "number" ||
-    !Array.isArray(breakoutGroups.groupIds) ||
-    typeof breakoutGroups.createdAt !== "number"
-  ) {
-    return null
-  }
-  if (
-    !breakoutGroups.groupIds.every(
-      (group) => Array.isArray(group) && group.every((id) => typeof id === "string")
-    )
-  ) {
-    return null
-  }
-  return breakoutGroups
+  if (!isBreakoutGroups(parsed)) return null
+  return parsed
 }
 
 export function saveBreakoutGroups(groups: BreakoutGroups | null) {
@@ -147,18 +113,8 @@ export function saveQuizIndex(index: QuizIndexEntry[]) {
 export function loadQuiz(id: string): Quiz | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(quizKey(id)), null)
-  if (!parsed || typeof parsed !== "object") return null
-  const quiz = parsed as Quiz
-  if (
-    typeof quiz.id !== "string" ||
-    typeof quiz.title !== "string" ||
-    !Array.isArray(quiz.questions) ||
-    typeof quiz.createdAt !== "number" ||
-    typeof quiz.updatedAt !== "number"
-  ) {
-    return null
-  }
-  return quiz
+  if (!isQuiz(parsed)) return null
+  return parsed
 }
 
 export function saveQuiz(quiz: Quiz) {
@@ -223,19 +179,9 @@ export function persistAllQuizzes(
 export function loadTimer(): PersistedTimerState | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(TIMER_KEY), null)
-  if (
-    !parsed ||
-    typeof parsed !== "object" ||
-    typeof (parsed as PersistedTimerState).configuredTotalSeconds !== "number" ||
-    typeof (parsed as PersistedTimerState).remainingSeconds !== "number" ||
-    typeof (parsed as PersistedTimerState).isRunning !== "boolean" ||
-    typeof (parsed as PersistedTimerState).savedAt !== "number"
-  ) {
-    return null
-  }
-  const state = parsed as PersistedTimerState
-  if (state.remainingSeconds <= 0) return null
-  return state
+  if (!isPersistedTimerState(parsed)) return null
+  if (parsed.remainingSeconds <= 0) return null
+  return parsed
 }
 
 export function saveTimer(state: PersistedTimerState) {

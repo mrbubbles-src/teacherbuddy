@@ -1,66 +1,68 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { GraduationCapIcon } from "lucide-react"
+import * as React from 'react';
 
-import ThemeToggle from "@/components/utility/theme-toggle"
-import { SidebarNav } from "@/components/navigation/sidebar-nav"
-import QuizTimerCard from "@/components/play/quiz-timer-card"
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { GraduationCapIcon } from 'lucide-react';
+
+import { SidebarNav } from '@/components/navigation/sidebar-nav';
+import QuizTimerCard from '@/components/play/quiz-timer-card';
+import { Separator } from '@/components/ui/separator';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+} from '@/components/ui/sidebar';
+import ThemeToggle from '@/components/utility/theme-toggle';
 
 const pageMeta: Record<string, { title: string; description: string }> = {
-  "/": {
-    title: "Dashboard",
-    description: "Choose a workflow to get started.",
+  '/': {
+    title: 'Dashboard',
+    description: 'Choose a workflow to get started.',
   },
-  "/students": {
-    title: "Student Management",
-    description: "Add students, mark absences, and manage your roster.",
+  '/students': {
+    title: 'Student Management',
+    description: 'Add students, mark absences, and manage your roster.',
   },
-  "/generator": {
-    title: "Student Generator",
-    description: "Pick a random student without repeats.",
+  '/generator': {
+    title: 'Student Generator',
+    description: 'Pick a random student without repeats.',
   },
-  "/breakout-rooms": {
-    title: "Breakout Rooms",
-    description: "Create randomized student groups for breakout sessions.",
+  '/breakout-rooms': {
+    title: 'Breakout Rooms',
+    description: 'Create randomized student groups for breakout sessions.',
   },
-  "/quizzes": {
-    title: "Quiz Builder",
-    description: "Create and update quizzes with custom questions.",
+  '/quizzes': {
+    title: 'Quiz Builder',
+    description: 'Create and update quizzes with custom questions.',
   },
-  "/play": {
-    title: "Quiz Play",
-    description: "Draw a student and a question, then reveal the answer.",
+  '/play': {
+    title: 'Quiz Play',
+    description: 'Draw a student and a question, then reveal the answer.',
   },
-  "/projects": {
-    title: "Project Lists",
-    description: "Build project lists and group students from your roster.",
+  '/projects': {
+    title: 'Project Lists',
+    description: 'Build project lists and group students from your roster.',
   },
-}
+};
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const meta = pageMeta[pathname] ?? {
-    title: "TeacherBuddy",
-    description: "",
-  }
+    title: 'TeacherBuddy',
+    description: '',
+  };
 
   return (
     <SidebarProvider>
@@ -71,8 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <SidebarMenuButton
                 render={<Link href="/" />}
                 size="lg"
-                className="font-semibold"
-              >
+                className="font-semibold">
                 <GraduationCapIcon />
                 <span>TeacherBuddy</span>
               </SidebarMenuButton>
@@ -87,7 +88,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground">
-            <span>v0.1</span>
+            <span>v1.0.1</span>
             <span className="uppercase tracking-[0.2em]">Classroom</span>
           </div>
         </SidebarFooter>
@@ -102,9 +103,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 TeacherBuddy
               </p>
-              <h1 className="text-xl font-semibold text-foreground">{meta.title}</h1>
+              <h1 className="text-xl font-semibold text-foreground">
+                {meta.title}
+              </h1>
               {meta.description ? (
-                <p className="text-sm text-muted-foreground">{meta.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {meta.description}
+                </p>
               ) : null}
             </div>
           </div>
@@ -120,5 +125,5 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </section>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

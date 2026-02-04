@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { CopyIcon } from "lucide-react"
 
 import { useAppStore } from "@/context/app-store"
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import type { Student } from "@/lib/models"
 import { formatStudentName } from "@/lib/students"
 import GeneratorCardSkeleton from "@/components/loading/generator-card-skeleton"
@@ -17,8 +18,8 @@ const DEFAULT_GROUP_SIZE = 3
 export default function BreakoutGroupsCard() {
   const { state, actions } = useAppStore()
   const [groupSizeOverride, setGroupSizeOverride] = useState<number | null>(null)
-  const [isCopied, setIsCopied] = useState(false)
-  const [copiedGroupIndex, setCopiedGroupIndex] = useState<number | null>(null)
+  const { copy: copyAll, isCopied: isAllCopied, reset: resetAllCopy } = useCopyToClipboard()
+  const { copy: copyGroup, isCopied: isGroupCopied, reset: resetGroupCopy } = useCopyToClipboard()
 
   const activeStudents = useMemo(
     () => state.persisted.students.filter((student) => student.status === "active"),
@@ -107,8 +108,8 @@ export default function BreakoutGroupsCard() {
                 createdAt: Date.now(),
               })
               setGroupSizeOverride(null)
-              setIsCopied(false)
-              setCopiedGroupIndex(null)
+              resetAllCopy()
+              resetGroupCopy()
             }}
           >
             Generate Groups
@@ -117,14 +118,9 @@ export default function BreakoutGroupsCard() {
             variant="secondary"
             className="sm:w-44"
             disabled={!groups.length}
-            onClick={async () => {
-              if (!groupSummary) return
-              await navigator.clipboard.writeText(groupSummary)
-              setIsCopied(true)
-              setCopiedGroupIndex(null)
-            }}
+            onClick={() => copyAll(groupSummary)}
           >
-            {isCopied ? "Copied!" : "Copy Groups"}
+            {isAllCopied ? "Copied!" : "Copy Groups"}
           </Button>
         </div>
         {groups.length ? (
@@ -140,17 +136,15 @@ export default function BreakoutGroupsCard() {
                     variant="ghost"
                     size="icon-sm"
                     aria-label={
-                      copiedGroupIndex === index
+                      isGroupCopied
                         ? `Copied group ${index + 1}`
                         : `Copy group ${index + 1}`
                     }
-                    onClick={async () => {
+                    onClick={() => {
                       const names = group
                         .map((student: Student) => formatStudentName(student.name))
                         .join(", ")
-                      if (!names) return
-                      await navigator.clipboard.writeText(names)
-                      setCopiedGroupIndex(index)
+                      copyGroup(names)
                     }}
                   >
                     <CopyIcon />
