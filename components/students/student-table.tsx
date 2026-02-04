@@ -95,12 +95,12 @@ export default function StudentTable() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <CardTitle>Student List</CardTitle>
-            <CardDescription>
+            <CardTitle className="lg:text-lg">Student List</CardTitle>
+            <CardDescription className="lg:text-base/relaxed">
               {students.length
                 ? `${activeCount} active · ${
                     students.length - activeCount
@@ -133,7 +133,7 @@ export default function StudentTable() {
           ) : null}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
         {students.length ? (
           <Table>
             <TableHeader>

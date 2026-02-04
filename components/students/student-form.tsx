@@ -92,15 +92,15 @@ export default function StudentForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add Students</CardTitle>
-        <CardDescription>
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
+        <CardTitle className="lg:text-lg">Add Students</CardTitle>
+        <CardDescription className="lg:text-base/relaxed">
           Add students manually or paste a comma-separated list. You can also
           import a comma-separated .txt file below.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:flex-row sm:items-end">
           <Field className="flex-1">
             <FieldLabel htmlFor="student-name">Student name</FieldLabel>
@@ -121,7 +121,7 @@ export default function StudentForm() {
               {error ? <FieldError>{error}</FieldError> : null}
             </FieldContent>
           </Field>
-          <Button type="submit" className="sm:w-40">
+          <Button type="submit" className="sm:min-w-32">
             Add Student
           </Button>
         </form>

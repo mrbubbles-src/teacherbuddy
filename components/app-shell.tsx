@@ -73,9 +73,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <SidebarMenuButton
                 render={<Link href="/" />}
                 size="lg"
-                className="font-semibold">
+                className="font-semibold group-data-[collapsible=icon]:justify-center [&>svg]:group-data-[collapsible=icon]:size-5">
                 <GraduationCapIcon />
-                <span>TeacherBuddy</span>
+                <span className="group-data-[collapsible=icon]:hidden">TeacherBuddy</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -87,9 +87,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </SidebarContent>
         <SidebarFooter>
-          <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground">
-            <span>v1.0.1</span>
-            <span className="uppercase tracking-[0.2em]">Classroom</span>
+          <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
+            <span className="group-data-[collapsible=icon]:text-xs">v1.0.1</span>
+            <span className="uppercase tracking-[0.2em] group-data-[collapsible=icon]:hidden">Classroom</span>
           </div>
         </SidebarFooter>
         <SidebarRail />
@@ -103,9 +103,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <SidebarTrigger className="shrink-0" />
               <Separator orientation="vertical" className="h-5 shrink-0" />
               <div className="flex min-w-0 flex-col">
-                <p className="truncate text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-xs lg:text-sm xl:text-sm 2xl:text-base">
+                <Link href="/" className="truncate text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors md:text-xs lg:text-sm xl:text-sm 2xl:text-base">
                   TeacherBuddy
-                </p>
+                </Link>
                 <h1 className="truncate text-base font-semibold text-foreground md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl">
                   {meta.title}
                 </h1>
@@ -128,7 +128,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <QuizTimerCard />
           </div>
         </header>
-        <section className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto">
+        <section className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl">
           {children}
         </section>
       </SidebarInset>

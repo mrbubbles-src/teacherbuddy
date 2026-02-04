@@ -3,21 +3,21 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function StudentTableSkeleton() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-2">
-            <CardTitle>
+            <CardTitle className="lg:text-lg">
               <Skeleton className="h-4 w-32" />
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="lg:text-base/relaxed">
               <Skeleton className="h-3 w-40" />
             </CardDescription>
           </div>
           <Skeleton className="h-6 w-24" />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
         <div className="space-y-3">
           <div className="grid grid-cols-[2fr_1fr_1fr] gap-3">
             <Skeleton className="h-3 w-full" />

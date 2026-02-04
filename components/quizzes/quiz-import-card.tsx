@@ -78,14 +78,14 @@ export default function QuizImportCard() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Import Quiz JSON</CardTitle>
-        <CardDescription>
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
+        <CardTitle className="lg:text-lg">Import Quiz JSON</CardTitle>
+        <CardDescription className="lg:text-base/relaxed">
           Paste a JSON object or array that matches the quiz format.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
         <Field>
           <FieldLabel htmlFor="quiz-import">Quiz JSON</FieldLabel>
           <FieldContent>

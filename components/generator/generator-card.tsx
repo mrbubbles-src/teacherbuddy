@@ -38,26 +38,26 @@ export default function GeneratorCard() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
+        <CardTitle className="flex items-center gap-2 lg:text-lg">
           Random Student Pick
           <Badge variant="secondary">{remainingStudents.length} remaining</Badge>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="lg:text-base/relaxed">
           Generate a random student without repeats until you reset.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
+        <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center h-[160px] flex flex-col justify-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground lg:text-base">
             Selected Student
           </p>
-          <p className="mt-3 text-3xl font-semibold sm:text-4xl">
+          <p className="mt-3 text-xl font-semibold sm:text-2xl lg:text-3xl line-clamp-3">
             {currentStudent ? formatStudentName(currentStudent.name) : "—"}
           </p>
           {!activeStudents.length ? (
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-muted-foreground lg:text-base">
               Add or re-enable students to begin.
             </p>
           ) : null}
@@ -66,7 +66,7 @@ export default function GeneratorCard() {
           <Button
             onClick={actions.drawStudent}
             disabled={!canGenerate}
-            className="sm:flex-1"
+            className="sm:min-w-32"
           >
             Generate Student
           </Button>
@@ -74,7 +74,7 @@ export default function GeneratorCard() {
             variant="secondary"
             onClick={actions.resetGenerator}
             disabled={!state.domain.generator.usedStudentIds.length}
-            className="sm:flex-1"
+            className="sm:min-w-32"
           >
             Reset Generator
           </Button>

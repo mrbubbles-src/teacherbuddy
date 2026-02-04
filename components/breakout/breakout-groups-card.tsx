@@ -70,19 +70,19 @@ export default function BreakoutGroupsCard() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="lg:px-6 xl:px-8">
+        <CardTitle className="flex items-center gap-2 lg:text-lg">
           Breakout Rooms
           <Badge variant="secondary">{activeStudents.length} students</Badge>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="lg:text-base/relaxed">
           Shuffle active students into randomized breakout groups.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <label className="flex flex-1 flex-col gap-1 text-sm font-medium text-foreground">
+          <label className="flex flex-1 flex-col gap-1 text-sm font-medium text-foreground lg:text-base">
             Group size
             <Input
               type="number"
@@ -97,7 +97,7 @@ export default function BreakoutGroupsCard() {
             />
           </label>
           <Button
-            className="sm:w-44"
+            className="sm:min-w-32"
             disabled={!canGenerateGroups}
             onClick={() => {
               const size = Math.max(groupSizeToUse, 1)
@@ -116,7 +116,7 @@ export default function BreakoutGroupsCard() {
           </Button>
           <Button
             variant="secondary"
-            className="sm:w-44"
+            className="sm:min-w-32"
             disabled={!groups.length}
             onClick={() => copyAll(groupSummary)}
           >
@@ -150,19 +150,19 @@ export default function BreakoutGroupsCard() {
                     <CopyIcon />
                   </Button>
                 </div>
-                <p className="mt-1 text-sm text-foreground">
+                <p className="mt-1 text-sm text-foreground lg:text-base">
                   {group.map((student: Student) => formatStudentName(student.name)).join(", ")}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center">
-            <p className="text-sm text-muted-foreground">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center min-h-[100px] flex flex-col justify-center">
+            <p className="text-sm text-muted-foreground lg:text-base">
               Generate groups to see the breakout room list.
             </p>
             {!activeStudents.length ? (
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="mt-2 text-xs text-muted-foreground lg:text-sm">
                 Add or re-enable students to begin.
               </p>
             ) : null}

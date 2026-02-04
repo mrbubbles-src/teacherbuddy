@@ -167,11 +167,11 @@ export default function ProjectListView() {
 
   if (!projectLists.length) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Saved project lists</CardTitle>
+      <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="lg:text-lg">Saved project lists</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
           <p className="text-sm text-muted-foreground">
             Your saved project lists will appear here.
           </p>
@@ -192,10 +192,10 @@ export default function ProjectListView() {
           (student) => !selectedIds.includes(student.id)
         )
         return (
-          <Card key={list.id}>
-            <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <Card key={list.id} className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+            <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:px-6 xl:px-8">
               <div className="flex flex-col gap-1">
-                <CardTitle>{list.name}</CardTitle>
+                <CardTitle className="lg:text-lg">{list.name}</CardTitle>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                   <span>{createdAt}</span>
                   <span aria-hidden="true">•</span>
@@ -260,7 +260,7 @@ export default function ProjectListView() {
                 </AlertDialog>
               </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
               {isEditing ? (
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
                   <div className="flex flex-col gap-4">

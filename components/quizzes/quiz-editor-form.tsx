@@ -144,14 +144,14 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
   return (
     <>
       <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quiz Details</CardTitle>
-            <CardDescription>
+        <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+          <CardHeader className="lg:px-6 xl:px-8">
+            <CardTitle className="lg:text-lg">Quiz Details</CardTitle>
+            <CardDescription className="lg:text-base/relaxed">
               Select an existing quiz or start a new one.
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
             <QuizSelector
               label="Saved quizzes"
               value={quizId}
@@ -175,13 +175,13 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
             </Field>
             {quizError ? <FieldError>{quizError}</FieldError> : null}
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button onClick={handleSaveQuiz} className="sm:flex-1">
+              <Button onClick={handleSaveQuiz} className="sm:min-w-32">
                 Save Quiz
               </Button>
               <Button
                 variant="secondary"
                 onClick={handleNewQuiz}
-                className="sm:flex-1"
+                className="sm:min-w-32"
               >
                 New Quiz
               </Button>
@@ -208,14 +208,14 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{editingQuestion ? "Edit Question" : "Add Question"}</CardTitle>
-            <CardDescription>
+        <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+          <CardHeader className="lg:px-6 xl:px-8">
+            <CardTitle className="lg:text-lg">{editingQuestion ? "Edit Question" : "Add Question"}</CardTitle>
+            <CardDescription className="lg:text-base/relaxed">
               Add prompts and answers before saving the quiz.
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
             <Field>
               <FieldLabel htmlFor="question-prompt">Question</FieldLabel>
               <FieldContent>
@@ -240,7 +240,7 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
             </Field>
             {questionError ? <FieldError>{questionError}</FieldError> : null}
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button onClick={handleAddOrUpdateQuestion} className="sm:flex-1">
+              <Button onClick={handleAddOrUpdateQuestion} className="sm:min-w-32">
                 <PlusIcon className="size-3.5" />
                 {editingQuestion ? "Update Question" : "Add Question"}
               </Button>
@@ -248,7 +248,7 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
                 <Button
                   variant="secondary"
                   onClick={handleCancelEdit}
-                  className="sm:flex-1"
+                  className="sm:min-w-32"
                 >
                   Cancel Edit
                 </Button>
@@ -260,16 +260,16 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
         {importCard}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Questions</CardTitle>
-          <CardDescription>
+      <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="lg:text-lg">Questions</CardTitle>
+          <CardDescription className="lg:text-base/relaxed">
             {questions.length
               ? `${questions.length} question${questions.length === 1 ? "" : "s"}`
               : "Add questions to build your quiz."}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
           {questions.length ? (
             <Table>
               <TableHeader>

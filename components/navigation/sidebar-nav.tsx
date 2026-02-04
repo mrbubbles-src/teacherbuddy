@@ -66,6 +66,7 @@ export function SidebarNav({ pathname }: { pathname: string }) {
               render={<Link href={item.href} />}
               isActive={isActive}
               title={item.title}
+              className="[&>span]:group-data-[collapsible=icon]:hidden group-data-[collapsible=icon]:justify-center [&>svg]:group-data-[collapsible=icon]:size-5"
             >
               <Icon />
               <span>{item.title}</span>
