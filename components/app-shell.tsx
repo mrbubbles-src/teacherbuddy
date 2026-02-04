@@ -95,29 +95,37 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <header className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto] gap-4 border-b border-border/60 px-4 py-3 md:grid-cols-[1fr_auto_1fr] md:grid-rows-[auto] md:items-center md:gap-3 md:px-6">
-          <div className="row-start-1 flex items-center gap-3">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="h-5" />
-            <div className="flex flex-col">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm lg:text-base">
-                TeacherBuddy
-              </p>
-              <h1 className="text-lg font-semibold text-foreground md:text-xl lg:text-2xl xl:text-3xl 2xl:text-3xl">
-                {meta.title}
-              </h1>
-              {meta.description ? (
-                <p className="text-sm text-muted-foreground lg:text-base xl:text-lg 2xl:text-lg">
-                  {meta.description}
+        <header className="flex flex-col gap-4 border-b border-border/60 px-4 py-3 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-3 md:px-6 lg:px-8 xl:grid-cols-[1fr_auto_1fr] xl:px-10 2xl:px-12">
+          {/* Row 1: Title + Theme Toggle (mobile flex row, grid col 1 + 2 on md/lg, col 1 + 3 on xl+) */}
+          <div className="flex min-w-0 items-start justify-between gap-3 md:contents">
+            {/* Title area */}
+            <div className="flex min-w-0 flex-1 items-center gap-3 md:col-start-1 md:row-start-1">
+              <SidebarTrigger className="shrink-0" />
+              <Separator orientation="vertical" className="h-5 shrink-0" />
+              <div className="flex min-w-0 flex-col">
+                <p className="truncate text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-xs lg:text-sm xl:text-sm 2xl:text-base">
+                  TeacherBuddy
                 </p>
-              ) : null}
+                <h1 className="truncate text-base font-semibold text-foreground md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl">
+                  {meta.title}
+                </h1>
+                {meta.description ? (
+                  <p className="line-clamp-2 text-xs text-muted-foreground md:text-sm lg:text-sm xl:text-base 2xl:text-lg">
+                    {meta.description}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            {/* Theme toggle - col 2 on md/lg, col 3 on xl+ */}
+            <div className="shrink-0 self-center md:col-start-2 md:row-start-1 md:justify-self-end xl:col-start-3">
+              <ThemeToggle />
             </div>
           </div>
-          <div className="row-start-2 col-span-2 flex justify-center md:row-start-1 md:col-span-1 md:justify-center">
+
+          {/* Timer - full width row 2 on md/lg, col 2 row 1 on xl+ */}
+          <div className="flex min-w-0 justify-center md:col-span-2 md:row-start-2 xl:col-span-1 xl:col-start-2 xl:row-start-1">
             <QuizTimerCard />
-          </div>
-          <div className="row-start-1 flex justify-end md:col-start-3 md:justify-end">
-            <ThemeToggle />
           </div>
         </header>
         <section className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto">

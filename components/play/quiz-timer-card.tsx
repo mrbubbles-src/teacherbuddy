@@ -111,9 +111,9 @@ export default function QuizTimerCard() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:gap-3 lg:gap-4">
+    <div className="flex min-w-0 flex-wrap items-center justify-center gap-2 md:flex-nowrap md:justify-start md:gap-3 lg:gap-4">
       <Popover>
-        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs md:w-auto md:justify-start md:px-4 md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl">
+        <PopoverTrigger className="flex min-w-0 max-w-full items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-sm font-semibold tabular-nums shadow-xs md:max-w-none md:gap-3 md:px-4 md:text-base lg:text-lg xl:text-xl 2xl:text-2xl">
           <span
             className={cn(
               'text-foreground',
