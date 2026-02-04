@@ -2,10 +2,66 @@
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Fixed
+
+- Design Fixes
+  - Responsiveness of the app
+  - Accessibility of the app
+
+### Changed
+
+- Rethought Data Security
+- Performance Improvements
+
+## [1.0.1] - 2026-02-03
+
+### Added
+
+- QuizTimerCard with audio feedback and volume control
+- Quick timer display in sidebar on all pages
+- Project lists page with builder, view, and persistence
+- Comprehensive test suite using Vitest and React Testing Library
+  - 247 tests across 8 test files
+  - Unit tests for type guards (`lib/__tests__/type-guards.test.ts`)
+  - Unit tests for student utilities (`lib/__tests__/students.test.ts`)
+  - Unit tests for storage functions (`lib/__tests__/storage.test.ts`)
+  - Hook tests for `useTimer` (`hooks/__tests__/use-timer.test.ts`)
+  - Hook tests for `useCopyToClipboard` (`hooks/__tests__/use-copy-to-clipboard.test.ts`)
+  - Integration tests for app reducer (`context/__tests__/app-reducer.test.ts`)
+  - Component tests for `StudentForm` and `QuizSelector`
+- Test configuration files (`vitest.config.ts`, `vitest.setup.ts`)
+- Test utilities with AppStoreProvider wrapper (`__tests__/test-utils.tsx`)
+- npm scripts: `test`, `test:ui`, `test:coverage`, `test:run`
+- Testing documentation (`documentation/project-docs/testing.md`)
+
+### Changed
+
+- Refactored components for improved state management
+- Updated `package.json` with testing dependencies and scripts
+
+### Developer Experience
+
+- Tests provide ~80% coverage on core business logic (lib/, context/)
+- Mocked localStorage and crypto.randomUUID in test setup
+- Component tests use custom render wrapper with providers
+
 ## [1.0.0] - 2026-02-03
 
-- Added server-safe style variants for buttons and badges and converted dashboard cards to a server component.
-- Added hydration skeletons for feature views and global `app/loading.tsx` and `app/error.tsx` boundaries.
-- Fixed theme toggle hydration label mismatch and tightened student status typing.
-- Added project documentation and expanded README.
-- Added MIT license.
+### Added
+
+- Server-safe style variants for buttons and badges
+- Dashboard cards as server component
+- Hydration skeletons for feature views
+- Global `app/loading.tsx` and `app/error.tsx` boundaries
+- Project documentation and expanded README
+- MIT license
+
+### Fixed
+
+- Theme toggle hydration label mismatch
+- Tightened student status typing
