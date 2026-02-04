@@ -2,6 +2,8 @@
 
 import * as React from "react"
 
+import type { Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
+import { loadPersistedState, persistAllQuizzes, saveQuizIndex, saveStudents } from "@/lib/storage"
 import type { ProjectList, Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
 import {
   loadPersistedState,

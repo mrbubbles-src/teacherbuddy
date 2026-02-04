@@ -49,6 +49,23 @@ export default function QuizEditor() {
   const [importNotice, setImportNotice] = useState<string | null>(null)
 
   useEffect(() => {
+    queueMicrotask(() => {
+      if (activeQuiz) {
+        setTitle(activeQuiz.title)
+        setQuestions(activeQuiz.questions)
+      } else {
+        setTitle("")
+        setQuestions([])
+      }
+      setPrompt("")
+      setAnswer("")
+      actions.setEditingQuestion(null)
+      setQuizError(null)
+      setQuestionError(null)
+      setImportError(null)
+      setImportNotice(null)
+    })
+  }, [activeQuizId, activeQuiz, actions])
     if (activeQuiz) {
       setTitle(activeQuiz.title)
       setQuestions(activeQuiz.questions)

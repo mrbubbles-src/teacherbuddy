@@ -7,6 +7,7 @@ import { GraduationCapIcon } from "lucide-react"
 
 import ThemeToggle from "@/components/utility/theme-toggle"
 import { SidebarNav } from "@/components/navigation/sidebar-nav"
+import QuizTimerCard from "@/components/play/quiz-timer-card"
 import {
   Sidebar,
   SidebarContent,
@@ -93,6 +94,26 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
+        <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="h-5" />
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                TeacherBuddy
+              </p>
+              <h1 className="text-xl font-semibold text-foreground">{meta.title}</h1>
+              {meta.description ? (
+                <p className="text-sm text-muted-foreground">{meta.description}</p>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <QuizTimerCard />
+          </div>
+          <div className="flex justify-end">
+            <ThemeToggle />
+          </div>
         <header className="flex items-center gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
           <SidebarTrigger />
           <Separator orientation="vertical" className="h-5" />

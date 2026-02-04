@@ -112,7 +112,6 @@
   --sidebar-border: oklch(var(--surface-2));
   --sidebar-ring: oklch(var(--lavender));
 }
-
 .dark {
   --rosewater: var(--ctp-mocha-rosewater);
   --flamingo: var(--ctp-mocha-flamingo);
