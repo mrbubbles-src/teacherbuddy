@@ -33,6 +33,11 @@ const navItems = [
     icon: ShuffleIcon,
   },
   {
+    title: "Breakout Rooms",
+    href: "/breakout-rooms",
+    icon: UsersIcon,
+  },
+  {
     title: "Quizzes",
     href: "/quizzes",
     icon: ClipboardListIcon,

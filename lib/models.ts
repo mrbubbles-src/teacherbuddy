@@ -34,5 +34,8 @@ export type ProjectList = {
   description: string
   studentIds: string[]
   groups: string[][]
+export type BreakoutGroups = {
+  groupSize: number
+  groupIds: string[][]
   createdAt: number
 }

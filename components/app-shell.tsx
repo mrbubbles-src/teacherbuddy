@@ -36,6 +36,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "Student Generator",
     description: "Pick a random student without repeats.",
   },
+  "/breakout-rooms": {
+    title: "Breakout Rooms",
+    description: "Create randomized student groups for breakout sessions.",
+  },
   "/quizzes": {
     title: "Quiz Builder",
     description: "Create and update quizzes with custom questions.",

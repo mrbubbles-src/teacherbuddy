@@ -28,6 +28,13 @@ const cards = [
     badge: "Random",
   },
   {
+    title: "Breakout Rooms",
+    description: "Create randomized student groups for breakout sessions.",
+    href: "/breakout-rooms",
+    icon: UsersIcon,
+    badge: "Groups",
+  },
+  {
     title: "Quiz Builder",
     description: "Create quizzes with custom questions and answers.",
     href: "/quizzes",

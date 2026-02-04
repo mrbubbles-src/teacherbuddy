@@ -17,6 +17,7 @@ export type PersistedState = {
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
   projectLists: ProjectList[]
+  breakoutGroups: BreakoutGroups | null
 }
 
 export type GeneratorState = {
@@ -56,6 +57,7 @@ const initialState: AppState = {
     quizIndex: [],
     quizzes: {},
     projectLists: [],
+    breakoutGroups: null,
   },
   domain: {
     generator: {
@@ -110,6 +112,8 @@ type AppAction =
       }
     }
   | { type: "DELETE_PROJECT_LIST"; payload: { id: string } }
+  | { type: "SET_BREAKOUT_GROUPS"; payload: BreakoutGroups }
+  | { type: "CLEAR_BREAKOUT_GROUPS" }
   | { type: "RESET_GENERATOR" }
   | { type: "DRAW_STUDENT" }
   | {
@@ -354,6 +358,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
             }
           : list
       )
+    case "SET_BREAKOUT_GROUPS": {
       return {
         ...state,
         persisted: {
@@ -366,11 +371,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
       const projectLists = state.persisted.projectLists.filter(
         (list) => list.id !== action.payload.id
       )
+          breakoutGroups: action.payload,
+        },
+      }
+    }
+    case "CLEAR_BREAKOUT_GROUPS": {
       return {
         ...state,
         persisted: {
           ...state.persisted,
           projectLists,
+          breakoutGroups: null,
         },
       }
     }
@@ -665,6 +676,8 @@ const AppStoreContext = React.createContext<{
       groups: string[][]
     ) => void
     deleteProjectList: (id: string) => void
+    setBreakoutGroups: (groups: BreakoutGroups) => void
+    clearBreakoutGroups: () => void
     resetGenerator: () => void
     drawStudent: () => void
     createQuiz: (title: string, questions: Question[]) => void
@@ -693,6 +706,8 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     saveQuizIndex(state.persisted.quizIndex)
     persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
     saveProjectLists(state.persisted.projectLists)
+    saveBreakoutGroups(state.persisted.breakoutGroups)
+    persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
   }, [state.persisted, state.ui.isHydrated])
 
   const actions = React.useMemo(
@@ -748,6 +763,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
         }),
       deleteProjectList: (id: string) =>
         dispatch({ type: "DELETE_PROJECT_LIST", payload: { id } }),
+      setBreakoutGroups: (groups: BreakoutGroups) =>
+        dispatch({ type: "SET_BREAKOUT_GROUPS", payload: groups }),
+      clearBreakoutGroups: () => dispatch({ type: "CLEAR_BREAKOUT_GROUPS" }),
       resetGenerator: () => dispatch({ type: "RESET_GENERATOR" }),
       drawStudent: () => dispatch({ type: "DRAW_STUDENT" }),
       createQuiz: (title: string, questions: Question[]) =>
