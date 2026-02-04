@@ -70,11 +70,11 @@ export default function DashboardCards() {
     <div className="grid gap-4 lg:grid-cols-2">
       <Card className="shadow-md lg:col-span-2 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
         <CardHeader className="lg:px-6 xl:px-8">
-          <CardTitle className="flex items-center gap-2 lg:text-lg">
-            <LayoutGridIcon className="size-4" />
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <LayoutGridIcon className="size-5" />
             Central Dashboard
           </CardTitle>
-          <CardDescription className="lg:text-base/relaxed">
+          <CardDescription className="text-base/relaxed">
             Choose a workflow to manage students, projects, or run your next
             quiz.
           </CardDescription>
@@ -86,12 +86,10 @@ export default function DashboardCards() {
           <Card
             key={card.title}
             className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
-            <CardHeader className="flex flex-row items-start justify-between gap-2 lg:px-6 xl:px-8">
+            <CardHeader className="flex flex-row items-start justify-between gap-2 px-6 xl:px-8">
               <div className="flex items-center gap-2">
-                <Icon className="size-4 text-primary" />
-                <CardTitle className="text-base lg:text-lg">
-                  {card.title}
-                </CardTitle>
+                <Icon className="size-5 text-primary" />
+                <CardTitle className="text-xl">{card.title}</CardTitle>
               </div>
               <Badge
                 variant="outline"
@@ -100,12 +98,14 @@ export default function DashboardCards() {
               </Badge>
             </CardHeader>
             <CardContent className="h-full px-6 xl:px-8 ">
-              <p className="text-sm text-muted-foreground lg:text-base/relaxed">
+              <p className="text-muted-foreground text-base/relaxed">
                 {card.description}
               </p>
             </CardContent>
             <CardFooter className="px-6 xl:px-8">
-              <Button className="w-full md:w-5/12 text-base" variant="default">
+              <Button
+                className="w-full h-9 font-semibold active:font-normal md:w-5/12 text-base"
+                variant="default">
                 <Link href={card.href}>Open {card.title}</Link>
               </Button>
             </CardFooter>

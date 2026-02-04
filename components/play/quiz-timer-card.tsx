@@ -125,7 +125,7 @@ export default function QuizTimerCard() {
         </PopoverTrigger>
         <PopoverContent
           align="center"
-          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-[26rem] xl:w-[28rem] 2xl:w-[30rem]">
+          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-104 xl:w-md 2xl:w-120">
           <div>
             <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Set timer
