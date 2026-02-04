@@ -2,12 +2,18 @@
 
 import * as React from "react"
 
-import type { Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
-import { loadPersistedState, persistAllQuizzes, saveQuizIndex, saveStudents } from "@/lib/storage"
-import type { ProjectList, Question, Quiz, QuizIndexEntry, Student } from "@/lib/models"
+import type {
+  BreakoutGroups,
+  ProjectList,
+  Question,
+  Quiz,
+  QuizIndexEntry,
+  Student,
+} from "@/lib/models"
 import {
   loadPersistedState,
   persistAllQuizzes,
+  saveBreakoutGroups,
   saveProjectLists,
   saveQuizIndex,
   saveStudents,
@@ -360,7 +366,6 @@ function appReducer(state: AppState, action: AppAction): AppState {
             }
           : list
       )
-    case "SET_BREAKOUT_GROUPS": {
       return {
         ...state,
         persisted: {
@@ -369,11 +374,24 @@ function appReducer(state: AppState, action: AppAction): AppState {
         },
       }
     }
+    case "SET_BREAKOUT_GROUPS": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          breakoutGroups: action.payload,
+        },
+      }
+    }
     case "DELETE_PROJECT_LIST": {
       const projectLists = state.persisted.projectLists.filter(
         (list) => list.id !== action.payload.id
       )
-          breakoutGroups: action.payload,
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          projectLists,
         },
       }
     }
@@ -382,7 +400,6 @@ function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         persisted: {
           ...state.persisted,
-          projectLists,
           breakoutGroups: null,
         },
       }
@@ -709,7 +726,6 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
     saveProjectLists(state.persisted.projectLists)
     saveBreakoutGroups(state.persisted.breakoutGroups)
-    persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
   }, [state.persisted, state.ui.isHydrated])
 
   const actions = React.useMemo(

@@ -17,7 +17,7 @@
     "",
     "<TYPES>",
     "",
-    "^\@/lib/",
+    "^@/lib/",
     "",
     "<BUILTIN_MODULES>",
     "",

@@ -1,4 +1,5 @@
-import Link from "next/link"
+import Link from 'next/link';
+
 import {
   ClipboardListIcon,
   FolderKanbanIcon,
@@ -6,56 +7,62 @@ import {
   PlayCircleIcon,
   ShuffleIcon,
   UsersIcon,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { badgeVariants } from "@/components/ui/badge-variants"
-import { buttonVariants } from "@/components/ui/button-variants"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { badgeVariants } from '../ui/badge-variants';
+import { buttonVariants } from '../ui/button-variants';
 
 const cards = [
   {
-    title: "Students",
-    description: "Add students, mark absences, and keep your roster tidy.",
-    href: "/students",
+    title: 'Students',
+    description: 'Add students, mark absences, and keep your roster tidy.',
+    href: '/students',
     icon: UsersIcon,
-    badge: "Roster",
+    badge: 'Roster',
   },
   {
-    title: "Generator",
-    description: "Randomly pick a student without repeats until reset.",
-    href: "/generator",
+    title: 'Generator',
+    description: 'Randomly pick a student without repeats until reset.',
+    href: '/generator',
     icon: ShuffleIcon,
-    badge: "Random",
+    badge: 'Random',
   },
   {
-    title: "Breakout Rooms",
-    description: "Create randomized student groups for breakout sessions.",
-    href: "/breakout-rooms",
+    title: 'Breakout Rooms',
+    description: 'Create randomized student groups for breakout sessions.',
+    href: '/breakout-rooms',
     icon: UsersIcon,
-    badge: "Groups",
+    badge: 'Groups',
   },
   {
-    title: "Quiz Builder",
-    description: "Create quizzes with custom questions and answers.",
-    href: "/quizzes",
+    title: 'Quiz Builder',
+    description: 'Create quizzes with custom questions and answers.',
+    href: '/quizzes',
     icon: ClipboardListIcon,
-    badge: "Create",
+    badge: 'Create',
   },
   {
-    title: "Quiz Play",
-    description: "Draw a student + question, then reveal the answer.",
-    href: "/play",
+    title: 'Quiz Play',
+    description: 'Draw a student + question, then reveal the answer.',
+    href: '/play',
     icon: PlayCircleIcon,
-    badge: "Live",
+    badge: 'Live',
   },
   {
-    title: "Projects",
-    description: "Build student lists and manage grouped project teams.",
-    href: "/projects",
+    title: 'Projects',
+    description: 'Build student lists and manage grouped project teams.',
+    href: '/projects',
     icon: FolderKanbanIcon,
-    badge: "Lists",
+    badge: 'Lists',
   },
-]
+];
 
 export default function DashboardCards() {
   return (
@@ -67,12 +74,13 @@ export default function DashboardCards() {
             Central Dashboard
           </CardTitle>
           <CardDescription>
-            Choose a workflow to manage students, projects, or run your next quiz.
+            Choose a workflow to manage students, projects, or run your next
+            quiz.
           </CardDescription>
         </CardHeader>
       </Card>
       {cards.map((card) => {
-        const Icon = card.icon
+        const Icon = card.icon;
         return (
           <Card key={card.title}>
             <CardHeader className="flex flex-row items-start justify-between gap-2">
@@ -80,23 +88,24 @@ export default function DashboardCards() {
                 <Icon className="size-4 text-primary" />
                 <CardTitle className="text-base">{card.title}</CardTitle>
               </div>
-              <span className={badgeVariants({ variant: "secondary" })}>
+              <span className={badgeVariants({ variant: 'secondary' })}>
                 {card.badge}
               </span>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">{card.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {card.description}
+              </p>
               <Link
                 data-slot="button"
                 href={card.href}
-                className={buttonVariants({ size: "sm", className: "w-fit" })}
-              >
+                className={buttonVariants({ size: 'sm', className: 'w-fit' })}>
                 Open {card.title}
               </Link>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

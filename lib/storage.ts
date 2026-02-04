@@ -1,7 +1,15 @@
-import type { Quiz, QuizIndexEntry, Student } from "@/lib/models"
+import type {
+  BreakoutGroups,
+  ProjectList,
+  Quiz,
+  QuizIndexEntry,
+  Student,
+} from "@/lib/models"
 
 const STUDENTS_KEY = "teacherbuddy:students"
 const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
+const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
+const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
 const TIMER_KEY = "teacherbuddy:timer"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
@@ -12,17 +20,6 @@ export type PersistedTimerState = {
   isRunning: boolean
   savedAt: number
 }
-
-import type { ProjectList, Quiz, QuizIndexEntry, Student, BreakoutGroups } from "@/lib/models"
-
-const STUDENTS_KEY = "teacherbuddy:students"
-const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
-const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
-const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
-
-import type { BreakoutGroups, Quiz, QuizIndexEntry, Student } from "@/lib/models"
-
-const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
 
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback
@@ -84,26 +81,33 @@ export function loadProjectLists(): ProjectList[] {
   if (!Array.isArray(parsed)) return []
   return parsed
     .filter((entry): entry is ProjectList => {
+      const e = entry as Record<string, unknown>
       return (
         typeof entry === "object" &&
         entry !== null &&
-        typeof (entry as ProjectList).id === "string" &&
-        typeof (entry as ProjectList).name === "string" &&
-        typeof (entry as ProjectList).projectType === "string" &&
-        Array.isArray((entry as ProjectList).studentIds) &&
-        Array.isArray((entry as ProjectList).groups) &&
-        typeof (entry as ProjectList).createdAt === "number"
+        typeof e.id === "string" &&
+        typeof e.name === "string" &&
+        typeof e.projectType === "string" &&
+        Array.isArray(e.studentIds) &&
+        Array.isArray(e.groups)
       )
     })
-    .map((entry) => ({
-      ...entry,
-      description: entry.description ?? "",
-    }))
+    .map((entry) => {
+      const e = entry as Record<string, unknown>
+      return {
+        ...entry,
+        description: entry.description ?? "",
+        createdAt:
+          typeof e.createdAt === "number" ? e.createdAt : Date.now(),
+      }
+    })
 }
 
 export function saveProjectLists(lists: ProjectList[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(PROJECT_LISTS_KEY, JSON.stringify(lists))
+}
+
 export function loadBreakoutGroups(): BreakoutGroups | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
@@ -170,19 +174,13 @@ export function removeQuiz(id: string) {
 export function loadPersistedState(): {
   students: Student[]
   quizIndex: QuizIndexEntry[]
+  projectLists: ProjectList[]
+  breakoutGroups: BreakoutGroups | null
   quizzes: Record<string, Quiz>
 } {
   const students = loadStudents()
   const quizIndex = loadQuizIndex()
-  projectLists: ProjectList[]
-} {
-  const students = loadStudents()
-  const quizIndex = loadQuizIndex()
   const projectLists = loadProjectLists()
-  breakoutGroups: BreakoutGroups | null
-} {
-  const students = loadStudents()
-  const quizIndex = loadQuizIndex()
   const breakoutGroups = loadBreakoutGroups()
   const quizzes: Record<string, Quiz> = {}
   const cleanedIndex: QuizIndexEntry[] = []
@@ -198,9 +196,9 @@ export function loadPersistedState(): {
   return {
     students,
     quizIndex: cleanedIndex,
-    quizzes,
     projectLists,
     breakoutGroups,
+    quizzes,
   }
 }
 

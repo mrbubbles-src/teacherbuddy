@@ -70,9 +70,7 @@ export default function StudentNameGenerator() {
   };
 
   useEffect(() => {
-    queueMicrotask(() => syncFromStorage())
-  }, [])
-    syncFromStorage();
+    queueMicrotask(() => syncFromStorage());
   }, []);
 
   const remaining = useMemo(
