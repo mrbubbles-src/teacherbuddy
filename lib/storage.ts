@@ -19,6 +19,7 @@ const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
 const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
 const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
 const TIMER_KEY = "teacherbuddy:timer"
+const PRIVACY_NOTICE_ACK_KEY = "teacherbuddy:privacy-notice-acknowledged"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
 
@@ -256,4 +257,21 @@ export function saveTimer(state: PersistedTimerState) {
 export function clearTimer() {
   if (typeof window === "undefined") return
   localStorage.removeItem(TIMER_KEY)
+}
+
+/**
+ * Returns whether the user has acknowledged the privacy/local-storage notice.
+ * Used to avoid showing the notice again until local storage is cleared.
+ */
+export function isPrivacyNoticeAcknowledged(): boolean {
+  if (typeof window === "undefined") return false
+  return localStorage.getItem(PRIVACY_NOTICE_ACK_KEY) === "1"
+}
+
+/**
+ * Marks the privacy notice as acknowledged so it is not shown again.
+ */
+export function setPrivacyNoticeAcknowledged(): void {
+  if (typeof window === "undefined") return
+  localStorage.setItem(PRIVACY_NOTICE_ACK_KEY, "1")
 }

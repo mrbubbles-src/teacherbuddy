@@ -13,6 +13,7 @@ import {
 
 import AppShell from '@/components/app-shell';
 import Footer from '@/components/footer';
+import PrivacyNotice from '@/components/privacy-notice';
 import { AppStoreProvider } from '@/context/app-store';
 import { ThemeProvider } from '@/context/theme-provider';
 
@@ -69,6 +70,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AppStoreProvider>
             <AppShell footer={<Footer />}>{children}</AppShell>
+            <PrivacyNotice />
           </AppStoreProvider>
         </ThemeProvider>
       </body>

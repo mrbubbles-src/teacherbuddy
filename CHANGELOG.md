@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Metadata tests in `lib/__tests__/metadata.test.ts` covering metadata base fallback and Open Graph/Twitter composition.
 - New metadata documentation: `documentation/project-docs/metadata-and-seo.md`.
 - Generated Open Graph image route with `next/og`: `app/api/og/route.ts` (`/api/og`).
+- Logo to `/` page
+- Logo to Footer
 
 ### Changed
 
@@ -29,8 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Root dashboard metadata title is explicitly `Dashboard | TeacherBuddy` for title consistency with other pages.
 - `lib/page-info.tsx` now consumes shared route metadata from `lib/page-meta.ts`.
 - Project docs and README now document metadata and Open Graph patterns, including `NEXT_PUBLIC_SITE_URL`.
-- Logo to `/` page
-- Logo to Footer
 - Favicon switched to be aligned with the logo
 - Switched Icon in Sidebar Header to be aligned with the logo
 
