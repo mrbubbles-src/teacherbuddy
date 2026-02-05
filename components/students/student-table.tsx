@@ -153,14 +153,20 @@ export default function StudentTable() {
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
+      <CardContent className="px-6 xl:px-8 gap-5 xl:gap-6 text-base/relaxed flex flex-col">
         {students.length ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-lg/relaxed px-4 sm:px-3 md:px-2">
+                  Student
+                </TableHead>
+                <TableHead className="text-lg/relaxed px-4 sm:px-3 md:px-2">
+                  Status
+                </TableHead>
+                <TableHead className="text-lg/relaxed text-right px-4 sm:px-3 md:px-2">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -168,21 +174,21 @@ export default function StudentTable() {
                 const isExcluded = student.status === 'excluded';
                 return (
                   <TableRow key={student.id}>
-                    <TableCell>
+                    <TableCell className="px-4 sm:px-3 md:px-2">
                       <div className="flex flex-col">
-                        <span className="font-medium">
+                        <span className="font-medium text-base/relaxed md:text-lg/relaxed">
                           {formatStudentName(student.name)}
                         </span>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm/relaxed md:text-base/relaxed text-muted-foreground/70">
                           Added{' '}
                           {new Date(student.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 sm:px-3 md:px-2">
                       <Badge
                         className={cn(
-                          'p-2.5 text-sm shadow-sm',
+                          'p-2.5 text-base/relaxed shadow-sm',
                           isExcluded
                             ? 'bg-destructive/10 text-destructive border-destructive/50'
                             : 'bg-ctp-latte-green/10 text-ctp-latte-green border-ctp-latte-green/50',
@@ -190,27 +196,37 @@ export default function StudentTable() {
                         {isExcluded ? 'Excluded' : 'Active'}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 sm:px-3 md:px-2">
                       <div className="flex items-center justify-end gap-3">
                         <div className="flex items-center gap-2">
-                          <Label className="text-sm">Absent</Label>
+                          <Label className="text-sm/relaxed md:text-base/relaxed">
+                            Absent
+                          </Label>
                           <Checkbox
                             checked={isExcluded}
                             onCheckedChange={() =>
                               actions.toggleStudentExcluded(student.id)
                             }
                             aria-label={`Mark ${student.name} as absent`}
+                            className="touch-hitbox cursor-pointer border-accent/25"
                           />
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleOpenEdit(student.id)}>
+                          onClick={() => handleOpenEdit(student.id)}
+                          className="md:text-base/relaxed text-sm/relaxed">
                           Edit
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger
-                            render={<Button variant="ghost" size="sm" />}>
+                            render={
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                className="md:text-base/relaxed text-sm/relaxed"
+                              />
+                            }>
                             Delete
                           </AlertDialogTrigger>
                           <AlertDialogContent>

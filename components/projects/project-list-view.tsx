@@ -202,9 +202,9 @@ export default function ProjectListView() {
               <div className="flex flex-col gap-1">
                 <CardTitle className="text-xl">{list.name}</CardTitle>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <span>{createdAt}</span>
+                  <span className="text-base/relaxed">{createdAt}</span>
                   <span aria-hidden="true">•</span>
-                  <span>{list.projectType}</span>
+                  <span className="text-base/relaxed">{list.projectType}</span>
                   {isGroupedList ? (
                     <Badge
                       variant="outline"
@@ -220,7 +220,7 @@ export default function ProjectListView() {
                   )}
                 </div>
                 {list.description ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-base/relaxed text-muted-foreground">
                     {list.description}
                   </p>
                 ) : null}
@@ -280,7 +280,9 @@ export default function ProjectListView() {
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
                   <div className="flex flex-col gap-4">
                     <Field>
-                      <FieldLabel htmlFor={`edit-name-${list.id}`}>
+                      <FieldLabel
+                        htmlFor={`edit-name-${list.id}`}
+                        className="text-base/relaxed">
                         Project name
                       </FieldLabel>
                       <FieldContent>
@@ -291,11 +293,14 @@ export default function ProjectListView() {
                             setDraftName(event.target.value);
                             if (error) setError(null);
                           }}
+                          className="text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                         />
                       </FieldContent>
                     </Field>
                     <Field>
-                      <FieldLabel htmlFor={`edit-type-${list.id}`}>
+                      <FieldLabel
+                        htmlFor={`edit-type-${list.id}`}
+                        className="text-base/relaxed">
                         Project type
                       </FieldLabel>
                       <FieldContent>
@@ -306,11 +311,14 @@ export default function ProjectListView() {
                             setDraftType(event.target.value);
                             if (error) setError(null);
                           }}
+                          className="text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                         />
                       </FieldContent>
                     </Field>
                     <Field>
-                      <FieldLabel htmlFor={`edit-description-${list.id}`}>
+                      <FieldLabel
+                        htmlFor={`edit-description-${list.id}`}
+                        className="text-base/relaxed">
                         Description
                       </FieldLabel>
                       <FieldContent>
@@ -320,6 +328,7 @@ export default function ProjectListView() {
                           onChange={(event) => {
                             setDraftDescription(event.target.value);
                           }}
+                          className="text-base/relaxed  placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                         />
                       </FieldContent>
                     </Field>
@@ -327,8 +336,10 @@ export default function ProjectListView() {
                   </div>
                   <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/70 p-4">
                     <div className="flex flex-col gap-1">
-                      <p className="text-sm font-semibold">Selected students</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-lg/relaxed font-semibold">
+                        Selected students
+                      </p>
+                      <p className="text-base/relaxed text-muted-foreground">
                         {selectedIds.length}
                         {selectedIds.length === 1
                           ? ' student'
@@ -347,7 +358,7 @@ export default function ProjectListView() {
                       />
                       <label
                         htmlFor={`include-excluded-${list.id}`}
-                        className="text-sm text-muted-foreground">
+                        className="text-base/relaxed text-muted-foreground">
                         Include absent students
                       </label>
                     </div>
@@ -357,7 +368,7 @@ export default function ProjectListView() {
                           availableStudents.map((student) => (
                             <label
                               key={student.id}
-                              className="flex items-center justify-between gap-2 rounded-md border border-border/60 px-3 py-2 text-sm">
+                              className="flex items-center justify-between gap-2 rounded-md border border-border/60 px-3 py-2 text-base/relaxed">
                               <span className="font-medium">
                                 {formatStudentName(student.name)}
                               </span>
@@ -371,7 +382,7 @@ export default function ProjectListView() {
                             </label>
                           ))
                         ) : (
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-base/relaxed text-muted-foreground">
                             Everyone is already included in this list.
                           </p>
                         )}
@@ -386,7 +397,7 @@ export default function ProjectListView() {
                     <div
                       key={`${list.id}-group-${index + 1}`}
                       className="rounded-lg border border-border/60 p-3">
-                      <p className="text-sm font-semibold text-muted-foreground">
+                      <p className="text-base/relaxed font-semibold text-muted-foreground">
                         Group {index + 1}
                       </p>
                       <div className="mt-2 flex flex-wrap gap-2">
@@ -398,7 +409,7 @@ export default function ProjectListView() {
                               return (
                                 <div
                                   key={studentId}
-                                  className="flex items-center gap-2 rounded-md border border-border/60 px-2 py-1 text-sm">
+                                  className="flex items-center gap-2 rounded-md border border-border/60 px-2 py-1 text-base/relaxed">
                                   <span className="font-medium">
                                     {formatStudentName(student.name)}
                                   </span>
@@ -411,7 +422,7 @@ export default function ProjectListView() {
                                         Number.parseInt(value, 10),
                                       );
                                     }}>
-                                    <SelectTrigger className="w-28">
+                                    <SelectTrigger className="w-28 text-base/relaxed">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -441,13 +452,13 @@ export default function ProjectListView() {
                               <Badge
                                 key={studentId}
                                 variant="default"
-                                className="p-2.5 text-sm border-card/50 shadow-sm">
+                                className="p-2.5 text-base/relaxed border-card/50 shadow-sm">
                                 {formatStudentName(student.name)}
                               </Badge>
                             );
                           })
                         ) : (
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-base/relaxed text-muted-foreground">
                             No students assigned.
                           </p>
                         )}
@@ -464,7 +475,7 @@ export default function ProjectListView() {
                       return (
                         <div
                           key={studentId}
-                          className="flex items-center gap-2 rounded-md border border-border/60 px-2 py-1 text-sm">
+                          className="flex items-center gap-2 rounded-md border border-border/60 px-2 py-1 text-base/relaxed">
                           <span className="font-medium">
                             {formatStudentName(student.name)}
                           </span>
@@ -483,7 +494,7 @@ export default function ProjectListView() {
                       <Badge
                         key={studentId}
                         variant="default"
-                        className="p-2.5 text-sm border-card/50 shadow-sm">
+                        className="p-2.5 text-base/relaxed border-card/50 shadow-sm">
                         {formatStudentName(student.name)}
                       </Badge>
                     );

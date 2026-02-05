@@ -1,72 +1,111 @@
-"use client"
+'use client';
 
-import { useMemo, useState } from "react"
-import { CopyIcon } from "lucide-react"
+import type { Student } from '@/lib/models';
 
-import { useAppStore } from "@/context/app-store"
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
-import type { Student } from "@/lib/models"
-import { formatStudentName } from "@/lib/students"
-import GeneratorCardSkeleton from "@/components/loading/generator-card-skeleton"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { formatStudentName } from '@/lib/students';
 
-const DEFAULT_GROUP_SIZE = 3
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { CheckIcon, CopyIcon } from 'lucide-react';
+
+import GeneratorCardSkeleton from '@/components/loading/generator-card-skeleton';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useAppStore } from '@/context/app-store';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import { useTheme } from '@/hooks/use-theme';
+
+const DEFAULT_GROUP_SIZE = 3;
 
 export default function BreakoutGroupsCard() {
-  const { state, actions } = useAppStore()
-  const [groupSizeOverride, setGroupSizeOverride] = useState<number | null>(null)
-  const { copy: copyAll, isCopied: isAllCopied, reset: resetAllCopy } = useCopyToClipboard()
-  const { copy: copyGroup, isCopied: isGroupCopied, reset: resetGroupCopy } = useCopyToClipboard()
+  const { theme } = useTheme();
+  const { state, actions } = useAppStore();
+  const [groupSizeOverride, setGroupSizeOverride] = useState<number | null>(
+    null,
+  );
+  const {
+    copy: copyAll,
+    isCopied: isAllCopied,
+    reset: resetAllCopy,
+  } = useCopyToClipboard();
+  const { copy: copyGroup, reset: resetGroupCopy } = useCopyToClipboard();
+  const [copiedGroupIndex, setCopiedGroupIndex] = useState<number | null>(null);
+  const copyGroupTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyGroupTimeoutRef.current !== null) {
+        clearTimeout(copyGroupTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const activeStudents = useMemo(
-    () => state.persisted.students.filter((student) => student.status === "active"),
-    [state.persisted.students]
-  )
+    () =>
+      state.persisted.students.filter((student) => student.status === 'active'),
+    [state.persisted.students],
+  );
 
-  const persistedGroups = state.persisted.breakoutGroups
-  const groupSizeToUse = groupSizeOverride ?? persistedGroups?.groupSize ?? DEFAULT_GROUP_SIZE
-  const canGenerateGroups = activeStudents.length > 0 && groupSizeToUse > 0
+  const persistedGroups = state.persisted.breakoutGroups;
+  const groupSizeToUse =
+    groupSizeOverride ?? persistedGroups?.groupSize ?? DEFAULT_GROUP_SIZE;
+  const canGenerateGroups = activeStudents.length > 0 && groupSizeToUse > 0;
 
   const studentById = useMemo(() => {
-    return new Map(state.persisted.students.map((student) => [student.id, student]))
-  }, [state.persisted.students])
+    return new Map(
+      state.persisted.students.map((student) => [student.id, student]),
+    );
+  }, [state.persisted.students]);
 
   const groups = useMemo((): Student[][] => {
-    if (!persistedGroups) return []
+    if (!persistedGroups) return [];
     return persistedGroups.groupIds
-      .map((group: string[]) =>
-        group.map((id: string) => studentById.get(id)).filter(Boolean) as Student[]
+      .map(
+        (group: string[]) =>
+          group
+            .map((id: string) => studentById.get(id))
+            .filter(Boolean) as Student[],
       )
-      .filter((group: Student[]) => group.length > 0)
-  }, [persistedGroups, studentById])
+      .filter((group: Student[]) => group.length > 0);
+  }, [persistedGroups, studentById]);
 
   const groupSummary = useMemo(() => {
     return groups
       .map((group: Student[], index: number) => {
-        const names = group.map((student: Student) => formatStudentName(student.name)).join(", ")
-        return `Group ${index + 1}: ${names}`
+        const names = group
+          .map((student: Student) => formatStudentName(student.name))
+          .join(', ');
+        return `Group ${index + 1}: ${names}`;
       })
-      .join("\n")
-  }, [groups])
+      .join('\n');
+  }, [groups]);
 
   const buildGroups = (students: Student[], size: number) => {
-    const shuffled = [...students]
+    const shuffled = [...students];
     for (let index = shuffled.length - 1; index > 0; index -= 1) {
-      const swapIndex = Math.floor(Math.random() * (index + 1))
-      ;[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]]
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[swapIndex]] = [
+        shuffled[swapIndex],
+        shuffled[index],
+      ];
     }
-    const nextGroups: Student[][] = []
+    const nextGroups: Student[][] = [];
     for (let index = 0; index < shuffled.length; index += size) {
-      nextGroups.push(shuffled.slice(index, index + size))
+      nextGroups.push(shuffled.slice(index, index + size));
     }
-    return nextGroups
-  }
+    return nextGroups;
+  };
 
   if (!state.ui.isHydrated) {
-    return <GeneratorCardSkeleton />
+    return <GeneratorCardSkeleton />;
   }
 
   return (
@@ -91,71 +130,101 @@ export default function BreakoutGroupsCard() {
             <Input
               type="number"
               min={1}
+              inputMode="numeric"
               value={groupSizeToUse}
               onChange={(event) => {
-                const nextValue = Number(event.target.value)
+                const nextValue = Number(event.target.value);
                 if (!Number.isNaN(nextValue)) {
-                  setGroupSizeOverride(nextValue)
+                  setGroupSizeOverride(nextValue);
                 }
               }}
+              className="text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
             />
           </label>
           <Button
             className="h-9 font-semibold text-base sm:min-w-32"
             disabled={!canGenerateGroups}
             onClick={() => {
-              const size = Math.max(groupSizeToUse, 1)
-              const nextGroups = buildGroups(activeStudents, size)
+              const size = Math.max(groupSizeToUse, 1);
+              const nextGroups = buildGroups(activeStudents, size);
               actions.setBreakoutGroups({
                 groupSize: size,
-                groupIds: nextGroups.map((group) => group.map((student) => student.id)),
+                groupIds: nextGroups.map((group) =>
+                  group.map((student) => student.id),
+                ),
                 createdAt: Date.now(),
-              })
-              setGroupSizeOverride(null)
-              resetAllCopy()
-              resetGroupCopy()
-            }}
-          >
+              });
+              setGroupSizeOverride(null);
+              resetAllCopy();
+              resetGroupCopy();
+              if (copyGroupTimeoutRef.current !== null) {
+                clearTimeout(copyGroupTimeoutRef.current);
+                copyGroupTimeoutRef.current = null;
+              }
+              setCopiedGroupIndex(null);
+            }}>
             Generate Groups
           </Button>
           <Button
             variant="secondary"
             className="h-9 font-semibold text-base sm:min-w-32"
             disabled={!groups.length}
-            onClick={() => copyAll(groupSummary)}
-          >
-            {isAllCopied ? "Copied!" : "Copy Groups"}
+            onClick={() => copyAll(groupSummary)}>
+            {isAllCopied ? 'Copied!' : 'Copy Groups'}
           </Button>
         </div>
         {groups.length ? (
-          <div className="space-y-3">
+          <div className="flex flex-wrap gap-4 items-center">
             {groups.map((group: Student[], index: number) => (
-              <div key={`group-${index}`} className="rounded-md border border-border/60 px-3 py-2">
+              <div
+                key={`group-${index}`}
+                className="flex flex-col rounded-md border border-border/60 px-3 py-2 w-fit flex-wrap
+                ">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  <p className="text-sm/relaxed font-medium uppercase tracking-[0.2em] text-muted-foreground">
                     Group {index + 1}
                   </p>
                   <Button
+                    disabled={copiedGroupIndex === index}
                     type="button"
                     variant="ghost"
                     size="icon-sm"
                     aria-label={
-                      isGroupCopied
+                      copiedGroupIndex === index
                         ? `Copied group ${index + 1}`
                         : `Copy group ${index + 1}`
                     }
                     onClick={() => {
                       const names = group
-                        .map((student: Student) => formatStudentName(student.name))
-                        .join(", ")
-                      copyGroup(names)
-                    }}
-                  >
-                    <CopyIcon />
+                        .map((student: Student) =>
+                          formatStudentName(student.name),
+                        )
+                        .join(', ');
+                      copyGroup(names);
+                      setCopiedGroupIndex(index);
+                      if (copyGroupTimeoutRef.current !== null) {
+                        clearTimeout(copyGroupTimeoutRef.current);
+                      }
+                      copyGroupTimeoutRef.current = setTimeout(() => {
+                        setCopiedGroupIndex(null);
+                        copyGroupTimeoutRef.current = null;
+                      }, 2000);
+                    }}>
+                    {copiedGroupIndex === index ? (
+                      <CheckIcon
+                        className={`${theme === 'dark' ? 'text-ctp-mocha-green' : 'text-ctp-latte-green'}`}
+                      />
+                    ) : (
+                      <CopyIcon
+                        className={`${theme === 'dark' ? 'text-ctp-mocha-peach/75' : 'text-ctp-latte-peach/50'}`}
+                      />
+                    )}
                   </Button>
                 </div>
-                <p className="mt-1 text-sm text-foreground lg:text-base">
-                  {group.map((student: Student) => formatStudentName(student.name)).join(", ")}
+                <p className="text-lg/relaxed text-foreground">
+                  {group
+                    .map((student: Student) => formatStudentName(student.name))
+                    .join(', ')}
                 </p>
               </div>
             ))}
@@ -174,5 +243,5 @@ export default function BreakoutGroupsCard() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

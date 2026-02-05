@@ -73,7 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 size="lg"
                 className="font-semibold group-data-[collapsible=icon]:justify-center [&>svg]:group-data-[collapsible=icon]:size-5">
                 <GraduationCapIcon />
-                <span className="group-data-[collapsible=icon]:hidden">
+                <span className="group-data-[collapsible=icon]:hidden text-lg/relaxed">
                   TeacherBuddy
                 </span>
               </SidebarMenuButton>

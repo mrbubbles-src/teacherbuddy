@@ -1,23 +1,12 @@
-"use client"
+'use client';
 
-import { useMemo, useState } from "react"
-import { PencilIcon, Trash2Icon, PlusIcon } from "lucide-react"
+import type { Question, Quiz } from '@/lib/models';
 
-import type { Question, Quiz } from "@/lib/models"
-import { useAppStore } from "@/context/app-store"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { useMemo, useState } from 'react';
+
+import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+
+import QuizSelector from '@/components/quizzes/quiz-selector';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,58 +17,90 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import QuizSelector from "@/components/quizzes/quiz-selector"
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
+import { useAppStore } from '@/context/app-store';
 
 type QuizEditorFormProps = {
-  quiz: Quiz | null
-  quizId: string | null
-  importCard: React.ReactNode
-}
+  quiz: Quiz | null;
+  quizId: string | null;
+  importCard: React.ReactNode;
+};
 
-export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorFormProps) {
-  const { state, actions } = useAppStore()
+export default function QuizEditorForm({
+  quiz,
+  quizId,
+  importCard,
+}: QuizEditorFormProps) {
+  const { state, actions } = useAppStore();
 
   // Form state - initialized from props, reset via key pattern in parent
-  const [title, setTitle] = useState(quiz?.title ?? "")
-  const [questions, setQuestions] = useState<Question[]>(quiz?.questions ?? [])
-  const [prompt, setPrompt] = useState("")
-  const [answer, setAnswer] = useState("")
-  const [quizError, setQuizError] = useState<string | null>(null)
-  const [questionError, setQuestionError] = useState<string | null>(null)
-  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null)
+  const [title, setTitle] = useState(quiz?.title ?? '');
+  const [questions, setQuestions] = useState<Question[]>(quiz?.questions ?? []);
+  const [prompt, setPrompt] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [quizError, setQuizError] = useState<string | null>(null);
+  const [questionError, setQuestionError] = useState<string | null>(null);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null,
+  );
 
   const editingQuestion = useMemo(
-    () => questions.find((question) => question.id === editingQuestionId) ?? null,
-    [questions, editingQuestionId]
-  )
+    () =>
+      questions.find((question) => question.id === editingQuestionId) ?? null,
+    [questions, editingQuestionId],
+  );
 
   const handleSaveQuiz = () => {
-    const trimmed = title.trim()
+    const trimmed = title.trim();
     if (!trimmed) {
-      setQuizError("Quiz title is required.")
-      return
+      setQuizError('Quiz title is required.');
+      return;
     }
     if (!questions.length) {
-      setQuizError("Add at least one question before saving.")
-      return
+      setQuizError('Add at least one question before saving.');
+      return;
     }
 
     if (quizId) {
-      actions.updateQuiz(quizId, trimmed, questions)
+      actions.updateQuiz(quizId, trimmed, questions);
     } else {
-      actions.createQuiz(trimmed, questions)
+      actions.createQuiz(trimmed, questions);
     }
-    setQuizError(null)
-  }
+    setQuizError(null);
+  };
 
   const handleAddOrUpdateQuestion = () => {
-    const trimmedPrompt = prompt.trim()
-    const trimmedAnswer = answer.trim()
+    const trimmedPrompt = prompt.trim();
+    const trimmedAnswer = answer.trim();
 
     if (!trimmedPrompt || !trimmedAnswer) {
-      setQuestionError("Both question and answer are required.")
-      return
+      setQuestionError('Both question and answer are required.');
+      return;
     }
 
     if (editingQuestionId) {
@@ -87,9 +108,9 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
         prev.map((question) =>
           question.id === editingQuestionId
             ? { ...question, prompt: trimmedPrompt, answer: trimmedAnswer }
-            : question
-        )
-      )
+            : question,
+        ),
+      );
     } else {
       setQuestions((prev) => [
         ...prev,
@@ -98,48 +119,50 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
           prompt: trimmedPrompt,
           answer: trimmedAnswer,
         },
-      ])
+      ]);
     }
 
-    setPrompt("")
-    setAnswer("")
-    setEditingQuestionId(null)
-    setQuestionError(null)
-  }
+    setPrompt('');
+    setAnswer('');
+    setEditingQuestionId(null);
+    setQuestionError(null);
+  };
 
   const handleEditQuestion = (questionId: string) => {
-    const question = questions.find((item) => item.id === questionId)
-    if (!question) return
-    setPrompt(question.prompt)
-    setAnswer(question.answer)
-    setEditingQuestionId(questionId)
-    setQuestionError(null)
-  }
+    const question = questions.find((item) => item.id === questionId);
+    if (!question) return;
+    setPrompt(question.prompt);
+    setAnswer(question.answer);
+    setEditingQuestionId(questionId);
+    setQuestionError(null);
+  };
 
   const handleRemoveQuestion = (questionId: string) => {
-    setQuestions((prev) => prev.filter((question) => question.id !== questionId))
+    setQuestions((prev) =>
+      prev.filter((question) => question.id !== questionId),
+    );
     if (editingQuestionId === questionId) {
-      setEditingQuestionId(null)
-      setPrompt("")
-      setAnswer("")
+      setEditingQuestionId(null);
+      setPrompt('');
+      setAnswer('');
     }
-  }
+  };
 
   const handleCancelEdit = () => {
-    setEditingQuestionId(null)
-    setPrompt("")
-    setAnswer("")
-    setQuestionError(null)
-  }
+    setEditingQuestionId(null);
+    setPrompt('');
+    setAnswer('');
+    setQuestionError(null);
+  };
 
   const handleNewQuiz = () => {
-    actions.selectQuizForEditor(null)
-  }
+    actions.selectQuizForEditor(null);
+  };
 
   const handleDeleteQuiz = () => {
-    if (!quizId) return
-    actions.deleteQuiz(quizId)
-  }
+    if (!quizId) return;
+    actions.deleteQuiz(quizId);
+  };
 
   return (
     <>
@@ -157,18 +180,20 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
               value={quizId}
               onChange={actions.selectQuizForEditor}
               quizzes={state.persisted.quizIndex}
-              placeholder="Select a quiz to edit"
             />
             <Field>
-              <FieldLabel htmlFor="quiz-title">Quiz title</FieldLabel>
+              <FieldLabel htmlFor="quiz-title" className="text-lg/relaxed">
+                Quiz title
+              </FieldLabel>
               <FieldContent>
                 <Input
                   id="quiz-title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
+                  className="text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                   placeholder="e.g. Geography Review"
                 />
-                <FieldDescription>
+                <FieldDescription className="text-base/relaxed text-muted-foreground/70">
                   Titles are display-only and can be edited later.
                 </FieldDescription>
               </FieldContent>
@@ -189,12 +214,21 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
             </div>
             {quizId ? (
               <AlertDialog>
-                <AlertDialogTrigger render={<Button variant="destructive" />}>Delete Quiz</AlertDialogTrigger>
+                <AlertDialogTrigger
+                  render={
+                    <Button
+                      variant="destructive"
+                      className="w-full h-9 font-semibold active:font-normal md:w-6/12 lg:w-8/12 xl:w-6/12 2xl:w-5/12 text-base"
+                    />
+                  }>
+                  Delete Quiz
+                </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete this quiz?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will remove the quiz and its questions from local storage.
+                      This will remove the quiz and its questions from local
+                      storage.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -211,31 +245,39 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
 
         <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
           <CardHeader className="px-6 xl:px-8">
-            <CardTitle className="text-xl">{editingQuestion ? "Edit Question" : "Add Question"}</CardTitle>
+            <CardTitle className="text-xl">
+              {editingQuestion ? 'Edit Question' : 'Add Question'}
+            </CardTitle>
             <CardDescription className="text-base/relaxed">
               Add prompts and answers before saving the quiz.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
             <Field>
-              <FieldLabel htmlFor="question-prompt">Question</FieldLabel>
+              <FieldLabel className="text-lg/relaxed" htmlFor="question-prompt">
+                Question
+              </FieldLabel>
               <FieldContent>
                 <Input
                   id="question-prompt"
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
                   placeholder="What is the capital of France?"
+                  className="text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                 />
               </FieldContent>
             </Field>
             <Field>
-              <FieldLabel htmlFor="question-answer">Answer</FieldLabel>
+              <FieldLabel className="text-lg/relaxed" htmlFor="question-answer">
+                Answer
+              </FieldLabel>
               <FieldContent>
                 <Textarea
                   id="question-answer"
                   value={answer}
                   onChange={(event) => setAnswer(event.target.value)}
                   placeholder="Paris"
+                  className="text-base/relaxed placeholder:text-muted-foreground/70 placeholder:text-base/relaxed"
                 />
               </FieldContent>
             </Field>
@@ -245,7 +287,7 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
                 onClick={handleAddOrUpdateQuestion}
                 className="h-9 font-semibold text-base sm:min-w-32">
                 <PlusIcon className="size-3.5" />
-                {editingQuestion ? "Update Question" : "Add Question"}
+                {editingQuestion ? 'Update Question' : 'Add Question'}
               </Button>
               {editingQuestion ? (
                 <Button
@@ -267,8 +309,8 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
           <CardTitle className="text-xl">Questions</CardTitle>
           <CardDescription className="text-base/relaxed">
             {questions.length
-              ? `${questions.length} question${questions.length === 1 ? "" : "s"}`
-              : "Add questions to build your quiz."}
+              ? `${questions.length} question${questions.length === 1 ? '' : 's'}`
+              : 'Add questions to build your quiz.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
@@ -276,18 +318,20 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Prompt</TableHead>
-                  <TableHead>Answer</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-base/relaxed">Prompt</TableHead>
+                  <TableHead className="text-base/relaxed">Answer</TableHead>
+                  <TableHead className="text-right text-base/relaxed">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {questions.map((question) => (
                   <TableRow key={question.id}>
-                    <TableCell className="whitespace-normal">
+                    <TableCell className="whitespace-normal text-base/relaxed">
                       {question.prompt}
                     </TableCell>
-                    <TableCell className="whitespace-normal">
+                    <TableCell className="whitespace-normal text-base/relaxed">
                       {question.answer}
                     </TableCell>
                     <TableCell>
@@ -295,17 +339,15 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          onClick={() => handleEditQuestion(question.id)}
-                        >
+                          onClick={() => handleEditQuestion(question.id)}>
                           <PencilIcon className="size-3.5" />
                           <span className="sr-only">Edit</span>
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          onClick={() => handleRemoveQuestion(question.id)}
-                        >
-                          <Trash2Icon className="size-3.5" />
+                          onClick={() => handleRemoveQuestion(question.id)}>
+                          <Trash2Icon className="size-3.5 text-destructive" />
                           <span className="sr-only">Remove</span>
                         </Button>
                       </div>
@@ -322,5 +364,5 @@ export default function QuizEditorForm({ quiz, quizId, importCard }: QuizEditorF
         </CardContent>
       </Card>
     </>
-  )
+  );
 }
