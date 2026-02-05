@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <footer className="text-sm text-muted-foreground py-6 px-4 container mx-auto flex flex-col gap-4 items-center">
       <Separator orientation="horizontal" className="my-4 w-full" />
-      <article className="max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-2/6">
+      <section className="max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-2/6">
         <Image
           src={Logo}
           alt="TeacherBuddy Logo"
@@ -22,8 +22,8 @@ const Footer = () => {
           placeholder="blur"
           blurDataURL={Logo.blurDataURL}
         />
-      </article>
-      <article className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+      </section>
+      <section className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
         <p className="text-center sm:text-left">
           &copy; {currentYear}{' '}
           <Link
@@ -48,8 +48,8 @@ const Footer = () => {
             TeacherBuddy
           </Link>
         </p>
-      </article>
-      <article className="text-center">
+      </section>
+      <section className="text-center">
         <p>
           Color theme inspired by{' '}
           <Link
@@ -60,7 +60,24 @@ const Footer = () => {
             Catppuccin
           </Link>
         </p>
-      </article>
+      </section>
+      <section className="flex items-center gap-2">
+        <Link
+          href="https://mrbubbles-src.dev/de/impressum"
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-primary hover:text-primary/70">
+          Privacy Policy
+        </Link>
+        <Separator orientation="vertical" className="h-4 shrink-0" />
+        <Link
+          href="https://mrbubbles-src.dev/de/datenschutz"
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-primary hover:text-primary/70">
+          Legal Notice
+        </Link>
+      </section>
     </footer>
   );
 };

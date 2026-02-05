@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generated Open Graph image route with `next/og`: `app/api/og/route.ts` (`/api/og`).
 - Logo to `/` page
 - Logo to Footer
+- Privacy Notice
+- `sitemap.xml` and `robots.txt`
+- Privacy Policy and Legal Notice to Footer
 
 ### Changed
 
