@@ -1,6 +1,6 @@
 # Getting Started
 
-A guide for developers new to the TeacherBuddy codebase.
+A guide for developers new to the TeacherBuddy codebase. For a full list of docs, see [README.md](README.md) in this folder.
 
 ## Prerequisites
 
@@ -194,6 +194,7 @@ it("renders correctly", () => {
 
 ## Resources
 
+- **In-repo**: [documentation/project-docs/](README.md) – component reference, state, hooks, testing, conventions
 - [Next.js App Router](https://nextjs.org/docs/app)
 - [React 19](https://react.dev/)
 - [Vitest](https://vitest.dev/)

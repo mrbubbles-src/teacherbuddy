@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/context/theme-provider';
 import { AppStoreProvider } from '@/context/app-store';
 import AppShell from '@/components/app-shell';
+import Footer from '@/components/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +36,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='dark'>
           <AppStoreProvider>
-            <AppShell>{children}</AppShell>
+            <AppShell footer={<Footer />}>{children}</AppShell>
           </AppStoreProvider>
         </ThemeProvider>
       </body>

@@ -31,12 +31,12 @@ export default function GlobalError({
         </p>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row">
-        <Button onClick={reset} className="sm:w-40">
+        <Button onClick={reset} className="sm:min-w-32">
           Try Again
         </Button>
         <Button
           variant="secondary"
-          className="sm:w-40"
+          className="sm:min-w-32"
           render={<Link href="/" />}
         >
           Dashboard

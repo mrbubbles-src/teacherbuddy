@@ -42,7 +42,13 @@ teacherbuddy/
 │   │   └── __tests__/      # Quiz component tests
 │   ├── play/               # Quiz play components
 │   ├── generator/          # Generator components
-│   └── utility/            # Theme toggle, etc.
+│   ├── breakout/           # BreakoutGroupsCard
+│   ├── projects/           # ProjectListBuilder, ProjectListView
+│   ├── utility/            # ThemeToggle
+│   ├── app-shell.tsx       # Root layout shell
+│   ├── header.tsx          # Page header (timer in header)
+│   ├── footer.tsx          # Credits footer
+│   └── student-name-generator.tsx
 ├── context/                # React context providers
 │   ├── app-store.tsx       # Global state and reducer
 │   ├── theme-provider.tsx  # next-themes wrapper
@@ -83,16 +89,21 @@ Tests are colocated with source code in `__tests__/` directories:
 
 ## Styling and Theme
 
-- Tailwind v4 configured in `app/globals.css`
-- Theme variables in `app/color-vars.css`, toggled via `next-themes`
-- `components/utility/theme-toggle.tsx` uses view transition helper in `lib/view-transition.ts`
+- Tailwind v4 and shadcn styles in `app/globals.css` (`@import 'tailwindcss'`, `@import 'shadcn/tailwind.css'`).
+- Theme variables (Catppuccin Latte/Mocha) live in `app/globals.css` (`:root` and `.dark`); toggled via `next-themes` (`ThemeProvider` in root layout).
+- `components/utility/theme-toggle.tsx` uses `lib/view-transition.ts` for smooth theme transitions.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `context/app-store.tsx` | Central state management with reducer |
-| `lib/storage.ts` | localStorage read/write with validation |
+| `app/layout.tsx` | Root layout: fonts (Geist), ThemeProvider, AppStoreProvider, AppShell, Footer |
+| `context/app-store.tsx` | Central state: reducer, useAppStore, hydration, persistence effects |
+| `lib/storage.ts` | localStorage read/write and validation |
 | `lib/type-guards.ts` | Runtime type checking for persisted data |
-| `components/app-shell.tsx` | Layout wrapper with sidebar navigation |
-| `vitest.config.ts` | Test runner configuration |
+| `lib/models.ts` | Shared TypeScript types (Student, Quiz, ProjectList, etc.) |
+| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header, main content |
+| `components/header.tsx` | Page meta, SidebarTrigger, ThemeToggle, QuizTimerCard |
+| `next.config.ts` | Next config; React Compiler enabled unless `NEXT_DISABLE_REACT_COMPILER=1` |
+| `vitest.config.ts` | Vitest + jsdom, path alias `@`, coverage for lib/hooks/context |
+| `vitest.setup.ts` | jest-dom, cleanup, localStorage/crypto mocks |

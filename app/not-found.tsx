@@ -20,7 +20,7 @@ export default function NotFound() {
           workflow.
         </p>
       </div>
-      <Button className="sm:w-40" render={<Link href="/" />}>
+      <Button className="sm:min-w-32" render={<Link href="/" />}>
         Back to Dashboard
       </Button>
     </div>

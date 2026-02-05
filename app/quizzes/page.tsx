@@ -1,9 +1,10 @@
-import QuizEditor from "@/components/quizzes/quiz-editor"
+import QuizEditorSkeleton from '@/components/loading/quiz-editor-skeleton';
+import QuizEditor from '@/components/quizzes/quiz-editor';
 
 export default function Page() {
   return (
     <div className="flex flex-col gap-4">
-      <QuizEditor />
+      <QuizEditor skeleton={<QuizEditorSkeleton />} />
     </div>
-  )
+  );
 }

@@ -172,6 +172,61 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-ctp-latte-rosewater: oklch(var(--ctp-latte-rosewater));
+  --color-ctp-latte-flamingo: oklch(var(--ctp-latte-flamingo));
+  --color-ctp-latte-pink: oklch(var(--ctp-latte-pink));
+  --color-ctp-latte-mauve: oklch(var(--ctp-latte-mauve));
+  --color-ctp-latte-red: oklch(var(--ctp-latte-red));
+  --color-ctp-latte-maroon: oklch(var(--ctp-latte-maroon));
+  --color-ctp-latte-peach: oklch(var(--ctp-latte-peach));
+  --color-ctp-latte-yellow: oklch(var(--ctp-latte-yellow));
+  --color-ctp-latte-green: oklch(var(--ctp-latte-green));
+  --color-ctp-latte-teal: oklch(var(--ctp-latte-teal));
+  --color-ctp-latte-sky: oklch(var(--ctp-latte-sky));
+  --color-ctp-latte-sapphire: oklch(var(--ctp-latte-sapphire));
+  --color-ctp-latte-blue: oklch(var(--ctp-latte-blue));
+  --color-ctp-latte-lavender: oklch(var(--ctp-latte-lavender));
+  --color-ctp-latte-text: oklch(var(--ctp-latte-text));
+  --color-ctp-latte-subtext-1: oklch(var(--ctp-latte-subtext-1));
+  --color-ctp-latte-subtext-0: oklch(var(--ctp-latte-subtext-0));
+  --color-ctp-latte-overlay-2: oklch(var(--ctp-latte-overlay-2));
+  --color-ctp-latte-overlay-1: oklch(var(--ctp-latte-overlay-1));
+  --color-ctp-latte-overlay-0: oklch(var(--ctp-latte-overlay-0));
+  --color-ctp-latte-surface-2: oklch(var(--ctp-latte-surface-2));
+  --color-ctp-latte-surface-1: oklch(var(--ctp-latte-surface-1));
+  --color-ctp-latte-surface-0: oklch(var(--ctp-latte-surface-0));
+  --color-ctp-latte-base: oklch(var(--ctp-latte-base));
+  --color-ctp-latte-mantle: oklch(var(--ctp-latte-mantle));
+  --color-ctp-latte-crust: oklch(var(--ctp-latte-crust));
+
+  /* Mocha */
+  --color-ctp-mocha-rosewater: oklch(var(--ctp-mocha-rosewater));
+  --color-ctp-mocha-flamingo: oklch(var(--ctp-mocha-flamingo));
+  --color-ctp-mocha-pink: oklch(var(--ctp-mocha-pink));
+  --color-ctp-mocha-mauve: oklch(var(--ctp-mocha-mauve));
+  --color-ctp-mocha-red: oklch(var(--ctp-mocha-red));
+  --color-ctp-mocha-maroon: oklch(var(--ctp-mocha-maroon));
+  --color-ctp-mocha-peach: oklch(var(--ctp-mocha-peach));
+  --color-ctp-mocha-yellow: oklch(var(--ctp-mocha-yellow));
+  --color-ctp-mocha-green: oklch(var(--ctp-mocha-green));
+  --color-ctp-mocha-teal: oklch(var(--ctp-mocha-teal));
+  --color-ctp-mocha-sky: oklch(var(--ctp-mocha-sky));
+  --color-ctp-mocha-sapphire: oklch(var(--ctp-mocha-sapphire));
+  --color-ctp-mocha-blue: oklch(var(--ctp-mocha-blue));
+  --color-ctp-mocha-lavender: oklch(var(--ctp-mocha-lavender));
+  --color-ctp-mocha-text: oklch(var(--ctp-mocha-text));
+  --color-ctp-mocha-subtext-1: oklch(var(--ctp-mocha-subtext-1));
+  --color-ctp-mocha-subtext-0: oklch(var(--ctp-mocha-subtext-0));
+  --color-ctp-mocha-overlay-2: oklch(var(--ctp-mocha-overlay-2));
+  --color-ctp-mocha-overlay-1: oklch(var(--ctp-mocha-overlay-1));
+  --color-ctp-mocha-overlay-0: oklch(var(--ctp-mocha-overlay-0));
+  --color-ctp-mocha-surface-2: oklch(var(--ctp-mocha-surface-2));
+  --color-ctp-mocha-surface-1: oklch(var(--ctp-mocha-surface-1));
+  --color-ctp-mocha-surface-0: oklch(var(--ctp-mocha-surface-0));
+  --color-ctp-mocha-base: oklch(var(--ctp-mocha-base));
+  --color-ctp-mocha-mantle: oklch(var(--ctp-mocha-mantle));
+  --color-ctp-mocha-crust: oklch(var(--ctp-mocha-crust));
 }
 @utility touch-hitbox {
   position: relative;

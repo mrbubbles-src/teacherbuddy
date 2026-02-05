@@ -22,15 +22,16 @@
 
 ## Navigation
 
-The sidebar (`components/navigation/sidebar-nav.tsx`) displays links to all feature routes. The current route is highlighted based on pathname matching.
+- **Sidebar**: `components/navigation/sidebar-nav.tsx` – links to all feature routes; current route highlighted by pathname. Sidebar is collapsible (icon-only mode) via `SidebarProvider` in `AppShell`.
+- **Header**: Every page shows a header (title, description, sidebar trigger, theme toggle) and the **QuizTimerCard** (countdown timer with alerts). See `components/header.tsx`.
 
 ## Route Components
 
-Each route page typically renders:
-1. A main feature card component
-2. Optional secondary components (tables, lists)
-3. Hydration skeletons until `state.ui.isHydrated` is true
+Each route page typically:
+1. Renders a main feature card component
+2. Optionally renders secondary components (tables, lists)
+3. Shows hydration skeletons until `state.ui.isHydrated` is true
 
 ## Static Generation
 
-All routes are statically generated at build time. Client-side state hydration happens on mount via the `AppStoreProvider`.
+All routes are statically generated at build time. Client-side state is hydrated on mount via `AppStoreProvider` and persisted to `localStorage` (see [state-and-storage.md](state-and-storage.md)).
