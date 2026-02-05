@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `lib/page-info.tsx` now consumes shared route metadata from `lib/page-meta.ts`.
 - Project docs and README now document metadata and Open Graph patterns, including `NEXT_PUBLIC_SITE_URL`.
 - Logo to `/` page
+- Logo to Footer
 - Favicon switched to be aligned with the logo
 - Switched Icon in Sidebar Header to be aligned with the logo
 
