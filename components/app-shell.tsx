@@ -95,7 +95,7 @@ export default function AppShell({
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
             <span className="group-data-[collapsible=icon]:text-xs">
-              v1.0.1
+              v1.1.1
             </span>
             <span className="uppercase tracking-[0.2em] group-data-[collapsible=icon]:hidden">
               Classroom
