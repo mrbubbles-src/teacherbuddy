@@ -4,13 +4,14 @@
 
 | Package | Purpose |
 |---------|---------|
-| `next` | App Router framework and server rendering |
+| `next` | App Router framework and server rendering (16.x) |
 | `react`, `react-dom` | UI runtime (React 19) |
-| `@base-ui/react` | Headless UI primitives for `components/ui/*` |
+| `@base-ui/react` | Headless UI primitives used by shadcn components |
+| `shadcn` | UI component system (Tailwind + Base UI); styles in `app/globals.css` via `shadcn/tailwind.css` |
 | `next-themes` | Theme management and system preference sync |
 | `lucide-react` | Icon library |
-| `class-variance-authority` | Variant-based component styling |
-| `clsx`, `tailwind-merge` | Conditional class name utilities |
+| `class-variance-authority` (CVA) | Variant-based component styling |
+| `clsx`, `tailwind-merge` | Conditional class names (`cn()` in `lib/utils.ts`) |
 | `tw-animate-css` | Tailwind animation utilities |
 
 ## Development
@@ -50,6 +51,16 @@ The project uses [Bun](https://bun.sh/) as the package manager and runtime. All 
 - Bun: 1.0+ (recommended)
 - React: 19.x
 - Next.js: 16.x
+
+## Adding and Removing Dependencies
+
+Use Bun only (see AGENTS.md / CLAUDE.md):
+
+```bash
+bun add <package>           # Add dependency
+bun add -d <package>        # Add dev dependency
+bun remove <package>        # Remove dependency
+```
 
 ## Updating Dependencies
 
