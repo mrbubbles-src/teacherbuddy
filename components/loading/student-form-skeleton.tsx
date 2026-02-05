@@ -1,6 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
+/**
+ * Displays loading placeholders for the student add/import form.
+ * Use while student state hydration is in progress.
+ */
 export default function StudentFormSkeleton() {
   return (
     <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">

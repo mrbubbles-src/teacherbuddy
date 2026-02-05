@@ -22,6 +22,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
 
+/**
+ * Renders JSON import controls for creating one or more quizzes in bulk.
+ * Expects quiz payloads with `title` and `questions[]` containing `prompt` and `answer`.
+ */
 export default function QuizImportCard() {
   const { actions } = useAppStore();
   const [importPayload, setImportPayload] = useState('');

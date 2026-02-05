@@ -110,16 +110,16 @@ Must be used within `AppStoreProvider`. Throws error if used outside.
 
 ---
 
-## useMobile
+## useIsMobile (use-mobile)
 
 **File**: `hooks/use-mobile.ts`
 
-Viewport width detection for responsive behavior.
+Viewport width detection for responsive behavior. Exported as `useIsMobile` (used by e.g. `PageInfoDialog` for responsive dialog layout).
 
 ### Usage
 
 ```typescript
-const isMobile = useMobile()
+const isMobile = useIsMobile()  // default breakpoint 768px
 
 // Returns true for viewport < 768px
 ```

@@ -711,6 +711,10 @@ const AppStoreContext = React.createContext<{
   }
 } | null>(null)
 
+/**
+ * Provides global TeacherBuddy state and actions to all child components.
+ * Mount once near the app root so hooks can access persisted/domain state.
+ */
 export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = React.useReducer(appReducer, initialState)
 
@@ -818,6 +822,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+/**
+ * Returns the app store context with current state and bound action creators.
+ * Must be used within `AppStoreProvider`.
+ */
 export function useAppStore() {
   const context = React.useContext(AppStoreContext)
   if (!context) {

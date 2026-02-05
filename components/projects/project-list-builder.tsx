@@ -39,6 +39,10 @@ const DEFAULT_GROUP_SIZE = '3';
 
 type GroupMode = 'none' | 'grouped';
 
+/**
+ * Renders the project list builder form for creating student project rosters.
+ * Collects project details, student selections, and optional grouping rules.
+ */
 export default function ProjectListBuilder() {
   const { state, actions } = useAppStore();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -304,6 +308,7 @@ export default function ProjectListBuilder() {
                 onCheckedChange={(checked) => {
                   setIncludeExcluded(Boolean(checked));
                 }}
+                className="touch-hitbox cursor-pointer border-accent/25"
               />
               <label
                 htmlFor="include-excluded"
@@ -321,6 +326,7 @@ export default function ProjectListBuilder() {
                       <Checkbox
                         checked={selectedIds.includes(student.id)}
                         onCheckedChange={() => toggleSelection(student.id)}
+                        className="touch-hitbox cursor-pointer border-accent/25"
                       />
                       <span className="font-medium">
                         {formatStudentName(student.name)}

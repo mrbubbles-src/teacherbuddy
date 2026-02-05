@@ -40,6 +40,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
 
+/**
+ * Renders saved project lists and inline editing controls.
+ * Supports updating metadata, membership, grouping, and deleting lists.
+ */
 export default function ProjectListView() {
   const { theme } = useTheme();
   const { state, actions } = useAppStore();
@@ -355,6 +359,7 @@ export default function ProjectListView() {
                         onCheckedChange={(checked) => {
                           setIncludeExcluded(Boolean(checked));
                         }}
+                        className="touch-hitbox cursor-pointer border-accent/25"
                       />
                       <label
                         htmlFor={`include-excluded-${list.id}`}

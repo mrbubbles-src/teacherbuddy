@@ -17,6 +17,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+/**
+ * Renders a reusable quiz picker field for editor and play workflows.
+ * Provide quiz index entries, current selection, and an `onChange` handler.
+ */
 export default function QuizSelector({
   label,
   value,

@@ -1,6 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
+/**
+ * Renders the global route-level loading skeleton shown during navigation.
+ * Displays placeholder dashboard cards while server components stream.
+ */
 export default function Loading() {
   return (
     <div className="flex flex-col gap-4">

@@ -74,6 +74,7 @@ Integration tests for React components with user interactions.
 |------|-------|-------------|
 | `student-form.test.tsx` | 8 | Form submission, validation, error states |
 | `quiz-selector.test.tsx` | 10 | Selection, disabled states, dropdown behavior |
+| `page-info-dialog.test.tsx` | — | PageInfoDialog: help modal, tabs, page selection (in `components/utility/__tests__/`) |
 
 ## Running Tests
 

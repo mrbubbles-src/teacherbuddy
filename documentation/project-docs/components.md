@@ -6,8 +6,8 @@ Reference for React components. All feature components are client components unl
 
 | Component    | File                                    | Description                                                                                                               |
 | ------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `AppShell`   | `components/app-shell.tsx`              | Root layout: sidebar (collapsible), route titles, main content area. Uses `SidebarProvider`, `Header`, optional `footer`. |
-| `Header`     | `components/header.tsx`                 | Page title, description, sidebar trigger, theme toggle, and **QuizTimerCard** (timer in header on all pages).             |
+| `AppShell`   | `components/app-shell.tsx`              | Root layout: sidebar (collapsible), route titles, main content. Uses `PAGE_INFO_BY_PATH` for meta; passes `meta` and `info` (currentPath, pages) to `Header`. Optional `footer`. |
+| `Header`     | `components/header.tsx`                 | Page title, description, **PageInfoDialog** (help button next to title), sidebar trigger, theme toggle, and **QuizTimerCard** (timer on all pages). Receives `meta` and `info` from AppShell. |
 | `Footer`     | `components/footer.tsx`                 | Credits, source link, Catppuccin attribution. Rendered via `AppShell` footer prop.                                        |
 | `SidebarNav` | `components/navigation/sidebar-nav.tsx` | Primary navigation links; highlights current route by pathname.                                                           |
 | `AppSidebar` | `components/app-sidebar.tsx`            | Alternative sidebar component (see app-shell for active layout).                                                          |
@@ -63,9 +63,10 @@ Reference for React components. All feature components are client components unl
 
 ## Utility
 
-| Component     | File                                  | Description                                                                                         |
-| ------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `ThemeToggle` | `components/utility/theme-toggle.tsx` | Dark/light/system theme switcher (uses `next-themes` and `lib/view-transition.ts` for transitions). |
+| Component        | File                                        | Description                                                                                                                                                       |
+| ---------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ThemeToggle`    | `components/utility/theme-toggle.tsx`       | Dark/light/system theme switcher (uses `next-themes` and `lib/view-transition.ts` for transitions).                                                               |
+| `PageInfoDialog` | `components/utility/page-info-dialog.tsx`  | Help button (next to page title in Header) that opens a modal with per-page tutorial: purpose, steps, outcome. Uses `lib/page-info` (`PageInfo`, `PAGE_INFOS`), Dialog, Select, Tabs, `useIsMobile`. |
 
 Copy-to-clipboard is provided by the `useCopyToClipboard` hook; it is used inline in components (e.g. `BreakoutGroupsCard`) rather than as a standalone `CopyButton` component.
 
@@ -92,6 +93,8 @@ Base components in `components/ui/` use Tailwind and (where noted) Base UI / sha
 | `Card`, `CardHeader`, etc.                       | Layout primitives.                                               |
 | `Input`, `Textarea`                              | Form inputs.                                                     |
 | `Select`, `Label`, `Field`                       | Form field wrappers.                                             |
+| `Dialog`, `DialogContent`, `DialogTrigger`, etc. | Modal dialogs (used by PageInfoDialog, etc.).                    |
+| `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | Tabbed content.                                                  |
 | `AlertDialog`                                    | Confirmation dialogs.                                            |
 | `Badge`                                          | Use `badge-variants.ts` for server-safe variants.                |
 | `Checkbox`, `Combobox`, `Popover`, `Sheet`       | Headless-style UI.                                               |
@@ -114,5 +117,6 @@ Component tests:
 
 - `StudentForm` – `components/students/__tests__/student-form.test.tsx`
 - `QuizSelector` – `components/quizzes/__tests__/quiz-selector.test.tsx`
+- `PageInfoDialog` – `components/utility/__tests__/page-info-dialog.test.tsx`
 
 Use `renderWithProvider` from `__tests__/test-utils.tsx` so components have `AppStoreProvider` when they call `useAppStore()`.

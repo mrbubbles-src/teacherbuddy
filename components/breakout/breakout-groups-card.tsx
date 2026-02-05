@@ -25,6 +25,10 @@ import { useTheme } from '@/hooks/use-theme';
 
 const DEFAULT_GROUP_SIZE = 3;
 
+/**
+ * Renders breakout room generation controls and the resulting student groups.
+ * Uses active students from app state and supports copying full or per-group output.
+ */
 export default function BreakoutGroupsCard() {
   const { theme } = useTheme();
   const { state, actions } = useAppStore();

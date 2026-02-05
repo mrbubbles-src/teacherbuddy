@@ -11,6 +11,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rethought Data Security
 
+## [1.1.3] - 2026-02-05
+
+### Added
+
+- Route-aware SEO metadata utility in `lib/metadata.ts` with `resolveMetadataBase()` and `buildPageMetadata(path)`.
+- Shared route metadata source in `lib/page-meta.ts` reused by both in-app page info and SEO metadata.
+- Route-level `generateMetadata()` exports for `/`, `/students`, `/generator`, `/quizzes`, `/play`, `/breakout-rooms`, and `/projects`.
+- Metadata tests in `lib/__tests__/metadata.test.ts` covering metadata base fallback and Open Graph/Twitter composition.
+- New metadata documentation: `documentation/project-docs/metadata-and-seo.md`.
+- Generated Open Graph image route with `next/og`: `app/api/og/route.ts` (`/api/og`).
+- Logo to `/` page
+- Logo to Footer
+- Privacy Notice
+- `sitemap.xml` and `robots.txt`
+- Privacy Policy and Legal Notice to Footer
+
+### Changed
+
+- Root layout metadata now defines app-wide `metadataBase`, Open Graph defaults, and Twitter defaults.
+- Shared Open Graph/Twitter metadata now points to the generated `/api/og` endpoint.
+- Root dashboard metadata title is explicitly `Dashboard | TeacherBuddy` for title consistency with other pages.
+- `lib/page-info.tsx` now consumes shared route metadata from `lib/page-meta.ts`.
+- Project docs and README now document metadata and Open Graph patterns, including `NEXT_PUBLIC_SITE_URL`.
+- Favicon switched to be aligned with the logo
+- Switched Icon in Sidebar Header to be aligned with the logo
+
+## [1.1.2] - 2026-02-05
+
+### Added
+
+- **In-app help**: PageInfoDialog — help button (?) next to the page title in the header opens a modal with a per-page tutorial (what the page does, what to do, what you get). Content is defined in `lib/page-info.tsx`.
+- Page metadata and help content in `lib/page-info.tsx` (`PAGE_INFOS`, `PAGE_INFO_BY_PATH`); header title and description are now driven from this data.
+- Dialog and Tabs UI components (`components/ui/dialog.tsx`, `components/ui/tabs.tsx`).
+- Component tests for PageInfoDialog (`components/utility/__tests__/page-info-dialog.test.tsx`).
+
+### Changed
+
+- App shell and header now use page info for route metadata and pass an `info` prop to Header for PageInfoDialog.
+- Project documentation: components (PageInfoDialog, Dialog, Tabs), structure (lib/page-info), routes, testing, getting-started (page-info step), hooks (useIsMobile), README (in-app help).
+
 ## [1.1.1] - 2026-02-05
 
 ### Fixed

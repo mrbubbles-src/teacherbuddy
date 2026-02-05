@@ -9,7 +9,7 @@ import {
   UsersIcon,
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button-variants';
 import {
   Card,
   CardContent,
@@ -19,6 +19,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
 
 const cards = [
   {
@@ -65,6 +66,10 @@ const cards = [
   },
 ];
 
+/**
+ * Renders the dashboard navigation cards linking to each workflow.
+ * Use this to present quick entry points for the core teacher tools.
+ */
 export default function DashboardCards() {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -103,11 +108,14 @@ export default function DashboardCards() {
               </p>
             </CardContent>
             <CardFooter className="px-6 xl:px-8">
-              <Button
-                className="w-full h-9 font-semibold active:font-normal md:w-6/12 lg:w-8/12 xl:w-6/12 2xl:w-5/12 text-base"
-                variant="default">
-                <Link href={card.href}>Open {card.title}</Link>
-              </Button>
+              <Link
+                href={card.href}
+                className={cn(
+                  buttonVariants({ variant: 'default', size: 'lg' }),
+                  'w-full h-9 font-semibold active:font-normal md:w-6/12 lg:w-8/12 xl:w-6/12 2xl:w-5/12 text-base',
+                )}>
+                Open {card.title}
+              </Link>
             </CardFooter>
           </Card>
         );

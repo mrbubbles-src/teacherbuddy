@@ -51,6 +51,7 @@ Open [http://localhost:3000](http://localhost:3000) and use the dashboard to nav
 - **Timer**: Use the **timer in the header** (on every page): set time, start countdown; alerts at 10min, 5min, 1min, and 0 (with optional sound).
 - **Breakout groups**: In `/breakout-rooms`, set group size and generate; copy groups or full list to clipboard.
 - **Project lists**: In `/projects`, create lists, assign students, and organize into groups.
+- **In-app help**: Click the **?** (help) button next to the page title in the header to open a short tutorial for the current page (purpose, steps, outcome). Content is defined in `lib/page-info.tsx`.
 
 ---
 
@@ -113,6 +114,8 @@ No environment variables are required for local development.
 
 - **Persistence**: All app data is stored in the browser under `localStorage` with keys prefixed by `teacherbuddy:`.
 - **React Compiler**: Enabled by default. To disable, set `NEXT_DISABLE_REACT_COMPILER=1` (see `next.config.ts`).
+- **Metadata base URL (optional)**: Set `NEXT_PUBLIC_SITE_URL` so canonical, Open Graph, and Twitter metadata URLs resolve to your production domain.
+- **Open Graph image**: The app serves a generated OG image through `app/api/og/route.ts` (`/api/og`) using `next/og`.
 
 ---
 

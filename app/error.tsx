@@ -5,6 +5,10 @@ import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 
+/**
+ * Renders the root error boundary fallback for runtime failures.
+ * Receives the thrown error and a reset callback to retry rendering.
+ */
 export default function GlobalError({
   error,
   reset,

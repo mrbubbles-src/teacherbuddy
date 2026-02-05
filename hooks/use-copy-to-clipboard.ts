@@ -8,6 +8,10 @@ export type UseCopyToClipboardReturn = {
   reset: () => void
 }
 
+/**
+ * Provides clipboard copy helpers with temporary copied-state feedback.
+ * Pass an optional reset delay in milliseconds and call `copy(text)` to copy.
+ */
 export function useCopyToClipboard(
   resetDelay: number = 2000
 ): UseCopyToClipboardReturn {

@@ -33,6 +33,10 @@ function ThemeBridge({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Wraps `next-themes` and exposes theme state through `ThemeProviderContext`.
+ * Use at the app root and pass the same props supported by `next-themes`.
+ */
 export function ThemeProvider({
   children,
   ...props

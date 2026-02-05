@@ -1,3 +1,7 @@
+/**
+ * Executes a callback inside the View Transition API when available.
+ * Optionally pass pointer coordinates to seed transition origin CSS variables.
+ */
 export function startVt(
   cb: () => void,
   ev?: { clientX: number; clientY: number },

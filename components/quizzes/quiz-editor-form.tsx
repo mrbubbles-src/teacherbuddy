@@ -51,6 +51,10 @@ type QuizEditorFormProps = {
   importCard: React.ReactNode;
 };
 
+/**
+ * Renders quiz editing controls for quiz metadata and question management.
+ * Accepts an optional existing quiz and emits store actions for create/update/delete flows.
+ */
 export default function QuizEditorForm({
   quiz,
   quizId,

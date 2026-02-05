@@ -8,6 +8,10 @@ import type {
 } from "@/lib/models"
 import type { PersistedTimerState } from "@/lib/storage"
 
+/**
+ * Checks whether a value matches the persisted `Student` shape.
+ * Use before trusting untyped storage payloads.
+ */
 export function isStudent(value: unknown): value is Student {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -20,6 +24,10 @@ export function isStudent(value: unknown): value is Student {
   )
 }
 
+/**
+ * Checks whether a value matches a quiz `Question` record.
+ * Validates id, prompt, and answer as strings.
+ */
 export function isQuestion(value: unknown): value is Question {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -30,6 +38,10 @@ export function isQuestion(value: unknown): value is Question {
   )
 }
 
+/**
+ * Checks whether a value matches a `QuizIndexEntry`.
+ * Ensures id/title strings and numeric creation timestamp.
+ */
 export function isQuizIndexEntry(value: unknown): value is QuizIndexEntry {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -40,6 +52,10 @@ export function isQuizIndexEntry(value: unknown): value is QuizIndexEntry {
   )
 }
 
+/**
+ * Checks whether a value matches a full `Quiz` payload.
+ * Verifies top-level fields and timestamps used by persistence.
+ */
 export function isQuiz(value: unknown): value is Quiz {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -52,6 +68,10 @@ export function isQuiz(value: unknown): value is Quiz {
   )
 }
 
+/**
+ * Checks whether a value matches persisted breakout group data.
+ * Ensures group size, group ID arrays, and creation timestamp are valid.
+ */
 export function isBreakoutGroups(value: unknown): value is BreakoutGroups {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -68,6 +88,10 @@ export function isBreakoutGroups(value: unknown): value is BreakoutGroups {
   )
 }
 
+/**
+ * Checks whether a value matches a stored `ProjectList` payload.
+ * Validates required scalar fields and student/group collections.
+ */
 export function isProjectList(value: unknown): value is ProjectList {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
@@ -80,6 +104,10 @@ export function isProjectList(value: unknown): value is ProjectList {
   )
 }
 
+/**
+ * Checks whether a value matches persisted quiz timer state.
+ * Used before restoring countdown values from local storage.
+ */
 export function isPersistedTimerState(
   value: unknown
 ): value is PersistedTimerState {

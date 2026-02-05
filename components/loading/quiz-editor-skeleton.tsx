@@ -21,6 +21,10 @@ function PlaceholderCard({ titleWidth }: { titleWidth: string }) {
   )
 }
 
+/**
+ * Displays loading placeholders for the quiz editor split layout.
+ * Mirrors the editor and question table structure before hydration.
+ */
 export default function QuizEditorSkeleton() {
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">

@@ -50,6 +50,10 @@ function saveNamesToStorage(names: string[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(names));
 }
 
+/**
+ * Renders the standalone random student name generator experience.
+ * Stores names in local storage, prevents repeats, and tracks generated history.
+ */
 export default function StudentNameGenerator() {
   const [studentName, setStudentName] = useState("");
   const [students, setStudents] = useState<string[]>([]);

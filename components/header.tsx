@@ -4,8 +4,19 @@ import QuizTimerCard from './play/quiz-timer-card';
 import { Separator } from './ui/separator';
 import { SidebarTrigger } from './ui/sidebar';
 import ThemeToggle from './utility/theme-toggle';
+import PageInfoDialog from './utility/page-info-dialog';
+import type { PageInfo } from '@/lib/page-info';
 
-const Header = ({ meta }: { meta: { title: string; description: string } }) => {
+type HeaderProps = {
+  meta: { title: string; description: string };
+  info: { currentPath: string; pages: PageInfo[] };
+};
+
+/**
+ * Top navigation header with page title, description, and utility actions.
+ * Provide the current page meta and info data to power the info dialog.
+ */
+const Header = ({ meta, info }: HeaderProps) => {
   return (
     <header className="flex flex-col gap-4 border-b border-border/60 px-4 py-3 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-3 md:px-6 lg:px-8 xl:grid-cols-[1fr_auto_1fr] xl:px-10 2xl:px-12">
       <div className="flex min-w-0 items-start justify-between gap-3 md:contents">
@@ -18,9 +29,15 @@ const Header = ({ meta }: { meta: { title: string; description: string } }) => {
               className="truncate touch-hitbox text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground  transition-colors md:text-base lg:text-lg xl:text-xl 2xl:text-2xl hover:text-primary">
               TeacherBuddy
             </Link>
-            <h1 className="truncate text-lg font-semibold text-foreground md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">
-              {meta.title}
-            </h1>
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="truncate text-lg font-semibold text-primary md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">
+                {meta.title}
+              </h1>
+              <PageInfoDialog
+                currentPath={info.currentPath}
+                pages={info.pages}
+              />
+            </div>
             {meta.description ? (
               <p className="line-clamp-2 text-xs text-muted-foreground md:text-sm lg:text-sm xl:text-base 2xl:text-lg">
                 {meta.description}
