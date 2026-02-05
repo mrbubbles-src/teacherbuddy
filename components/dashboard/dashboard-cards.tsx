@@ -9,15 +9,16 @@ import {
   UsersIcon,
 } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { badgeVariants } from '../ui/badge-variants';
-import { buttonVariants } from '../ui/button-variants';
+import { Badge } from '../ui/badge';
 
 const cards = [
   {
@@ -67,13 +68,13 @@ const cards = [
 export default function DashboardCards() {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <LayoutGridIcon className="size-4" />
+      <Card className="shadow-md lg:col-span-2 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <LayoutGridIcon className="size-5" />
             Central Dashboard
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-base/relaxed">
             Choose a workflow to manage students, projects, or run your next
             quiz.
           </CardDescription>
@@ -82,27 +83,32 @@ export default function DashboardCards() {
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <Card key={card.title}>
-            <CardHeader className="flex flex-row items-start justify-between gap-2">
+          <Card
+            key={card.title}
+            className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+            <CardHeader className="flex flex-row items-start justify-between gap-2 px-6 xl:px-8">
               <div className="flex items-center gap-2">
-                <Icon className="size-4 text-primary" />
-                <CardTitle className="text-base">{card.title}</CardTitle>
+                <Icon className="size-5 text-primary" />
+                <CardTitle className="text-xl">{card.title}</CardTitle>
               </div>
-              <span className={badgeVariants({ variant: 'secondary' })}>
+              <Badge
+                variant="outline"
+                className="p-2.5 text-sm border-accent/50 shadow-sm">
                 {card.badge}
-              </span>
+              </Badge>
             </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">
+            <CardContent className="h-full px-6 xl:px-8 ">
+              <p className="text-muted-foreground text-base/relaxed">
                 {card.description}
               </p>
-              <Link
-                data-slot="button"
-                href={card.href}
-                className={buttonVariants({ size: 'sm', className: 'w-fit' })}>
-                Open {card.title}
-              </Link>
             </CardContent>
+            <CardFooter className="px-6 xl:px-8">
+              <Button
+                className="w-full h-9 font-semibold active:font-normal md:w-6/12 lg:w-8/12 xl:w-6/12 2xl:w-5/12 text-base"
+                variant="default">
+                <Link href={card.href}>Open {card.title}</Link>
+              </Button>
+            </CardFooter>
           </Card>
         );
       })}

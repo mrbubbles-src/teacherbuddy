@@ -150,14 +150,14 @@ export default function StudentNameGenerator() {
         </p>
       </header>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Add Students</CardTitle>
-          <CardDescription>
+      <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="lg:text-lg">Add Students</CardTitle>
+          <CardDescription className="lg:text-base/relaxed">
             Enter each name once to store it in your browser.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -168,24 +168,24 @@ export default function StudentNameGenerator() {
               placeholder="Input a student's name"
               aria-label="Student name"
             />
-            <Button type="submit" className="sm:w-40">
+            <Button type="submit" className="sm:min-w-32">
               Submit Student
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Generator</CardTitle>
-          <CardDescription>{statusContent}</CardDescription>
+      <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="lg:text-lg">Generator</CardTitle>
+          <CardDescription className="lg:text-base/relaxed">{statusContent}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 text-center min-h-[140px] flex flex-col justify-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground lg:text-base">
               Selected Student
             </p>
-            <p className="mt-3 text-3xl font-semibold sm:text-4xl">
+            <p className="mt-3 text-2xl font-semibold sm:text-3xl lg:text-4xl line-clamp-2">
               {currentName ? capitalizeName(currentName) : "—"}
             </p>
           </div>
@@ -193,7 +193,7 @@ export default function StudentNameGenerator() {
             <Button
               onClick={handleGenerate}
               disabled={!remaining.length}
-              className="sm:flex-1"
+              className="sm:min-w-32"
             >
               Generate!
             </Button>
@@ -201,7 +201,7 @@ export default function StudentNameGenerator() {
               variant="secondary"
               onClick={handleReset}
               disabled={!students.length}
-              className="sm:flex-1"
+              className="sm:min-w-32"
             >
               Reset Generator
             </Button>
@@ -209,14 +209,14 @@ export default function StudentNameGenerator() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Student List</CardTitle>
-          <CardDescription>
+      <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <CardHeader className="lg:px-6 xl:px-8">
+          <CardTitle className="lg:text-lg">Student List</CardTitle>
+          <CardDescription className="lg:text-base/relaxed">
             Generated names are crossed out so you can keep track.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
           {sortedStudents.length ? (
             <ul className="grid gap-2 sm:grid-cols-2">
               {sortedStudents.map((name) => {

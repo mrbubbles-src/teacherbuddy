@@ -2,185 +2,196 @@
 
 TeacherBuddy is a Next.js app for managing students, building quizzes, and running quick classroom activities from a single dashboard.
 
+---
+
 ## Installation
 
-```bash
-# Install dependencies
-bun install
+**Prerequisites:** [Bun](https://bun.sh/) 1.0+ (or Node.js 18+).
 
-# Or with npm
-npm install
+```bash
+git clone git@github.com:mrbubbles-src/teacherbuddy.git>
+cd teacherbuddy
+bun install
 ```
+
+> This project uses **Bun** as the package manager. Use `bun install`, `bun add`, and `bun run` (see [AGENTS.md](AGENTS.md)).
+
+---
 
 ## Usage
 
-Run the development server:
+Start the development server:
 
 ```bash
 bun dev
 ```
 
-Open http://localhost:3000 and use the dashboard to navigate.
+Open [http://localhost:3000](http://localhost:3000) and use the dashboard to navigate.
 
 ### Features
 
-| Route | Description |
-|-------|-------------|
-| `/students` | Add, import, edit, and manage student roster |
-| `/generator` | Draw random students with no-repeat logic |
-| `/quizzes` | Build and edit quiz question sets |
-| `/play` | Run live quiz sessions with student pairing |
-| `/breakout-rooms` | Generate random student groups |
-| `/projects` | Create and manage project lists |
+| Route             | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `/`               | Dashboard with links to all features                 |
+| `/students`       | Add, import, edit, and manage student roster         |
+| `/generator`      | Draw random students with no-repeat logic            |
+| `/quizzes`        | Build and edit quiz question sets                    |
+| `/play`           | Run live quiz sessions with question/student pairing |
+| `/breakout-rooms` | Generate random student groups                       |
+| `/projects`       | Create and manage project lists                      |
 
 ### Usage Examples
 
-- **Add students**: Navigate to `/students`, type names (comma-separated for bulk) or import a `.txt` file.
-- **Random draw**: Go to `/generator` and click "Draw" to select a random active student.
-- **Quiz play**: In `/play`, select a quiz and draw question/student pairs. Click to reveal answers.
-- **Timer**: Use the sidebar timer with configurable alerts at 10min, 5min, 1min, and 0.
+- **Add students**: Go to `/students`, type names (comma-separated for bulk) or import a `.txt` file.
+- **Random draw**: Go to `/generator` and click "Draw" to select a random active student (no repeats until reset).
+- **Quiz play**: In `/play`, select a quiz, then draw question/student pairs and click to reveal answers.
+- **Timer**: Use the **timer in the header** (on every page): set time, start countdown; alerts at 10min, 5min, 1min, and 0 (with optional sound).
+- **Breakout groups**: In `/breakout-rooms`, set group size and generate; copy groups or full list to clipboard.
+- **Project lists**: In `/projects`, create lists, assign students, and organize into groups.
+
+---
 
 ## Architecture and Folder Structure
 
-TeacherBuddy uses the Next.js App Router with React 19. State is persisted to `localStorage` and hydrated on the client.
+TeacherBuddy uses the **Next.js App Router** with **React 19**. State is persisted in `localStorage` and hydrated on the client.
 
 ```text
 teacherbuddy/
 ├── app/                    # App Router routes and layouts
-│   ├── layout.tsx          # Root layout with providers
-│   ├── page.tsx            # Dashboard (server component)
-│   ├── loading.tsx         # Global loading state
+│   ├── layout.tsx          # Root layout (fonts, ThemeProvider, AppStoreProvider, AppShell)
+│   ├── page.tsx            # Dashboard (server-rendered cards)
+│   ├── loading.tsx        # Global loading state
 │   ├── error.tsx           # Global error boundary
-│   └── [feature]/          # Feature route pages
+│   └── [feature]/          # Feature route pages (students, generator, quizzes, play, etc.)
 ├── components/             # React components
-│   ├── ui/                 # Base UI primitives (Button, Card, etc.)
+│   ├── ui/                 # Shared UI primitives (Button, Card, Sidebar, etc.)
 │   ├── loading/            # Hydration skeleton components
-│   ├── navigation/         # Sidebar and navigation
-│   ├── students/           # Student management components
-│   ├── quizzes/            # Quiz builder components
-│   ├── play/               # Quiz play components
-│   └── ...                 # Other feature components
-├── context/                # React context providers
-│   ├── app-store.tsx       # Global app state and reducer
-│   └── theme-provider.tsx  # Theme context (next-themes)
-├── hooks/                  # Custom React hooks
-│   ├── use-timer.ts        # Timer hook with persistence
-│   ├── use-copy-to-clipboard.ts
-│   └── ...
-├── lib/                    # Utilities and helpers
-│   ├── models.ts           # TypeScript type definitions
-│   ├── storage.ts          # localStorage persistence
-│   ├── students.ts         # Student name utilities
-│   ├── type-guards.ts      # Runtime type validation
-│   └── utils.ts            # General utilities (cn)
-├── __tests__/              # Test utilities
-├── documentation/          # Project documentation
-│   └── project-docs/       # Detailed documentation files
-├── vitest.config.ts        # Vitest configuration
-└── vitest.setup.ts         # Test setup and mocks
+│   ├── navigation/        # Sidebar navigation
+│   ├── dashboard/         # Dashboard cards (server component)
+│   ├── students/          # Student management
+│   ├── quizzes/           # Quiz builder
+│   ├── play/              # Quiz play + timer card
+│   ├── breakout/          # Breakout groups
+│   ├── projects/           # Project lists
+│   ├── utility/           # Theme toggle, etc.
+│   ├── app-shell.tsx      # Layout shell (sidebar + header + main)
+│   ├── header.tsx         # Page title, timer, theme toggle
+│   └── footer.tsx         # Credits
+├── context/                # React context
+│   ├── app-store.tsx      # Global state and reducer
+│   └── theme-provider.tsx  # next-themes
+├── hooks/                  # Custom hooks (use-timer, use-copy-to-clipboard, etc.)
+├── lib/                    # Utilities and types
+│   ├── models.ts          # TypeScript types
+│   ├── storage.ts         # localStorage persistence
+│   ├── type-guards.ts     # Runtime validation
+│   └── utils.ts           # Helpers (e.g. cn)
+├── __tests__/              # Test utilities (e.g. renderWithProvider)
+├── documentation/
+│   └── project-docs/      # Detailed docs (see below)
+├── vitest.config.ts
+└── vitest.setup.ts
 ```
 
 ### Key Architectural Patterns
 
-- **App Store**: `context/app-store.tsx` manages global state with `useReducer`. State is hydrated from localStorage on mount.
-- **Hydration Skeletons**: Components check `state.ui.isHydrated` and render skeletons until data loads.
-- **Server Components**: Dashboard cards are server-rendered; feature pages are client-driven.
-- **Type Guards**: Runtime validation in `lib/type-guards.ts` ensures data integrity from localStorage.
+- **App Store**: `context/app-store.tsx` holds global state with `useReducer`, hydrated from `localStorage` on mount.
+- **Hydration**: Components check `state.ui.isHydrated` and show skeletons until data is loaded.
+- **Server components**: Dashboard cards are server-rendered; feature pages are client-driven.
+- **Type guards**: `lib/type-guards.ts` validates persisted data from `localStorage`.
+
+**Developer documentation** (components, state, hooks, testing, conventions): [documentation/project-docs/](documentation/project-docs/README.md).
+
+---
 
 ## Configuration and Environment Variables
 
 No environment variables are required for local development.
 
-All data is stored in the browser's `localStorage` under keys prefixed with `teacherbuddy:`.
+- **Persistence**: All app data is stored in the browser under `localStorage` with keys prefixed by `teacherbuddy:`.
+- **React Compiler**: Enabled by default. To disable, set `NEXT_DISABLE_REACT_COMPILER=1` (see `next.config.ts`).
+
+---
 
 ## Testing
 
-TeacherBuddy uses [Vitest](https://vitest.dev/) with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
+TeacherBuddy uses [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
 ### Running Tests
 
 ```bash
-# Run tests in watch mode
-bun run test
-
-# Run tests once
-bun run test:run
-
-# Run tests with UI
-bun run test:ui
-
-# Run tests with coverage report
-bun run test:coverage
+bun run test          # Watch mode
+bun run test:run     # Single run (e.g. CI)
+bun run test:ui      # Interactive UI
+bun run test:coverage # Coverage report
 ```
 
-### Test Structure
+### Test Layout
 
-```text
-lib/__tests__/              # Unit tests for utilities
-  ├── type-guards.test.ts   # Type guard validation (85 tests)
-  ├── students.test.ts      # Student name utilities (28 tests)
-  └── storage.test.ts       # Storage functions (38 tests)
-hooks/__tests__/            # Hook tests
-  ├── use-timer.test.ts     # Timer hook (28 tests)
-  └── use-copy-to-clipboard.test.ts (11 tests)
-context/__tests__/          # State management tests
-  └── app-reducer.test.ts   # Reducer actions (39 tests)
-components/*/\_\_tests\_\_/ # Component tests
-  ├── student-form.test.tsx
-  └── quiz-selector.test.tsx
-__tests__/
-  └── test-utils.tsx        # Test utilities and providers
-```
+Tests live in `__tests__/` next to source:
 
-### Coverage
+- `lib/__tests__/` – type-guards, storage, students
+- `hooks/__tests__/` – use-timer, use-copy-to-clipboard
+- `context/__tests__/` – app-reducer
+- `components/*/__tests__/` – e.g. student-form, quiz-selector
 
-Current coverage targets core business logic:
-- `lib/`: ~86% line coverage (type-guards, students, utils at 100%)
-- `context/`: ~92% line coverage
-- `hooks/`: use-timer ~82%, use-copy-to-clipboard 100%
+Use `renderWithProvider` from `__tests__/test-utils.tsx` for components that need `AppStoreProvider`.
+
+Full testing guide: [documentation/project-docs/testing.md](documentation/project-docs/testing.md).
+
+---
 
 ## Quality Checks
 
 ```bash
-# Linting
-bun run lint
-
-# Type checking
-bun run typecheck
-
-# Production build
-bun run build
+bun run lint       # ESLint
+bun run typecheck  # TypeScript
+bun run test:run   # Tests
+bun run build      # Production build
 ```
+
+Run these before submitting changes.
+
+---
 
 ## Contribution Guidelines
 
-1. **Keep changes focused** - Align with existing patterns and conventions.
-2. **Update documentation** - Modify `documentation/project-docs/` when behavior changes.
-3. **Update CHANGELOG.md** - Document notable changes.
-4. **Run quality checks** - Ensure `lint`, `typecheck`, and `test:run` pass before submitting.
-5. **Write tests** - Add tests for new functionality, especially in `lib/`, `hooks/`, and `context/`.
+1. **Follow conventions** – See [documentation/project-docs/conventions.md](documentation/project-docs/conventions.md) (Bun, TypeScript, naming, where to put code).
+2. **Keep changes focused** – Match existing patterns.
+3. **Update documentation** – Adjust `documentation/project-docs/` when behavior or structure changes.
+4. **Update CHANGELOG.md** – Record notable changes.
+5. **Run quality checks** – `lint`, `typecheck`, and `test:run` must pass.
+6. **Add tests** – Especially for new logic in `lib/`, `hooks/`, and `context/`.
 
 ### Code Style
 
-- TypeScript strict mode enabled
-- Prettier for formatting (run via editor or `bunx prettier --write .`)
-- ESLint with Next.js config
+- TypeScript strict mode; no `any`/`unknown` in type positions.
+- Prettier for formatting (`bunx prettier --write .`).
+- ESLint with Next.js config.
+- JSDoc for exported functions and components where helpful.
+
+---
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 16 (App Router) |
-| UI | React 19 |
-| Styling | Tailwind CSS v4 |
-| Components | Base UI (headless), Lucide icons |
-| State | React Context + useReducer |
-| Persistence | localStorage |
-| Testing | Vitest, React Testing Library |
-| Language | TypeScript |
+| Category        | Technology                    |
+| --------------- | ----------------------------- |
+| Framework       | Next.js 16 (App Router)       |
+| UI              | React 19                      |
+| Styling         | Tailwind CSS v4, shadcn       |
+| Components      | Base UI, Lucide icons         |
+| State           | React Context + useReducer    |
+| Persistence     | localStorage                  |
+| Testing         | Vitest, React Testing Library |
+| Language        | TypeScript                    |
+| Package manager | Bun                           |
+
+---
 
 ## License and Credits
 
-MIT License. See [LICENSE](LICENSE) for details.
-
-Built with Next.js, React, and Tailwind CSS.
+- **License**: MIT. See [LICENSE](LICENSE).
+- **Author**: [mrbubbles-src](https://mrbubbles-src.dev)
+- **Source**: [TeacherBuddy on GitHub](https://github.com/mrbubbles-src/teacherbuddy)
+- **Theme**: Color palette inspired by [Catppuccin](https://github.com/catppuccin/catppuccin)
+- **Built with**: Next.js, React, Tailwind CSS

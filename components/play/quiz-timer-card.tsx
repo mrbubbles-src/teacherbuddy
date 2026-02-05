@@ -111,9 +111,9 @@ export default function QuizTimerCard() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:gap-3 lg:gap-4">
+    <div className="flex min-w-0 flex-wrap items-center justify-center gap-2 md:flex-nowrap md:justify-start md:gap-3 lg:gap-4">
       <Popover>
-        <PopoverTrigger className="flex w-full items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-base font-semibold tabular-nums shadow-xs md:w-auto md:justify-start md:px-4 md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl">
+        <PopoverTrigger className="flex min-w-0 max-w-full items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/70 px-3 py-2 text-sm font-semibold tabular-nums shadow-xs md:max-w-none md:gap-3 md:px-4 md:text-base lg:text-lg xl:text-xl 2xl:text-2xl">
           <span
             className={cn(
               'text-foreground',
@@ -125,7 +125,7 @@ export default function QuizTimerCard() {
         </PopoverTrigger>
         <PopoverContent
           align="center"
-          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-[26rem] xl:w-[28rem] 2xl:w-[30rem]">
+          className="w-[min(92vw,24rem)] p-4 md:w-96 lg:w-104 xl:w-md 2xl:w-120">
           <div>
             <p className="px-0 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-sm">
               Set timer
