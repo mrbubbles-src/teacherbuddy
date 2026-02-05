@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `sitemap.xml` and `robots.txt`
 - Privacy Policy and Legal Notice to Footer
 - Codeowners file
+- Workflow files for GitHub Actions
 
 ### Changed
 
