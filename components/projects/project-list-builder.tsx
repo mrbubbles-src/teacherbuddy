@@ -5,6 +5,7 @@ import { useMemo, useState } from "react"
 
 import { useAppStore } from "@/context/app-store"
 import { formatStudentName } from "@/lib/students"
+import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -132,15 +133,15 @@ export default function ProjectListBuilder() {
   }
 
   return (
-    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
-      <CardHeader className="lg:px-6 xl:px-8">
-        <CardTitle className="lg:text-lg">Create a project list</CardTitle>
-        <CardDescription className="lg:text-base/relaxed">
+    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="px-6 xl:px-8">
+        <CardTitle className="text-xl">Create a project list</CardTitle>
+        <CardDescription className="text-base/relaxed">
           Choose students from your roster and save them as a project-ready list
           or group set.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
+      <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <div className="flex flex-col gap-4">
             <Field>
@@ -300,9 +301,9 @@ export default function ProjectListBuilder() {
                         {formatStudentName(student.name)}
                       </span>
                       {student.status === "excluded" ? (
-                        <span className="text-xs text-muted-foreground">
+                        <Badge variant="outline" className="text-xs">
                           Absent
-                        </span>
+                        </Badge>
                       ) : null}
                     </label>
                   ))
@@ -320,7 +321,10 @@ export default function ProjectListBuilder() {
           <p className="text-sm text-muted-foreground">{notice}</p>
         ) : null}
         <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={handleCreateList}>
+          <Button
+            type="button"
+            onClick={handleCreateList}
+            className="h-9 font-semibold text-base">
             Save Project List
           </Button>
         </div>

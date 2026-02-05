@@ -49,14 +49,14 @@ export default function QuizPlayCard() {
   }
 
   return (
-    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
-      <CardHeader className="lg:px-6 xl:px-8">
-        <CardTitle className="lg:text-lg">Quiz Play Mode</CardTitle>
-        <CardDescription className="lg:text-base/relaxed">
+    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="px-6 xl:px-8">
+        <CardTitle className="text-xl">Quiz Play Mode</CardTitle>
+        <CardDescription className="text-base/relaxed">
           Draw a random student and question. Reveal answers when ready.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
+      <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
         <QuizSelector
           label="Select quiz"
           value={selectedQuizId}
@@ -73,7 +73,9 @@ export default function QuizPlayCard() {
             <p className="mt-3 text-xl font-semibold sm:text-2xl lg:text-3xl line-clamp-2">
               {currentStudent ? formatStudentName(currentStudent.name) : "—"}
             </p>
-            <Badge variant="secondary" className="mt-2">
+            <Badge
+              variant="outline"
+              className="mt-2 p-2.5 text-sm border-accent/50 shadow-sm">
               {availableStudentIds.length} remaining
             </Badge>
           </div>
@@ -84,7 +86,9 @@ export default function QuizPlayCard() {
             <p className="mt-3 text-base font-medium lg:text-lg line-clamp-3">
               {currentQuestion ? currentQuestion.prompt : "—"}
             </p>
-            <Badge variant="secondary" className="mt-2">
+            <Badge
+              variant="outline"
+              className="mt-2 p-2.5 text-sm border-accent/50 shadow-sm">
               {availableQuestionIds.length} remaining
             </Badge>
           </div>
@@ -102,23 +106,24 @@ export default function QuizPlayCard() {
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Button onClick={actions.drawQuizPair} disabled={!canDraw} className="sm:min-w-32">
+          <Button
+            onClick={actions.drawQuizPair}
+            disabled={!canDraw}
+            className="h-9 font-semibold text-base sm:min-w-32">
             Draw Student + Question
           </Button>
           <Button
             variant="secondary"
             onClick={actions.revealAnswer}
             disabled={!currentQuestion || state.domain.quizPlay.answerRevealed}
-            className="sm:min-w-32"
-          >
+            className="h-9 font-semibold text-base sm:min-w-32">
             Reveal Answer
           </Button>
           <Button
             variant="ghost"
             onClick={actions.resetQuizPlay}
             disabled={!selectedQuizId}
-            className="sm:min-w-32"
-          >
+            className="h-9 font-semibold text-base sm:min-w-32">
             Reset Round
           </Button>
         </div>

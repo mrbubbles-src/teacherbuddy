@@ -21,6 +21,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import Footer from './footer';
 import Header from './header';
 
 const pageMeta: Record<string, { title: string; description: string }> = {
@@ -81,7 +82,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <Separator />
         <SidebarContent>
-          <nav aria-label="Primary">
+          <nav aria-label="Primary" className="py-4">
             <SidebarNav pathname={pathname} />
           </nav>
         </SidebarContent>
@@ -100,9 +101,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <Header meta={meta} />
-        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl">
+        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
           {children}
         </main>
+        <Footer />
       </SidebarInset>
     </SidebarProvider>
   );

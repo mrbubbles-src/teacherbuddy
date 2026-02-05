@@ -70,17 +70,21 @@ export default function BreakoutGroupsCard() {
   }
 
   return (
-    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
-      <CardHeader className="lg:px-6 xl:px-8">
-        <CardTitle className="flex items-center gap-2 lg:text-lg">
-          Breakout Rooms
-          <Badge variant="secondary">{activeStudents.length} students</Badge>
-        </CardTitle>
-        <CardDescription className="lg:text-base/relaxed">
-          Shuffle active students into randomized breakout groups.
-        </CardDescription>
+    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="flex flex-row items-start justify-between gap-2 px-6 xl:px-8">
+        <div className="flex flex-col gap-1">
+          <CardTitle className="text-xl">Breakout Rooms</CardTitle>
+          <CardDescription className="text-base/relaxed">
+            Shuffle active students into randomized breakout groups.
+          </CardDescription>
+        </div>
+        <Badge
+          variant="outline"
+          className="p-2.5 text-sm border-accent/50 shadow-sm shrink-0">
+          {activeStudents.length} students
+        </Badge>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 lg:px-6 xl:px-8 lg:gap-5 xl:gap-6 lg:text-base/relaxed">
+      <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <label className="flex flex-1 flex-col gap-1 text-sm font-medium text-foreground lg:text-base">
             Group size
@@ -97,7 +101,7 @@ export default function BreakoutGroupsCard() {
             />
           </label>
           <Button
-            className="sm:min-w-32"
+            className="h-9 font-semibold text-base sm:min-w-32"
             disabled={!canGenerateGroups}
             onClick={() => {
               const size = Math.max(groupSizeToUse, 1)
@@ -116,7 +120,7 @@ export default function BreakoutGroupsCard() {
           </Button>
           <Button
             variant="secondary"
-            className="sm:min-w-32"
+            className="h-9 font-semibold text-base sm:min-w-32"
             disabled={!groups.length}
             onClick={() => copyAll(groupSummary)}
           >

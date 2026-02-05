@@ -104,7 +104,7 @@ export default function DashboardCards() {
             </CardContent>
             <CardFooter className="px-6 xl:px-8">
               <Button
-                className="w-full h-9 font-semibold active:font-normal md:w-5/12 text-base"
+                className="w-full h-9 font-semibold active:font-normal md:w-6/12 lg:w-8/12 xl:w-6/12 2xl:w-5/12 text-base"
                 variant="default">
                 <Link href={card.href}>Open {card.title}</Link>
               </Button>

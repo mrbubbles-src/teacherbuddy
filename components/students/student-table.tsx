@@ -1,25 +1,15 @@
-"use client"
+'use client';
 
-import { useMemo, useState } from "react"
-
-import { useAppStore } from "@/context/app-store"
-import { formatStudentName, normalizeStudentName, studentNameKey } from "@/lib/students"
-import StudentTableSkeleton from "@/components/loading/student-table-skeleton"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+  formatStudentName,
+  normalizeStudentName,
+  studentNameKey,
+} from '@/lib/students';
+import { cn } from '@/lib/utils';
+
+import { useMemo, useState } from 'react';
+
+import StudentTableSkeleton from '@/components/loading/student-table-skeleton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,89 +20,119 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { useAppStore } from '@/context/app-store';
 
 export default function StudentTable() {
-  const { state, actions } = useAppStore()
-  const [editingStudentId, setEditingStudentId] = useState<string | null>(null)
-  const [editName, setEditName] = useState("")
-  const [editError, setEditError] = useState<string | null>(null)
+  const { state, actions } = useAppStore();
+  const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editError, setEditError] = useState<string | null>(null);
 
   const students = useMemo(
     () =>
       [...state.persisted.students].sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       ),
-    [state.persisted.students]
-  )
+    [state.persisted.students],
+  );
 
-  const activeCount = students.filter((student) => student.status === "active")
-    .length
+  const activeCount = students.filter(
+    (student) => student.status === 'active',
+  ).length;
 
   const editingStudent = editingStudentId
-    ? state.persisted.students.find((student) => student.id === editingStudentId) ??
-      null
-    : null
+    ? (state.persisted.students.find(
+        (student) => student.id === editingStudentId,
+      ) ?? null)
+    : null;
 
   const handleOpenEdit = (studentId: string) => {
-    const student = state.persisted.students.find((item) => item.id === studentId)
-    if (!student) return
-    setEditingStudentId(student.id)
-    setEditName(student.name)
-    setEditError(null)
-  }
+    const student = state.persisted.students.find(
+      (item) => item.id === studentId,
+    );
+    if (!student) return;
+    setEditingStudentId(student.id);
+    setEditName(student.name);
+    setEditError(null);
+  };
 
   const handleCloseEdit = () => {
-    setEditingStudentId(null)
-    setEditName("")
-    setEditError(null)
-  }
+    setEditingStudentId(null);
+    setEditName('');
+    setEditError(null);
+  };
 
   const handleSaveEdit = () => {
-    const normalized = normalizeStudentName(editName)
+    const normalized = normalizeStudentName(editName);
     if (!normalized) {
-      setEditError("Enter a student name to continue.")
-      return
+      setEditError('Enter a student name to continue.');
+      return;
     }
-    const nextKey = studentNameKey(normalized)
+    const nextKey = studentNameKey(normalized);
     const hasDuplicate = state.persisted.students.some(
       (student) =>
         student.id !== editingStudentId &&
-        studentNameKey(student.name) === nextKey
-    )
+        studentNameKey(student.name) === nextKey,
+    );
     if (hasDuplicate) {
-      setEditError("That student already exists. Try a different name.")
-      return
+      setEditError('That student already exists. Try a different name.');
+      return;
     }
     if (editingStudentId) {
-      actions.updateStudent(editingStudentId, normalized)
+      actions.updateStudent(editingStudentId, normalized);
     }
-    handleCloseEdit()
-  }
+    handleCloseEdit();
+  };
 
   if (!state.ui.isHydrated) {
-    return <StudentTableSkeleton />
+    return <StudentTableSkeleton />;
   }
 
   return (
-    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
-      <CardHeader className="lg:px-6 xl:px-8">
+    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <CardHeader className="px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <CardTitle className="lg:text-lg">Student List</CardTitle>
-            <CardDescription className="lg:text-base/relaxed">
+            <CardTitle className="text-xl">Student List</CardTitle>
+            <CardDescription className="text-base/relaxed">
               {students.length
                 ? `${activeCount} active · ${
                     students.length - activeCount
                   } excluded`
-                : "Your roster will appear here once students are added."}
+                : 'Your roster will appear here once students are added.'}
             </CardDescription>
           </div>
           {students.length ? (
             <AlertDialog>
               <AlertDialogTrigger
-                render={<Button variant="destructive" size="sm" />}
-              >
+                render={<Button variant="destructive" size="sm" />}>
                 Delete All
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -133,7 +153,7 @@ export default function StudentTable() {
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="lg:px-6 xl:px-8 lg:text-base/relaxed">
+      <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
         {students.length ? (
           <Table>
             <TableHeader>
@@ -145,7 +165,7 @@ export default function StudentTable() {
             </TableHeader>
             <TableBody>
               {students.map((student) => {
-                const isExcluded = student.status === "excluded"
+                const isExcluded = student.status === 'excluded';
                 return (
                   <TableRow key={student.id}>
                     <TableCell>
@@ -154,13 +174,20 @@ export default function StudentTable() {
                           {formatStudentName(student.name)}
                         </span>
                         <span className="text-sm text-muted-foreground">
-                          Added {new Date(student.createdAt).toLocaleDateString()}
+                          Added{' '}
+                          {new Date(student.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={isExcluded ? "outline" : "secondary"}>
-                        {isExcluded ? "Excluded" : "Active"}
+                      <Badge
+                        className={cn(
+                          'p-2.5 text-sm shadow-sm',
+                          isExcluded
+                            ? 'bg-destructive/10 text-destructive border-destructive/50'
+                            : 'bg-ctp-latte-green/10 text-ctp-latte-green border-ctp-latte-green/50',
+                        )}>
+                        {isExcluded ? 'Excluded' : 'Active'}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -178,14 +205,12 @@ export default function StudentTable() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleOpenEdit(student.id)}
-                        >
+                          onClick={() => handleOpenEdit(student.id)}>
                           Edit
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger
-                            render={<Button variant="ghost" size="sm" />}
-                          >
+                            render={<Button variant="ghost" size="sm" />}>
                             Delete
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -201,8 +226,9 @@ export default function StudentTable() {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => actions.deleteStudent(student.id)}
-                              >
+                                onClick={() =>
+                                  actions.deleteStudent(student.id)
+                                }>
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -211,7 +237,7 @@ export default function StudentTable() {
                       </div>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
@@ -224,9 +250,8 @@ export default function StudentTable() {
       <AlertDialog
         open={!!editingStudentId}
         onOpenChange={(open) => {
-          if (!open) handleCloseEdit()
-        }}
-      >
+          if (!open) handleCloseEdit();
+        }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Edit student</AlertDialogTitle>
@@ -241,8 +266,8 @@ export default function StudentTable() {
                 id="edit-student-name"
                 value={editName}
                 onChange={(event) => {
-                  setEditName(event.target.value)
-                  if (editError) setEditError(null)
+                  setEditName(event.target.value);
+                  if (editError) setEditError(null);
                 }}
                 placeholder="e.g. Alex Johnson"
               />
@@ -250,13 +275,17 @@ export default function StudentTable() {
             </FieldContent>
           </Field>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCloseEdit}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSaveEdit} disabled={!editingStudent}>
+            <AlertDialogCancel onClick={handleCloseEdit}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleSaveEdit}
+              disabled={!editingStudent}>
               Save Changes
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </Card>
-  )
+  );
 }
