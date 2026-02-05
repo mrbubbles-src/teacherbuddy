@@ -12,6 +12,9 @@ TeacherBuddy is a Next.js app for managing students, building quizzes, and runni
 git clone git@github.com:mrbubbles-src/teacherbuddy.git>
 cd teacherbuddy
 bun install
+
+# Or with npm
+npm install
 ```
 
 > This project uses **Bun** as the package manager. Use `bun install`, `bun add`, and `bun run` (see [AGENTS.md](AGENTS.md)).
