@@ -4,7 +4,6 @@ import { formatStudentName } from '@/lib/students';
 
 import { useMemo } from 'react';
 
-import QuizPlayCardSkeleton from '@/components/loading/quiz-play-card-skeleton';
 import QuizSelector from '@/components/quizzes/quiz-selector';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,15 @@ import {
 } from '@/components/ui/card';
 import { useAppStore } from '@/context/app-store';
 
-export default function QuizPlayCard() {
+/**
+ * Quiz play card: shows server-rendered skeleton until hydrated, then the card.
+ * Skeleton is passed from the page (RSC) so it runs as a server component.
+ */
+export default function QuizPlayCard({
+  skeleton,
+}: {
+  skeleton: React.ReactNode;
+}) {
   const { state, actions } = useAppStore();
 
   const selectedQuizId = state.domain.quizPlay.selectedQuizId;
@@ -59,7 +66,7 @@ export default function QuizPlayCard() {
     !!quiz && availableQuestionIds.length > 0 && availableStudentIds.length > 0;
 
   if (!state.ui.isHydrated) {
-    return <QuizPlayCardSkeleton />;
+    return <>{skeleton}</>;
   }
 
   return (

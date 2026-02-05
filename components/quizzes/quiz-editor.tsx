@@ -1,17 +1,24 @@
-"use client"
+'use client';
 
-import { useAppStore } from "@/context/app-store"
-import QuizEditorSkeleton from "@/components/loading/quiz-editor-skeleton"
-import QuizEditorForm from "@/components/quizzes/quiz-editor-form"
-import QuizImportCard from "@/components/quizzes/quiz-import-card"
+import { useAppStore } from '@/context/app-store';
+import QuizEditorForm from '@/components/quizzes/quiz-editor-form';
+import QuizImportCard from '@/components/quizzes/quiz-import-card';
 
-export default function QuizEditor() {
-  const { state } = useAppStore()
-  const activeQuizId = state.ui.quizEditor.activeQuizId
-  const activeQuiz = activeQuizId ? state.persisted.quizzes[activeQuizId] : null
+/**
+ * Quiz editor wrapper: shows server-rendered skeleton until hydrated, then the editor.
+ * Skeleton is passed from the page (RSC) so it runs as a server component.
+ */
+export default function QuizEditor({
+  skeleton,
+}: {
+  skeleton: React.ReactNode;
+}) {
+  const { state } = useAppStore();
+  const activeQuizId = state.ui.quizEditor.activeQuizId;
+  const activeQuiz = activeQuizId ? state.persisted.quizzes[activeQuizId] : null;
 
   if (!state.ui.isHydrated) {
-    return <QuizEditorSkeleton />
+    return <>{skeleton}</>;
   }
 
   return (

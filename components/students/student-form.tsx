@@ -4,7 +4,6 @@ import { normalizeStudentName, studentNameKey } from '@/lib/students';
 
 import { useState } from 'react';
 
-import StudentFormSkeleton from '@/components/loading/student-form-skeleton';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -33,7 +32,15 @@ type InputChangeEvent = Parameters<
   NonNullable<React.ComponentProps<'input'>['onChange']>
 >[0];
 
-export default function StudentForm() {
+/**
+ * Add/import students form. Shows server-rendered skeleton until hydrated.
+ * Skeleton is passed from the page (RSC) so it runs as a server component.
+ */
+export default function StudentForm({
+  skeleton,
+}: {
+  skeleton: React.ReactNode;
+}) {
   const { state, actions } = useAppStore();
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +113,7 @@ export default function StudentForm() {
   };
 
   if (!state.ui.isHydrated) {
-    return <StudentFormSkeleton />;
+    return <>{skeleton}</>;
   }
 
   return (

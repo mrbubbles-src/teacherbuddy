@@ -4,7 +4,6 @@ import { formatStudentName } from '@/lib/students';
 
 import { useMemo } from 'react';
 
-import GeneratorCardSkeleton from '@/components/loading/generator-card-skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +15,15 @@ import {
 } from '@/components/ui/card';
 import { useAppStore } from '@/context/app-store';
 
-export default function GeneratorCard() {
+/**
+ * Generator card: shows server-rendered skeleton until hydrated, then the card.
+ * Skeleton is passed from the page (RSC) so it runs as a server component.
+ */
+export default function GeneratorCard({
+  skeleton,
+}: {
+  skeleton: React.ReactNode;
+}) {
   const { state, actions } = useAppStore();
 
   const activeStudents = useMemo(
@@ -43,7 +50,7 @@ export default function GeneratorCard() {
   const canGenerate = remainingStudents.length > 0;
 
   if (!state.ui.isHydrated) {
-    return <GeneratorCardSkeleton />;
+    return <>{skeleton}</>;
   }
 
   return (

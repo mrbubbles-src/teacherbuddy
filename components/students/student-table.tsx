@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 
 import { useMemo, useState } from 'react';
 
-import StudentTableSkeleton from '@/components/loading/student-table-skeleton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,7 +48,15 @@ import {
 } from '@/components/ui/table';
 import { useAppStore } from '@/context/app-store';
 
-export default function StudentTable() {
+/**
+ * Student roster table. Shows server-rendered skeleton until hydrated.
+ * Skeleton is passed from the page (RSC) so it runs as a server component.
+ */
+export default function StudentTable({
+  skeleton,
+}: {
+  skeleton: React.ReactNode;
+}) {
   const { state, actions } = useAppStore();
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
@@ -112,7 +119,7 @@ export default function StudentTable() {
   };
 
   if (!state.ui.isHydrated) {
-    return <StudentTableSkeleton />;
+    return <>{skeleton}</>;
   }
 
   return (

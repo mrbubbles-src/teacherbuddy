@@ -14,7 +14,9 @@ describe("StudentForm", () => {
   const setupUser = () => userEvent.setup()
 
   it("renders input and button", async () => {
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     // Wait for hydration
     await waitFor(() => {
@@ -25,7 +27,9 @@ describe("StudentForm", () => {
   })
 
   it("renders placeholder text", async () => {
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByPlaceholderText(/alex johnson/i)).toBeInTheDocument()
@@ -34,7 +38,9 @@ describe("StudentForm", () => {
 
   it("adds student on submit", async () => {
     const user = setupUser()
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/student name/i)).toBeInTheDocument()
@@ -52,7 +58,9 @@ describe("StudentForm", () => {
 
   it("shows error for empty name", async () => {
     const user = setupUser()
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/student name/i)).toBeInTheDocument()
@@ -67,7 +75,9 @@ describe("StudentForm", () => {
 
   it("clears input after successful add", async () => {
     const user = setupUser()
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/student name/i)).toBeInTheDocument()
@@ -87,7 +97,9 @@ describe("StudentForm", () => {
 
   it("clears error when typing", async () => {
     const user = setupUser()
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/student name/i)).toBeInTheDocument()
@@ -109,7 +121,9 @@ describe("StudentForm", () => {
 
   it("handles comma-separated names", async () => {
     const user = setupUser()
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/student name/i)).toBeInTheDocument()
@@ -126,7 +140,9 @@ describe("StudentForm", () => {
   })
 
   it("shows file import section", async () => {
-    renderWithProvider(<StudentForm />)
+    renderWithProvider(
+      <StudentForm skeleton={<div data-testid="student-form-skeleton" />} />,
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/import from/i)).toBeInTheDocument()

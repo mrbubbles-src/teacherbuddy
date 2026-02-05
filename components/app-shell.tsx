@@ -21,7 +21,6 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import Footer from './footer';
 import Header from './header';
 
 const pageMeta: Record<string, { title: string; description: string }> = {
@@ -55,7 +54,13 @@ const pageMeta: Record<string, { title: string; description: string }> = {
   },
 };
 
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function AppShell({
+  children,
+  footer,
+}: {
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   const pathname = usePathname();
   const meta = pageMeta[pathname] ?? {
     title: 'TeacherBuddy',
@@ -104,7 +109,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
           {children}
         </main>
-        <Footer />
+        {footer ?? null}
       </SidebarInset>
     </SidebarProvider>
   );
