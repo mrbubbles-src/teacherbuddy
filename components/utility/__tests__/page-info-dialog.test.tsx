@@ -125,9 +125,9 @@ describe("PageInfoDialog", () => {
     })
   })
 
-  it("uses dropdown workflow selector on small screens (<lg)", async () => {
+  it("uses dropdown workflow selector on laptop and below (<xl)", async () => {
     const user = userEvent.setup()
-    setViewportWidth(900)
+    setViewportWidth(1100)
 
     render(<PageInfoDialog currentPath="/" pages={PAGE_INFOS} />)
 

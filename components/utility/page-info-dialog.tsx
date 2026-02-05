@@ -78,7 +78,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
   const dashboardPages = useMemo(() => pages, [pages]);
   const dashboardPage = dashboardPages.find((page) => page.path === '/');
   const defaultTab = dashboardPage?.id ?? dashboardPages[0]?.id ?? 'dashboard';
-  const useDropdownSelector = useIsMobile(1024);
+  const useDropdownSelector = useIsMobile(1280);
   const [activeGuideId, setActiveGuideId] = useState<string>(defaultTab);
 
   const currentPage = pages.find((page) => page.path === currentPath);

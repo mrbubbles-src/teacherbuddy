@@ -1,5 +1,7 @@
 'use client';
 
+import { PAGE_INFO_BY_PATH, PAGE_INFOS } from '@/lib/page-info';
+
 import * as React from 'react';
 
 import Link from 'next/link';
@@ -21,7 +23,6 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { PAGE_INFO_BY_PATH, PAGE_INFOS } from '@/lib/page-info';
 import Header from './header';
 
 /**
@@ -70,7 +71,7 @@ export default function AppShell({
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
             <span className="group-data-[collapsible=icon]:text-xs">
-              v1.1.1
+              v1.1.2
             </span>
             <span className="uppercase tracking-[0.2em] group-data-[collapsible=icon]:hidden">
               Classroom
@@ -80,7 +81,10 @@ export default function AppShell({
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <Header meta={meta} info={{ currentPath: pathname, pages: PAGE_INFOS }} />
+        <Header
+          meta={meta}
+          info={{ currentPath: pathname, pages: PAGE_INFOS }}
+        />
         <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
           {children}
         </main>
