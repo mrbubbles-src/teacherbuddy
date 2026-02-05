@@ -21,39 +21,13 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { PAGE_INFO_BY_PATH, PAGE_INFOS } from '@/lib/page-info';
 import Header from './header';
 
-const pageMeta: Record<string, { title: string; description: string }> = {
-  '/': {
-    title: 'Dashboard',
-    description: 'Choose a workflow to get started.',
-  },
-  '/students': {
-    title: 'Student Management',
-    description: 'Add students, mark absences, and manage your roster.',
-  },
-  '/generator': {
-    title: 'Student Generator',
-    description: 'Pick a random student without repeats.',
-  },
-  '/breakout-rooms': {
-    title: 'Breakout Rooms',
-    description: 'Create randomized student groups for breakout sessions.',
-  },
-  '/quizzes': {
-    title: 'Quiz Builder',
-    description: 'Create and update quizzes with custom questions.',
-  },
-  '/play': {
-    title: 'Quiz Play',
-    description: 'Draw a student and a question, then reveal the answer.',
-  },
-  '/projects': {
-    title: 'Project Lists',
-    description: 'Build project lists and group students from your roster.',
-  },
-};
-
+/**
+ * Global app shell that renders the sidebar, header, and page content.
+ * Pass the page content as children and an optional footer to render below.
+ */
 export default function AppShell({
   children,
   footer,
@@ -62,7 +36,8 @@ export default function AppShell({
   footer?: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const meta = pageMeta[pathname] ?? {
+  const currentPage = PAGE_INFO_BY_PATH[pathname];
+  const meta = currentPage ?? {
     title: 'TeacherBuddy',
     description: '',
   };
@@ -105,7 +80,7 @@ export default function AppShell({
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <Header meta={meta} />
+        <Header meta={meta} info={{ currentPath: pathname, pages: PAGE_INFOS }} />
         <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
           {children}
         </main>
