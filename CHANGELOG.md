@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rethought Data Security
 
+## [1.1.2] - 2026-02-05
+
+### Added
+
+- **In-app help**: PageInfoDialog — help button (?) next to the page title in the header opens a modal with a per-page tutorial (what the page does, what to do, what you get). Content is defined in `lib/page-info.tsx`.
+- Page metadata and help content in `lib/page-info.tsx` (`PAGE_INFOS`, `PAGE_INFO_BY_PATH`); header title and description are now driven from this data.
+- Dialog and Tabs UI components (`components/ui/dialog.tsx`, `components/ui/tabs.tsx`).
+- Component tests for PageInfoDialog (`components/utility/__tests__/page-info-dialog.test.tsx`).
+
+### Changed
+
+- App shell and header now use page info for route metadata and pass an `info` prop to Header for PageInfoDialog.
+- Project documentation: components (PageInfoDialog, Dialog, Tabs), structure (lib/page-info), routes, testing, getting-started (page-info step), hooks (useIsMobile), README (in-app help).
+
 ## [1.1.1] - 2026-02-05
 
 ### Fixed

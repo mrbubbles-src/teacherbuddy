@@ -152,9 +152,10 @@ it("renders correctly", () => {
 2. Add components in `components/[feature]/`
 3. Add state/actions to `context/app-store.tsx` if needed
 4. Add persistence in `lib/storage.ts` if needed
-5. Create skeleton in `components/loading/`
-6. Add tests for new functionality
-7. Update documentation
+5. Add page metadata and in-app help in `lib/page-info.tsx` (add an entry to `PAGE_INFOS` so the header title/description and PageInfoDialog work for the new route)
+6. Create skeleton in `components/loading/`
+7. Add tests for new functionality
+8. Update documentation
 
 ### Adding State
 

@@ -44,7 +44,8 @@ teacherbuddy/
 │   ├── generator/          # Generator components
 │   ├── breakout/           # BreakoutGroupsCard
 │   ├── projects/           # ProjectListBuilder, ProjectListView
-│   ├── utility/            # ThemeToggle
+│   ├── utility/            # ThemeToggle, PageInfoDialog
+│   │   └── __tests__/      # PageInfoDialog tests
 │   ├── app-shell.tsx       # Root layout shell
 │   ├── header.tsx          # Page header (timer in header)
 │   ├── footer.tsx          # Credits footer
@@ -65,6 +66,8 @@ teacherbuddy/
 │   ├── students.ts         # Student name utilities
 │   ├── type-guards.ts      # Runtime type validation
 │   ├── utils.ts            # General utilities
+│   ├── page-info.tsx       # Page metadata and in-app help content (PAGE_INFOS, PAGE_INFO_BY_PATH)
+│   ├── view-transition.ts  # Theme transition helper
 │   └── __tests__/          # Utility tests
 ├── __tests__/              # Global test utilities
 │   └── test-utils.tsx      # Custom render with providers
@@ -102,8 +105,9 @@ Tests are colocated with source code in `__tests__/` directories:
 | `lib/storage.ts` | localStorage read/write and validation |
 | `lib/type-guards.ts` | Runtime type checking for persisted data |
 | `lib/models.ts` | Shared TypeScript types (Student, Quiz, ProjectList, etc.) |
-| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header, main content |
-| `components/header.tsx` | Page meta, SidebarTrigger, ThemeToggle, QuizTimerCard |
+| `lib/page-info.tsx` | Page metadata and help content (PageInfo, PAGE_INFOS, PAGE_INFO_BY_PATH); drives Header meta and PageInfoDialog |
+| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header (meta + info), main content |
+| `components/header.tsx` | Page meta, PageInfoDialog, SidebarTrigger, ThemeToggle, QuizTimerCard |
 | `next.config.ts` | Next config; React Compiler enabled unless `NEXT_DISABLE_REACT_COMPILER=1` |
 | `vitest.config.ts` | Vitest + jsdom, path alias `@`, coverage for lib/hooks/context |
 | `vitest.setup.ts` | jest-dom, cleanup, localStorage/crypto mocks |
