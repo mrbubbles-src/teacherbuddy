@@ -28,7 +28,7 @@ export default function Page() {
     <>
       <section className="justify-self-center mb-5 max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-4/6">
         <Image
-          src={Logo}
+          src={Logo.src}
           alt="TeacherBuddy Logo"
           width={895}
           height={372}

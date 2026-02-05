@@ -55,7 +55,7 @@ export default function AppShell({
                 className="font-semibold group-data-[collapsible=icon]:justify-center [&>svg]:group-data-[collapsible=icon]:size-5">
                 <span className="relative size-10 shrink-0 overflow-hidden rounded-[calc(var(--radius-sm)+2px)] flex items-center justify-center group-data-[collapsible=icon]:size-8">
                   <Image
-                    src={Icon}
+                    src={Icon.src}
                     alt="TeacherBuddy Logo"
                     fill
                     className="object-contain"
