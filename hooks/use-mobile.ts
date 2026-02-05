@@ -4,6 +4,10 @@ import { useEffect, useState } from "react"
 
 const DEFAULT_BREAKPOINT = 768
 
+/**
+ * Tracks whether the viewport is below a mobile breakpoint.
+ * Provide a pixel breakpoint (defaults to 768) and receive a live boolean.
+ */
 export function useIsMobile(breakpoint = DEFAULT_BREAKPOINT) {
   const [isMobile, setIsMobile] = useState(false)
 

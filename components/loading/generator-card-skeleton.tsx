@@ -1,6 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
+/**
+ * Displays loading placeholders for the random generator card layout.
+ * Use while generator state hydrates on the client.
+ */
 export default function GeneratorCardSkeleton() {
   return (
     <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">

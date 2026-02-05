@@ -40,6 +40,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
 
+/**
+ * Renders saved project lists and inline editing controls.
+ * Supports updating metadata, membership, grouping, and deleting lists.
+ */
 export default function ProjectListView() {
   const { theme } = useTheme();
   const { state, actions } = useAppStore();

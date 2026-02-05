@@ -11,6 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rethought Data Security
 
+## [1.1.3] - 2026-02-05
+
+### Added
+
+- Route-aware SEO metadata utility in `lib/metadata.ts` with `resolveMetadataBase()` and `buildPageMetadata(path)`.
+- Shared route metadata source in `lib/page-meta.ts` reused by both in-app page info and SEO metadata.
+- Route-level `generateMetadata()` exports for `/`, `/students`, `/generator`, `/quizzes`, `/play`, `/breakout-rooms`, and `/projects`.
+- Metadata tests in `lib/__tests__/metadata.test.ts` covering metadata base fallback and Open Graph/Twitter composition.
+- New metadata documentation: `documentation/project-docs/metadata-and-seo.md`.
+- Generated Open Graph image route with `next/og`: `app/api/og/route.ts` (`/api/og`).
+
+### Changed
+
+- Root layout metadata now defines app-wide `metadataBase`, Open Graph defaults, and Twitter defaults.
+- Shared Open Graph/Twitter metadata now points to the generated `/api/og` endpoint.
+- Root dashboard metadata title is explicitly `Dashboard | TeacherBuddy` for title consistency with other pages.
+- `lib/page-info.tsx` now consumes shared route metadata from `lib/page-meta.ts`.
+- Project docs and README now document metadata and Open Graph patterns, including `NEXT_PUBLIC_SITE_URL`.
+- Logo to `/` page
+- Favicon switched to be aligned with the logo
+- Switched Icon in Sidebar Header to be aligned with the logo
+
 ## [1.1.2] - 2026-02-05
 
 ### Added

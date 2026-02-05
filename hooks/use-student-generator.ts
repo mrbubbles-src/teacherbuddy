@@ -95,6 +95,10 @@ function saveStateToStorage(state: StudentGeneratorState) {
   localStorage.removeItem(LEGACY_STORAGE_KEY);
 }
 
+/**
+ * Manages persisted random-student generator state and actions.
+ * Returns normalized student lists, remaining candidates, and mutation helpers.
+ */
 export function useStudentGenerator() {
   const [state, setState] = React.useState<StudentGeneratorState>(EMPTY_STATE);
   const [hasHydrated, setHasHydrated] = React.useState(false);

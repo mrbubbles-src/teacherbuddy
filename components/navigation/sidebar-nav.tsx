@@ -55,6 +55,10 @@ const navItems = [
   },
 ];
 
+/**
+ * Renders primary app navigation links with active-route highlighting.
+ * Pass the current pathname so the matching item is marked as active.
+ */
 export function SidebarNav({ pathname }: { pathname: string }) {
   return (
     <SidebarMenu className="gap-2 px-2 ">

@@ -1,13 +1,12 @@
 'use client';
 
-import { PAGE_INFO_BY_PATH, PAGE_INFOS } from '@/lib/page-info';
+import { getPageInfoByPath, PAGE_INFOS } from '@/lib/page-info';
 
 import * as React from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-import { GraduationCapIcon } from 'lucide-react';
 
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 import { Separator } from '@/components/ui/separator';
@@ -23,6 +22,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import Icon from '@/public/images/teacherbuddy-icon-transparent.png';
 import Header from './header';
 
 /**
@@ -37,7 +37,7 @@ export default function AppShell({
   footer?: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const currentPage = PAGE_INFO_BY_PATH[pathname];
+  const currentPage = getPageInfoByPath(pathname);
   const meta = currentPage ?? {
     title: 'TeacherBuddy',
     description: '',
@@ -53,7 +53,19 @@ export default function AppShell({
                 render={<Link href="/" />}
                 size="lg"
                 className="font-semibold group-data-[collapsible=icon]:justify-center [&>svg]:group-data-[collapsible=icon]:size-5">
-                <GraduationCapIcon />
+                <span className="relative size-10 shrink-0 overflow-hidden rounded-[calc(var(--radius-sm)+2px)] flex items-center justify-center group-data-[collapsible=icon]:size-8">
+                  <Image
+                    src={Icon}
+                    alt="TeacherBuddy Logo"
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 48px) 32px, 40px"
+                    priority
+                    placeholder="blur"
+                    blurDataURL={Icon.blurDataURL}
+                  />
+                </span>
+
                 <span className="group-data-[collapsible=icon]:hidden text-lg/relaxed">
                   TeacherBuddy
                 </span>
@@ -71,7 +83,7 @@ export default function AppShell({
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
             <span className="group-data-[collapsible=icon]:text-xs">
-              v1.1.2
+              v1.1.3
             </span>
             <span className="uppercase tracking-[0.2em] group-data-[collapsible=icon]:hidden">
               Classroom

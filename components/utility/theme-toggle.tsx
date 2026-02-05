@@ -12,6 +12,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+/**
+ * Renders a theme toggle button with view-transition animation support.
+ * Uses resolved theme state and updates the app theme on click.
+ */
 const ThemeToggle = () => {
   const { resolvedTheme, theme, setTheme, isHydrated } = useTheme();
   const isDark = resolvedTheme === 'dark';

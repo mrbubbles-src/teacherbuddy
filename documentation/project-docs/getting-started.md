@@ -25,14 +25,14 @@ bun dev
 
 TeacherBuddy is a classroom management tool with these features:
 
-| Feature | Route | Purpose |
-|---------|-------|---------|
-| Students | `/students` | Manage student roster |
-| Generator | `/generator` | Random student selection |
-| Quizzes | `/quizzes` | Build quiz question sets |
-| Play | `/play` | Run quiz sessions |
-| Breakout Rooms | `/breakout-rooms` | Generate student groups |
-| Projects | `/projects` | Track project assignments |
+| Feature        | Route             | Purpose                   |
+| -------------- | ----------------- | ------------------------- |
+| Students       | `/students`       | Manage student roster     |
+| Generator      | `/generator`      | Random student selection  |
+| Quizzes        | `/quizzes`        | Build quiz question sets  |
+| Play           | `/play`           | Run quiz sessions         |
+| Breakout Rooms | `/breakout-rooms` | Generate student groups   |
+| Projects       | `/projects`       | Track project assignments |
 
 ## Key Concepts
 
@@ -41,7 +41,7 @@ TeacherBuddy is a classroom management tool with these features:
 All state flows through `context/app-store.tsx`:
 
 ```typescript
-const { state, actions } = useAppStore()
+const { state, actions } = useAppStore();
 
 // state.persisted - Data saved to localStorage
 // state.domain    - Session state (generator, quiz play)
@@ -68,9 +68,9 @@ return <MyComponent data={state.persisted.students} />
 Data from localStorage is validated at runtime:
 
 ```typescript
-import { isStudent } from "@/lib/type-guards"
+import { isStudent } from '@/lib/type-guards';
 
-const data = JSON.parse(localStorage.getItem("key"))
+const data = JSON.parse(localStorage.getItem('key'));
 if (isStudent(data)) {
   // data is typed as Student
 }
@@ -127,15 +127,15 @@ it("renders correctly", () => {
 
 ### Where to Put Things
 
-| Type | Location |
-|------|----------|
-| Page routes | `app/[feature]/page.tsx` |
-| Feature components | `components/[feature]/` |
-| Shared UI | `components/ui/` |
-| State logic | `context/app-store.tsx` |
-| Utilities | `lib/` |
-| Custom hooks | `hooks/` |
-| Tests | Adjacent `__tests__/` folder |
+| Type               | Location                     |
+| ------------------ | ---------------------------- |
+| Page routes        | `app/[feature]/page.tsx`     |
+| Feature components | `components/[feature]/`      |
+| Shared UI          | `components/ui/`             |
+| State logic        | `context/app-store.tsx`      |
+| Utilities          | `lib/`                       |
+| Custom hooks       | `hooks/`                     |
+| Tests              | Adjacent `__tests__/` folder |
 
 ### Naming Conventions
 
@@ -152,10 +152,13 @@ it("renders correctly", () => {
 2. Add components in `components/[feature]/`
 3. Add state/actions to `context/app-store.tsx` if needed
 4. Add persistence in `lib/storage.ts` if needed
-5. Add page metadata and in-app help in `lib/page-info.tsx` (add an entry to `PAGE_INFOS` so the header title/description and PageInfoDialog work for the new route)
-6. Create skeleton in `components/loading/`
-7. Add tests for new functionality
-8. Update documentation
+5. Add route title/description in `lib/page-meta.ts` and page help content in `lib/page-info.tsx`
+6. Export `generateMetadata()` from the route page and call `buildPageMetadata('/your-route')` from `lib/metadata.ts`
+7. Create skeleton in `components/loading/`
+8. Add tests for new functionality
+9. Update documentation
+
+See [metadata-and-seo.md](metadata-and-seo.md) for metadata details.
 
 ### Adding State
 

@@ -1,4 +1,7 @@
+import type { RoutePageMeta, RoutePath } from '@/lib/page-meta';
 import type { ReactNode } from 'react';
+
+import { ROUTE_PAGE_META_BY_PATH, ROUTE_PATHS } from '@/lib/page-meta';
 
 type PageHelp = {
   purpose: ReactNode;
@@ -6,25 +9,21 @@ type PageHelp = {
   outcome: ReactNode;
 };
 
-export type PageInfo = {
-  id: string;
-  path: string;
-  title: string;
-  description: string;
+export type PageInfo = RoutePageMeta & {
   help: PageHelp;
 };
 
+/**
+ * Route help content used by the page info dialog and header guidance UI.
+ */
 export const PAGE_INFOS: PageInfo[] = [
   {
-    id: 'dashboard',
-    path: '/',
-    title: 'Dashboard',
-    description: 'Choose a workflow to get started.',
+    ...ROUTE_PAGE_META_BY_PATH['/'],
     help: {
       purpose: (
         <>
-          This page is your main starting point. It gives you one clear place
-          to choose the next teaching task, whether you are preparing materials
+          This page is your main starting point. It gives you one clear place to
+          choose the next teaching task, whether you are preparing materials
           before class or guiding activities live.
         </>
       ),
@@ -56,15 +55,12 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'students',
-    path: '/students',
-    title: 'Student Management',
-    description: 'Add students, mark absences, and manage your roster.',
+    ...ROUTE_PAGE_META_BY_PATH['/students'],
     help: {
       purpose: (
         <>
-          This is your roster home. Every other feature depends on this list,
-          so keeping names accurate here keeps the rest of the app accurate too.
+          This is your roster home. Every other feature depends on this list, so
+          keeping names accurate here keeps the rest of the app accurate too.
         </>
       ),
       howTo: [
@@ -94,10 +90,7 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'generator',
-    path: '/generator',
-    title: 'Student Generator',
-    description: 'Pick a random student without repeats.',
+    ...ROUTE_PAGE_META_BY_PATH['/generator'],
     help: {
       purpose: (
         <>
@@ -132,10 +125,7 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'breakout-rooms',
-    path: '/breakout-rooms',
-    title: 'Breakout Rooms',
-    description: 'Create randomized student groups for breakout sessions.',
+    ...ROUTE_PAGE_META_BY_PATH['/breakout-rooms'],
     help: {
       purpose: (
         <>
@@ -170,10 +160,7 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'quizzes',
-    path: '/quizzes',
-    title: 'Quiz Builder',
-    description: 'Create and update quizzes with custom questions.',
+    ...ROUTE_PAGE_META_BY_PATH['/quizzes'],
     help: {
       purpose: (
         <>
@@ -208,10 +195,7 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'play',
-    path: '/play',
-    title: 'Quiz Play',
-    description: 'Draw a student and a question, then reveal the answer.',
+    ...ROUTE_PAGE_META_BY_PATH['/play'],
     help: {
       purpose: (
         <>
@@ -246,10 +230,7 @@ export const PAGE_INFOS: PageInfo[] = [
     },
   },
   {
-    id: 'projects',
-    path: '/projects',
-    title: 'Project Lists',
-    description: 'Build project lists and group students from your roster.',
+    ...ROUTE_PAGE_META_BY_PATH['/projects'],
     help: {
       purpose: (
         <>
@@ -285,10 +266,24 @@ export const PAGE_INFOS: PageInfo[] = [
   },
 ];
 
-export const PAGE_INFO_BY_PATH = PAGE_INFOS.reduce<Record<string, PageInfo>>(
+/**
+ * Route help content indexed by path for direct lookups.
+ */
+export const PAGE_INFO_BY_PATH = PAGE_INFOS.reduce<Record<RoutePath, PageInfo>>(
   (accumulator, page) => {
     accumulator[page.path] = page;
     return accumulator;
   },
-  {},
+  {} as Record<RoutePath, PageInfo>,
 );
+
+/**
+ * Returns page info for a top-level route path, or null when the path is unknown.
+ */
+export function getPageInfoByPath(pathname: string): PageInfo | null {
+  if (!ROUTE_PATHS.includes(pathname as RoutePath)) {
+    return null;
+  }
+
+  return PAGE_INFO_BY_PATH[pathname as RoutePath];
+}

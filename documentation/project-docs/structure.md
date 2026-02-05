@@ -23,6 +23,7 @@ teacherbuddy/
 ├── app/                    # Routes, layout, global loading and error UI
 │   ├── layout.tsx          # Root layout with providers
 │   ├── page.tsx            # Dashboard
+│   ├── api/og/route.ts     # API-style Open Graph image endpoint (next/og)
 │   ├── loading.tsx         # Global loading state
 │   ├── error.tsx           # Global error boundary
 │   ├── students/           # Student management route
@@ -66,6 +67,9 @@ teacherbuddy/
 │   ├── students.ts         # Student name utilities
 │   ├── type-guards.ts      # Runtime type validation
 │   ├── utils.ts            # General utilities
+│   ├── metadata.ts         # SEO metadata utilities (metadataBase, OG/Twitter, page metadata builder)
+│   ├── og-image.tsx        # Shared next/og image renderer
+│   ├── page-meta.ts        # Route title/description source of truth
 │   ├── page-info.tsx       # Page metadata and in-app help content (PAGE_INFOS, PAGE_INFO_BY_PATH)
 │   ├── view-transition.ts  # Theme transition helper
 │   └── __tests__/          # Utility tests
@@ -82,13 +86,13 @@ teacherbuddy/
 
 Tests are colocated with source code in `__tests__/` directories:
 
-| Location | Coverage |
-|----------|----------|
-| `lib/__tests__/` | Type guards, storage, student utilities |
-| `hooks/__tests__/` | useTimer, useCopyToClipboard |
-| `context/__tests__/` | App reducer actions |
-| `components/*/__tests__/` | Component integration tests |
-| `__tests__/test-utils.tsx` | Shared test utilities |
+| Location                   | Coverage                                |
+| -------------------------- | --------------------------------------- |
+| `lib/__tests__/`           | Type guards, storage, student utilities |
+| `hooks/__tests__/`         | useTimer, useCopyToClipboard            |
+| `context/__tests__/`       | App reducer actions                     |
+| `components/*/__tests__/`  | Component integration tests             |
+| `__tests__/test-utils.tsx` | Shared test utilities                   |
 
 ## Styling and Theme
 
@@ -98,16 +102,19 @@ Tests are colocated with source code in `__tests__/` directories:
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `app/layout.tsx` | Root layout: fonts (Geist), ThemeProvider, AppStoreProvider, AppShell, Footer |
-| `context/app-store.tsx` | Central state: reducer, useAppStore, hydration, persistence effects |
-| `lib/storage.ts` | localStorage read/write and validation |
-| `lib/type-guards.ts` | Runtime type checking for persisted data |
-| `lib/models.ts` | Shared TypeScript types (Student, Quiz, ProjectList, etc.) |
-| `lib/page-info.tsx` | Page metadata and help content (PageInfo, PAGE_INFOS, PAGE_INFO_BY_PATH); drives Header meta and PageInfoDialog |
-| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header (meta + info), main content |
-| `components/header.tsx` | Page meta, PageInfoDialog, SidebarTrigger, ThemeToggle, QuizTimerCard |
-| `next.config.ts` | Next config; React Compiler enabled unless `NEXT_DISABLE_REACT_COMPILER=1` |
-| `vitest.config.ts` | Vitest + jsdom, path alias `@`, coverage for lib/hooks/context |
-| `vitest.setup.ts` | jest-dom, cleanup, localStorage/crypto mocks |
+| File                       | Purpose                                                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `app/layout.tsx`           | Root layout: fonts (Geist), ThemeProvider, AppStoreProvider, AppShell, Footer                                   |
+| `context/app-store.tsx`    | Central state: reducer, useAppStore, hydration, persistence effects                                             |
+| `lib/storage.ts`           | localStorage read/write and validation                                                                          |
+| `lib/type-guards.ts`       | Runtime type checking for persisted data                                                                        |
+| `lib/models.ts`            | Shared TypeScript types (Student, Quiz, ProjectList, etc.)                                                      |
+| `lib/metadata.ts`          | Shared SEO metadata builders and metadataBase resolution (`buildPageMetadata`, `resolveMetadataBase`)           |
+| `lib/og-image.tsx`         | Shared Open Graph image renderer used by `app/api/og/route.ts`                                                  |
+| `lib/page-meta.ts`         | Route metadata source (`ROUTE_PAGE_META`, `ROUTE_PAGE_META_BY_PATH`) reused by SEO and UI help                  |
+| `lib/page-info.tsx`        | Page metadata and help content (PageInfo, PAGE_INFOS, PAGE_INFO_BY_PATH); drives Header meta and PageInfoDialog |
+| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header (meta + info), main content                                        |
+| `components/header.tsx`    | Page meta, PageInfoDialog, SidebarTrigger, ThemeToggle, QuizTimerCard                                           |
+| `next.config.ts`           | Next config; React Compiler enabled unless `NEXT_DISABLE_REACT_COMPILER=1`                                      |
+| `vitest.config.ts`         | Vitest + jsdom, path alias `@`, coverage for lib/hooks/context                                                  |
+| `vitest.setup.ts`          | jest-dom, cleanup, localStorage/crypto mocks                                                                    |

@@ -2,6 +2,10 @@ import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 
+/**
+ * Renders the application 404 page for unknown routes.
+ * Guides users back to the dashboard to continue their workflow.
+ */
 export default function NotFound() {
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center gap-6 py-12 text-center">

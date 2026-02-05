@@ -39,6 +39,10 @@ const DEFAULT_GROUP_SIZE = '3';
 
 type GroupMode = 'none' | 'grouped';
 
+/**
+ * Renders the project list builder form for creating student project rosters.
+ * Collects project details, student selections, and optional grouping rules.
+ */
 export default function ProjectListBuilder() {
   const { state, actions } = useAppStore();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);

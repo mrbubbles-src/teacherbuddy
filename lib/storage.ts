@@ -39,6 +39,10 @@ function safeParse<T>(raw: string | null, fallback: T): T {
   }
 }
 
+/**
+ * Loads students from local storage and normalizes legacy string-array data.
+ * Returns an empty array when unavailable, invalid, or running on the server.
+ */
 export function loadStudents(): Student[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(STUDENTS_KEY), [])
@@ -55,11 +59,19 @@ export function loadStudents(): Student[] {
   return parsed.filter(isStudent)
 }
 
+/**
+ * Persists the full student roster to local storage.
+ * Accepts normalized student records from app state.
+ */
 export function saveStudents(students: Student[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(STUDENTS_KEY, JSON.stringify(students))
 }
 
+/**
+ * Loads quiz index entries from local storage.
+ * Filters out invalid entries and returns an empty array on failure.
+ */
 export function loadQuizIndex(): QuizIndexEntry[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(QUIZ_INDEX_KEY), [])
@@ -67,6 +79,10 @@ export function loadQuizIndex(): QuizIndexEntry[] {
   return parsed.filter(isQuizIndexEntry)
 }
 
+/**
+ * Loads saved project lists from local storage with backward-compatible defaults.
+ * Ensures each list contains description and createdAt values.
+ */
 export function loadProjectLists(): ProjectList[] {
   if (typeof window === "undefined") return []
   const parsed = safeParse<unknown>(localStorage.getItem(PROJECT_LISTS_KEY), [])
@@ -84,11 +100,19 @@ export function loadProjectLists(): ProjectList[] {
     })
 }
 
+/**
+ * Persists project list records to local storage.
+ * Overwrites any existing project list payload.
+ */
 export function saveProjectLists(lists: ProjectList[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(PROJECT_LISTS_KEY, JSON.stringify(lists))
 }
 
+/**
+ * Loads persisted breakout group assignments from local storage.
+ * Returns `null` when data is missing or invalid.
+ */
 export function loadBreakoutGroups(): BreakoutGroups | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(BREAKOUT_GROUPS_KEY), null)
@@ -96,6 +120,10 @@ export function loadBreakoutGroups(): BreakoutGroups | null {
   return parsed
 }
 
+/**
+ * Persists breakout group assignments, or clears them when `null`.
+ * Used by breakout workflow to retain the latest generated groups.
+ */
 export function saveBreakoutGroups(groups: BreakoutGroups | null) {
   if (typeof window === "undefined") return
   if (!groups) {
@@ -105,11 +133,19 @@ export function saveBreakoutGroups(groups: BreakoutGroups | null) {
   localStorage.setItem(BREAKOUT_GROUPS_KEY, JSON.stringify(groups))
 }
 
+/**
+ * Persists the quiz index used for selector lists.
+ * Accepts already-sorted quiz index entries.
+ */
 export function saveQuizIndex(index: QuizIndexEntry[]) {
   if (typeof window === "undefined") return
   localStorage.setItem(QUIZ_INDEX_KEY, JSON.stringify(index))
 }
 
+/**
+ * Loads a single quiz by ID from local storage.
+ * Returns `null` when the quiz does not exist or fails validation.
+ */
 export function loadQuiz(id: string): Quiz | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(quizKey(id)), null)
@@ -117,16 +153,28 @@ export function loadQuiz(id: string): Quiz | null {
   return parsed
 }
 
+/**
+ * Persists a single quiz payload using its ID-scoped storage key.
+ * Expects a complete quiz object including questions and timestamps.
+ */
 export function saveQuiz(quiz: Quiz) {
   if (typeof window === "undefined") return
   localStorage.setItem(quizKey(quiz.id), JSON.stringify(quiz))
 }
 
+/**
+ * Deletes a stored quiz by ID.
+ * No-op on the server or when the key is missing.
+ */
 export function removeQuiz(id: string) {
   if (typeof window === "undefined") return
   localStorage.removeItem(quizKey(id))
 }
 
+/**
+ * Loads all persisted application data and removes broken quiz references.
+ * Returns students, quiz index, quiz map, project lists, and breakout groups.
+ */
 export function loadPersistedState(): {
   students: Student[]
   quizIndex: QuizIndexEntry[]
@@ -158,6 +206,10 @@ export function loadPersistedState(): {
   }
 }
 
+/**
+ * Synchronizes stored quiz payloads with the current quiz index.
+ * Saves indexed quizzes and removes stale quiz keys not present in the index.
+ */
 export function persistAllQuizzes(
   quizIndex: QuizIndexEntry[],
   quizzes: Record<string, Quiz>
@@ -176,6 +228,10 @@ export function persistAllQuizzes(
   }
 }
 
+/**
+ * Loads persisted timer state for the quiz timer.
+ * Returns `null` for invalid data or completed timers.
+ */
 export function loadTimer(): PersistedTimerState | null {
   if (typeof window === "undefined") return null
   const parsed = safeParse<unknown>(localStorage.getItem(TIMER_KEY), null)
@@ -184,11 +240,19 @@ export function loadTimer(): PersistedTimerState | null {
   return parsed
 }
 
+/**
+ * Persists current quiz timer state to local storage.
+ * Call while timer is configured or actively running.
+ */
 export function saveTimer(state: PersistedTimerState) {
   if (typeof window === "undefined") return
   localStorage.setItem(TIMER_KEY, JSON.stringify(state))
 }
 
+/**
+ * Clears any persisted quiz timer state.
+ * Used when timer resets or completes.
+ */
 export function clearTimer() {
   if (typeof window === "undefined") return
   localStorage.removeItem(TIMER_KEY)

@@ -122,7 +122,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
         </DialogClose>
         <div className="flex h-full min-h-0 flex-col">
           <DialogHeader className="px-4 pb-2 pt-4 pr-14 text-left md:px-6 md:pt-6 md:pr-16">
-            <DialogTitle className="text-2xl/relaxed!">
+            <DialogTitle className="text-2xl/relaxed">
               {isDashboard
                 ? 'TeacherBuddy Workflows'
                 : `About ${currentPage.title}`}
@@ -142,7 +142,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
                     if (!value) return;
                     setActiveGuideId(value);
                   }}>
-                  <SelectTrigger className="h-9 w-full text-base! leading-relaxed!">
+                  <SelectTrigger className="h-9 w-full text-base/relaxed">
                     <SelectValue placeholder="Select a workflow">
                       {activeGuide.title}
                     </SelectValue>
@@ -158,7 +158,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
               ) : null}
               {useDropdownSelector ? (
                 <div className="min-h-0 flex-1 overflow-y-auto mt-2">
-                  <div className="px-2 py-1 text-base! leading-relaxed! text-foreground/85">
+                  <div className="px-2 py-1 text-base/relaxed text-foreground/85">
                     <HelpGuide help={activeGuide.help} id={activeGuide.id} />
                   </div>
                 </div>
@@ -175,7 +175,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
                         <TabsTrigger
                           key={page.id}
                           value={page.id}
-                          className="flex-none shrink-0 text-lg! leading-relaxed! text-foreground/80 data-active:text-primary dark:data-active:text-primary">
+                          className="flex-none shrink-0 text-lg/relaxed text-foreground/80 data-active:text-primary dark:data-active:text-primary">
                           {page.title}
                         </TabsTrigger>
                       ))}
@@ -186,7 +186,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
                       <TabsContent
                         key={page.id}
                         value={page.id}
-                        className="px-2 py-1 text-base! leading-relaxed! text-foreground/85">
+                        className="px-2 py-1 text-base/relaxed text-foreground/85">
                         <HelpGuide help={page.help} id={page.id} />
                       </TabsContent>
                     ))}
@@ -196,7 +196,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
             </div>
           ) : (
             <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 md:px-6 md:pb-6">
-              <div className="px-2 py-1 text-base! leading-relaxed! text-foreground/85">
+              <div className="px-2 py-1 text-base/relaxed text-foreground/85">
                 <HelpGuide help={currentPage.help} id={currentPage.id} />
               </div>
             </div>

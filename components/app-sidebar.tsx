@@ -41,6 +41,10 @@ const navigationItems = [
   },
 ];
 
+/**
+ * Renders the compact legacy sidebar navigation for hash-link workflows.
+ * Includes theme controls and quick links for single-page sections.
+ */
 export default function AppSidebar() {
   return (
     <Sidebar collapsible="icon" variant="inset">

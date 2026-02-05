@@ -114,6 +114,8 @@ No environment variables are required for local development.
 
 - **Persistence**: All app data is stored in the browser under `localStorage` with keys prefixed by `teacherbuddy:`.
 - **React Compiler**: Enabled by default. To disable, set `NEXT_DISABLE_REACT_COMPILER=1` (see `next.config.ts`).
+- **Metadata base URL (optional)**: Set `NEXT_PUBLIC_SITE_URL` so canonical, Open Graph, and Twitter metadata URLs resolve to your production domain.
+- **Open Graph image**: The app serves a generated OG image through `app/api/og/route.ts` (`/api/og`) using `next/og`.
 
 ---
 

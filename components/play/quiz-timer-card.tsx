@@ -24,6 +24,10 @@ const TICKING_SRC = '/sounds/alarm-clock-ticking.mp3';
 const ALARM_SRC = '/sounds/alarm.mp3';
 const DEFAULT_VOLUME = 0.05;
 
+/**
+ * Renders the classroom timer controls used in the app header.
+ * Supports time configuration, start/pause/reset actions, and alert sounds.
+ */
 export default function QuizTimerCard() {
   const timerId = useId();
   const [volume, setVolume] = useState(DEFAULT_VOLUME);

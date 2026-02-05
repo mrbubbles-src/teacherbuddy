@@ -12,6 +12,10 @@ const normalizeTimeValue = (value: string, max: number) => {
   return clampToRange(parsed, 0, max)
 }
 
+/**
+ * Formats a duration in seconds as `HH:MM:SS`.
+ * Accepts non-negative second values and returns a zero-padded clock string.
+ */
 export const formatTime = (totalSeconds: number) => {
   const hours = Math.floor(totalSeconds / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)
@@ -48,6 +52,10 @@ export type UseTimerReturn = {
   hasTimeConfigured: boolean
 }
 
+/**
+ * Provides countdown timer state, controls, and persistence behavior.
+ * Pass optional alert thresholds/duration and use returned handlers in UI.
+ */
 export function useTimer(options: UseTimerOptions = {}): UseTimerReturn {
   const {
     alertThresholds = DEFAULT_ALERT_THRESHOLDS,
