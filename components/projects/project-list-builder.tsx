@@ -304,6 +304,7 @@ export default function ProjectListBuilder() {
                 onCheckedChange={(checked) => {
                   setIncludeExcluded(Boolean(checked));
                 }}
+                className="touch-hitbox cursor-pointer border-accent/25"
               />
               <label
                 htmlFor="include-excluded"
@@ -321,6 +322,7 @@ export default function ProjectListBuilder() {
                       <Checkbox
                         checked={selectedIds.includes(student.id)}
                         onCheckedChange={() => toggleSelection(student.id)}
+                        className="touch-hitbox cursor-pointer border-accent/25"
                       />
                       <span className="font-medium">
                         {formatStudentName(student.name)}

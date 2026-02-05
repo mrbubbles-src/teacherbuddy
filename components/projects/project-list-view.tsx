@@ -355,6 +355,7 @@ export default function ProjectListView() {
                         onCheckedChange={(checked) => {
                           setIncludeExcluded(Boolean(checked));
                         }}
+                        className="touch-hitbox cursor-pointer border-accent/25"
                       />
                       <label
                         htmlFor={`include-excluded-${list.id}`}

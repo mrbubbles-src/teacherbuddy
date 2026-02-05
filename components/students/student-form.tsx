@@ -168,7 +168,7 @@ export default function StudentForm({
               type="file"
               accept=".txt,text/plain"
               onChange={handleFileImport}
-              className="text-base/relaxed h-10 file:text-base/relaxed file:text-muted-foreground/70 file:mr-5 file:px-5 file:bg-accent/10 file:border-accent/50 file:rounded-md file:cursor-pointer file:my-1 w-fit"
+              className="text-base/relaxed h-10 max-w-full file:text-base/relaxed file:text-muted-foreground/70 file:mr-5 file:px-5 file:bg-accent/10 file:border-accent/50 file:rounded-md file:cursor-pointer file:my-1"
             />
             <FieldDescription className="text-base/relaxed text-muted-foreground/70">
               Upload a .txt file with comma-separated names.
