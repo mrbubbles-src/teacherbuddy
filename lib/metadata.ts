@@ -13,8 +13,9 @@ export const SITE_NAME = 'TeacherBuddy';
 export const DEFAULT_SITE_DESCRIPTION =
   'Manage students, build quizzes, and draw random pairs without repeats.';
 
-const DEFAULT_SITE_URL = 'http://localhost:3000';
-const DEFAULT_OG_IMAGE_PATH = '/images/og.png';
+const PRODUCTION_SITE_URL = 'https://teacherbuddy.mrbubbles-src.dev';
+const DEFAULT_SITE_URL = PRODUCTION_SITE_URL;
+const DEFAULT_OG_IMAGE_PATH = '/api/og';
 const URL_PROTOCOL_PATTERN = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//;
 
 /**
@@ -26,10 +27,10 @@ export const SHARED_OPEN_GRAPH: NonNullable<Metadata['openGraph']> = {
   locale: 'en_US',
   images: [
     {
-      url: DEFAULT_OG_IMAGE_PATH,
-      width: 895,
-      height: 372,
-      alt: 'TeacherBuddy logo',
+      url: buildAbsoluteMetadataUrl(DEFAULT_OG_IMAGE_PATH),
+      width: 1200,
+      height: 630,
+      alt: 'TeacherBuddy Logo',
     },
   ],
 };
@@ -39,7 +40,7 @@ export const SHARED_OPEN_GRAPH: NonNullable<Metadata['openGraph']> = {
  */
 export const SHARED_TWITTER: NonNullable<Metadata['twitter']> = {
   card: 'summary_large_image',
-  images: [DEFAULT_OG_IMAGE_PATH],
+  images: [buildAbsoluteMetadataUrl(DEFAULT_OG_IMAGE_PATH)],
 };
 
 /**
@@ -71,6 +72,7 @@ export function buildPageMetadata(path: string): Metadata {
   const title = routeMeta?.title ?? SITE_NAME;
   const description = routeMeta?.description ?? DEFAULT_SITE_DESCRIPTION;
   const canonicalPath = resolveCanonicalPath(path);
+  const absoluteCanonicalUrl = buildAbsoluteMetadataUrl(canonicalPath);
 
   return {
     title,
@@ -82,12 +84,13 @@ export function buildPageMetadata(path: string): Metadata {
       ...SHARED_OPEN_GRAPH,
       title,
       description,
-      url: canonicalPath,
+      url: absoluteCanonicalUrl,
     },
     twitter: {
       ...SHARED_TWITTER,
       title,
       description,
+      creator: '@_MstrBubbles',
     },
   };
 }
@@ -132,4 +135,11 @@ function normalizeEnvUrl(
   } catch {
     return null;
   }
+}
+
+/**
+ * Resolves an absolute metadata URL from a path using the active site base.
+ */
+function buildAbsoluteMetadataUrl(path: string): string {
+  return new URL(path, resolveMetadataBase()).toString();
 }
