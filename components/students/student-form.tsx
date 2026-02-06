@@ -4,6 +4,8 @@ import { normalizeStudentName, studentNameKey } from '@/lib/students';
 
 import { useState } from 'react';
 
+import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -47,6 +49,13 @@ export default function StudentForm({
   const [importError, setImportError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
 
+  /**
+   * Parses a raw comma-separated list, adds unique students, and returns a count.
+   * Uses persisted students to de-dupe against existing roster entries.
+   *
+   * @param raw - Comma-separated student names to add.
+   * @returns The number of new students added to state.
+   */
   const addNames = (raw: string) => {
     const existingKeys = new Set(
       state.persisted.students.map((student) => studentNameKey(student.name)),
@@ -75,6 +84,11 @@ export default function StudentForm({
     return uniqueNames.length;
   };
 
+  /**
+   * Handles manual student entry submission and triggers a toast on success.
+   *
+   * @param event - Form submit event from the student name form.
+   */
   const handleSubmit = (event: FormSubmitEvent) => {
     event.preventDefault();
     const addedCount = addNames(name);
@@ -85,8 +99,17 @@ export default function StudentForm({
     setName('');
     setError(null);
     setImportNotice(null);
+    toast.success(
+      `Added ${addedCount} student${addedCount === 1 ? '' : 's'}.`,
+    );
   };
 
+  /**
+   * Reads a .txt upload, imports students, and confirms the result with a toast.
+   *
+   * @param event - File input change event containing the uploaded file.
+   * @returns A promise that resolves after the file is processed.
+   */
   const handleFileImport = async (event: InputChangeEvent) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -100,6 +123,9 @@ export default function StudentForm({
       } else {
         setImportError(null);
         setImportNotice(
+          `Imported ${addedCount} student${addedCount === 1 ? '' : 's'}.`,
+        );
+        toast.success(
           `Imported ${addedCount} student${addedCount === 1 ? '' : 's'}.`,
         );
       }

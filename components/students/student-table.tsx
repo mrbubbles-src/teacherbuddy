@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils';
 
 import { useMemo, useState } from 'react';
 
+import { toast } from 'sonner';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,6 +82,11 @@ export default function StudentTable({
       ) ?? null)
     : null;
 
+  /**
+   * Opens the edit dialog for a student and seeds the form inputs.
+   *
+   * @param studentId - Identifier of the student to edit.
+   */
   const handleOpenEdit = (studentId: string) => {
     const student = state.persisted.students.find(
       (item) => item.id === studentId,
@@ -90,12 +97,18 @@ export default function StudentTable({
     setEditError(null);
   };
 
+  /**
+   * Clears edit state and closes the edit dialog.
+   */
   const handleCloseEdit = () => {
     setEditingStudentId(null);
     setEditName('');
     setEditError(null);
   };
 
+  /**
+   * Validates the edited name, updates the student, and confirms success.
+   */
   const handleSaveEdit = () => {
     const normalized = normalizeStudentName(editName);
     if (!normalized) {
@@ -114,8 +127,50 @@ export default function StudentTable({
     }
     if (editingStudentId) {
       actions.updateStudent(editingStudentId, normalized);
+      toast.success('Student updated.');
     }
     handleCloseEdit();
+  };
+
+  /**
+   * Toggles a student's active/excluded status and surfaces a toast update.
+   *
+   * @param studentId - Identifier of the student to toggle.
+   */
+  const handleToggleExcluded = (studentId: string) => {
+    const student = state.persisted.students.find(
+      (item) => item.id === studentId,
+    );
+    actions.toggleStudentExcluded(studentId);
+    if (student) {
+      const nextStatus = student.status === 'active' ? 'excluded' : 'active';
+      toast.success(
+        `${formatStudentName(student.name)} marked as ${nextStatus}.`,
+      );
+    }
+  };
+
+  /**
+   * Deletes a student and shows a confirmation toast.
+   *
+   * @param studentId - Identifier of the student to delete.
+   */
+  const handleDeleteStudent = (studentId: string) => {
+    const student = state.persisted.students.find(
+      (item) => item.id === studentId,
+    );
+    actions.deleteStudent(studentId);
+    if (student) {
+      toast.success(`Removed ${formatStudentName(student.name)}.`);
+    }
+  };
+
+  /**
+   * Clears the roster and confirms the destructive action.
+   */
+  const handleClearStudents = () => {
+    actions.clearStudents();
+    toast.success('All students deleted.');
   };
 
   if (!state.ui.isHydrated) {
@@ -149,12 +204,12 @@ export default function StudentTable({
                     This will permanently remove every student from the roster.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={actions.clearStudents}>
-                    Delete All
-                  </AlertDialogAction>
-                </AlertDialogFooter>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClearStudents}>
+                      Delete All
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           ) : null}
@@ -212,7 +267,7 @@ export default function StudentTable({
                           <Checkbox
                             checked={isExcluded}
                             onCheckedChange={() =>
-                              actions.toggleStudentExcluded(student.id)
+                              handleToggleExcluded(student.id)
                             }
                             aria-label={`Mark ${student.name} as absent`}
                             className="touch-hitbox cursor-pointer border-accent/25"
@@ -250,7 +305,7 @@ export default function StudentTable({
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() =>
-                                  actions.deleteStudent(student.id)
+                                  handleDeleteStudent(student.id)
                                 }>
                                 Delete
                               </AlertDialogAction>

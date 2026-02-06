@@ -4,6 +4,8 @@ import type { Question } from '@/lib/models';
 
 import { useState } from 'react';
 
+import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -32,6 +34,9 @@ export default function QuizImportCard() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
 
+  /**
+   * Parses JSON input, creates quizzes, and summarizes the import result.
+   */
   const handleImportQuiz = () => {
     if (!importPayload.trim()) {
       setImportError('Paste a JSON quiz payload to import.');
@@ -86,6 +91,9 @@ export default function QuizImportCard() {
         actions.createQuiz(draft.title, draft.questions),
       );
       setImportNotice(
+        `Imported ${drafts.length} quiz${drafts.length === 1 ? '' : 'zes'}.`,
+      );
+      toast.success(
         `Imported ${drafts.length} quiz${drafts.length === 1 ? '' : 'zes'}.`,
       );
       setImportError(null);
