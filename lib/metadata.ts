@@ -14,7 +14,7 @@ export const DEFAULT_SITE_DESCRIPTION =
   'Manage students, build quizzes, and draw random pairs without repeats.';
 
 const DEFAULT_SITE_URL = 'http://localhost:3000';
-const DEFAULT_OG_IMAGE_PATH = '/api/og';
+const DEFAULT_OG_IMAGE_PATH = '/images/og.png';
 const URL_PROTOCOL_PATTERN = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//;
 
 /**
@@ -27,9 +27,9 @@ export const SHARED_OPEN_GRAPH: NonNullable<Metadata['openGraph']> = {
   images: [
     {
       url: DEFAULT_OG_IMAGE_PATH,
-      width: 1200,
-      height: 630,
-      alt: 'TeacherBuddy classroom dashboard preview',
+      width: 895,
+      height: 372,
+      alt: 'TeacherBuddy logo',
     },
   ],
 };

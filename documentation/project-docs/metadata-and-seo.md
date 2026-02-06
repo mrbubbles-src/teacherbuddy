@@ -18,18 +18,18 @@ This split follows Next.js metadata merge behavior: nested fields like `openGrap
 | `lib/page-meta.ts`    | Route title/description source of truth for top-level routes                              |
 | `lib/page-info.tsx`   | In-app help content and header metadata (built from route meta + help content)            |
 | `lib/metadata.ts`     | Metadata utilities (`resolveMetadataBase`, `buildPageMetadata`, shared OG/Twitter fields) |
-| `lib/og-image.tsx`    | Shared `next/og` image renderer used by OG routes                                         |
+| `lib/og-image.tsx`    | Shared `next/og` image renderer (optional custom OG endpoint)                             |
 | `app/layout.tsx`      | Global metadata defaults                                                                  |
 | `app/**/page.tsx`     | Route-level `generateMetadata()` exports                                                  |
-| `app/api/og/route.ts` | API-style Open Graph endpoint (`next/og`)                                                 |
+| `app/api/og/route.ts` | API-style Open Graph endpoint (`next/og`, optional)                                       |
 
 ## Open Graph Image
 
-TeacherBuddy uses a generated OG image route:
+TeacherBuddy uses a static OG image asset:
 
-- Path: `/api/og`
-- API route file: `app/api/og/route.ts`
-- Rendered dimensions: `1200x630`
+- Path: `/images/og.png`
+- Source file: `public/images/og.png`
+- Declared dimensions: `895x372`
 
 The shared OG and Twitter image path is defined once in `lib/metadata.ts`.
 
