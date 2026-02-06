@@ -325,3 +325,62 @@
   transform-origin: var(--radix-tooltip-content-transform-origin);
   animation: scaleIn 0.3s ease-in-out;
 }
+
+/* Sonner success/error toast colors (Catppuccin) */
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='error'] {
+  background: oklch(var(--ctp-latte-red)) !important;
+  color: oklch(var(--ctp-latte-crust)) !important;
+  border: 1px solid oklch(var(--ctp-latte-crust)) !important;
+}
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='error']
+  [data-title],
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='error']
+  [data-description] {
+  color: inherit;
+}
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='success'] {
+  background: oklch(var(--ctp-latte-green)) !important;
+  color: oklch(var(--ctp-latte-crust)) !important;
+  border: 1px solid oklch(var(--ctp-latte-crust)) !important;
+}
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='success']
+  [data-title],
+[data-sonner-toaster][data-sonner-theme='light']
+  [data-sonner-toast][data-type='success']
+  [data-description] {
+  color: inherit;
+}
+
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='error'] {
+  background: oklch(var(--ctp-mocha-red)) !important;
+  color: oklch(var(--ctp-mocha-crust)) !important;
+  border: 1px solid oklch(var(--ctp-mocha-crust)) !important;
+}
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='error']
+  [data-title],
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='error']
+  [data-description] {
+  color: inherit;
+}
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='success'] {
+  background: oklch(var(--ctp-mocha-green)) !important;
+  color: oklch(var(--ctp-mocha-crust)) !important;
+  border: 1px solid oklch(var(--ctp-mocha-crust)) !important;
+}
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='success']
+  [data-title],
+[data-sonner-toaster][data-sonner-theme='dark']
+  [data-sonner-toast][data-type='success']
+  [data-description] {
+  color: inherit;
+}

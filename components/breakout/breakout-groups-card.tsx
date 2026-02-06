@@ -7,6 +7,7 @@ import { formatStudentName } from '@/lib/students';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { CheckIcon, CopyIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 import GeneratorCardSkeleton from '@/components/loading/generator-card-skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -173,7 +174,10 @@ export default function BreakoutGroupsCard() {
             variant="secondary"
             className="h-9 font-semibold text-base sm:min-w-32"
             disabled={!groups.length}
-            onClick={() => copyAll(groupSummary)}>
+            onClick={async () => {
+              const ok = await copyAll(groupSummary);
+              if (!ok) toast.error('Failed to copy to clipboard.');
+            }}>
             {isAllCopied ? 'Copied!' : 'Copy Groups'}
           </Button>
         </div>
@@ -198,13 +202,17 @@ export default function BreakoutGroupsCard() {
                         ? `Copied group ${index + 1}`
                         : `Copy group ${index + 1}`
                     }
-                    onClick={() => {
+                    onClick={async () => {
                       const names = group
                         .map((student: Student) =>
                           formatStudentName(student.name),
                         )
                         .join(', ');
-                      copyGroup(names);
+                      const ok = await copyGroup(names);
+                      if (!ok) {
+                        toast.error('Failed to copy to clipboard.');
+                        return;
+                      }
                       setCopiedGroupIndex(index);
                       if (copyGroupTimeoutRef.current !== null) {
                         clearTimeout(copyGroupTimeoutRef.current);

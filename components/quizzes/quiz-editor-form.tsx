@@ -5,6 +5,7 @@ import type { Question, Quiz } from '@/lib/models';
 import { useMemo, useState } from 'react';
 
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { toast } from 'sonner';
 
 import QuizSelector from '@/components/quizzes/quiz-selector';
 import {
@@ -79,6 +80,9 @@ export default function QuizEditorForm({
     [questions, editingQuestionId],
   );
 
+  /**
+   * Validates quiz metadata, saves changes, and confirms with a toast.
+   */
   const handleSaveQuiz = () => {
     const trimmed = title.trim();
     if (!trimmed) {
@@ -92,12 +96,17 @@ export default function QuizEditorForm({
 
     if (quizId) {
       actions.updateQuiz(quizId, trimmed, questions);
+      toast.success('Quiz updated.');
     } else {
       actions.createQuiz(trimmed, questions);
+      toast.success('Quiz created.');
     }
     setQuizError(null);
   };
 
+  /**
+   * Adds a new question or updates the current edit and resets the inputs.
+   */
   const handleAddOrUpdateQuestion = () => {
     const trimmedPrompt = prompt.trim();
     const trimmedAnswer = answer.trim();
@@ -130,8 +139,16 @@ export default function QuizEditorForm({
     setAnswer('');
     setEditingQuestionId(null);
     setQuestionError(null);
+    toast.success(
+      editingQuestionId ? 'Question updated.' : 'Question added.',
+    );
   };
 
+  /**
+   * Loads the selected question into the edit form.
+   *
+   * @param questionId - Identifier of the question to edit.
+   */
   const handleEditQuestion = (questionId: string) => {
     const question = questions.find((item) => item.id === questionId);
     if (!question) return;
@@ -141,6 +158,11 @@ export default function QuizEditorForm({
     setQuestionError(null);
   };
 
+  /**
+   * Removes a question from the draft and clears the editor if needed.
+   *
+   * @param questionId - Identifier of the question to remove.
+   */
   const handleRemoveQuestion = (questionId: string) => {
     setQuestions((prev) =>
       prev.filter((question) => question.id !== questionId),
@@ -150,8 +172,12 @@ export default function QuizEditorForm({
       setPrompt('');
       setAnswer('');
     }
+    toast.success('Question removed.');
   };
 
+  /**
+   * Cancels question editing and resets the editor fields.
+   */
   const handleCancelEdit = () => {
     setEditingQuestionId(null);
     setPrompt('');
@@ -159,13 +185,20 @@ export default function QuizEditorForm({
     setQuestionError(null);
   };
 
+  /**
+   * Clears the active quiz selection to start a new quiz.
+   */
   const handleNewQuiz = () => {
     actions.selectQuizForEditor(null);
   };
 
+  /**
+   * Deletes the current quiz and confirms the action with a toast.
+   */
   const handleDeleteQuiz = () => {
     if (!quizId) return;
     actions.deleteQuiz(quizId);
+    toast.success('Quiz deleted.');
   };
 
   return (

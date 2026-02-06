@@ -7,6 +7,7 @@ import './globals.css';
 import AppShell from '@/components/app-shell';
 import Footer from '@/components/footer';
 import PrivacyNotice from '@/components/privacy-notice';
+import { Toaster } from '@/components/ui/sonner';
 import { AppStoreProvider } from '@/context/app-store';
 import { ThemeProvider } from '@/context/theme-provider';
 
@@ -103,6 +104,7 @@ export default function RootLayout({
           <AppStoreProvider>
             <AppShell footer={<Footer />}>{children}</AppShell>
             <PrivacyNotice />
+            <Toaster closeButton position="bottom-center" />
           </AppStoreProvider>
         </ThemeProvider>
       </body>

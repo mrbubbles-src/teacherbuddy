@@ -4,6 +4,8 @@ import type { Question } from '@/lib/models';
 
 import { useState } from 'react';
 
+import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -32,8 +34,12 @@ export default function QuizImportCard() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
 
+  /**
+   * Parses JSON input, creates quizzes, and summarizes the import result.
+   */
   const handleImportQuiz = () => {
     if (!importPayload.trim()) {
+      toast.error('Paste a JSON quiz payload to import.');
       setImportError('Paste a JSON quiz payload to import.');
       setImportNotice(null);
       return;
@@ -77,8 +83,10 @@ export default function QuizImportCard() {
         .filter(Boolean) as Array<{ title: string; questions: Question[] }>;
 
       if (!drafts.length) {
-        setImportError('No valid quiz data found in that JSON.');
+        const message = 'No valid quiz data found in that JSON.';
+        setImportError(message);
         setImportNotice(null);
+        toast.error(message);
         return;
       }
 
@@ -88,11 +96,16 @@ export default function QuizImportCard() {
       setImportNotice(
         `Imported ${drafts.length} quiz${drafts.length === 1 ? '' : 'zes'}.`,
       );
+      toast.success(
+        `Imported ${drafts.length} quiz${drafts.length === 1 ? '' : 'zes'}.`,
+      );
       setImportError(null);
       setImportPayload('');
     } catch {
-      setImportError('Invalid JSON. Please check the format and try again.');
+      const message = 'Invalid JSON. Please check the format and try again.';
+      setImportError(message);
       setImportNotice(null);
+      toast.error(message);
     }
   };
 
