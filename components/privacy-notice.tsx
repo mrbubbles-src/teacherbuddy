@@ -20,12 +20,12 @@ export default function PrivacyNotice() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    queueMicrotask(() => setMounted(true));
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
-    setOpen(!isPrivacyNoticeAcknowledged());
+    queueMicrotask(() => setOpen(!isPrivacyNoticeAcknowledged()));
   }, [mounted]);
 
   function handleUnderstood() {

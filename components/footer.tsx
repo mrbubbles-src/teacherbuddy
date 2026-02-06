@@ -15,7 +15,7 @@ const Footer = () => {
       <Separator orientation="horizontal" className="my-4 w-full" />
       <section className="max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-2/6">
         <Image
-          src={Logo}
+          src={Logo.src}
           alt="TeacherBuddy Logo"
           width={895}
           height={372}
