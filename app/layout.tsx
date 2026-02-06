@@ -104,7 +104,7 @@ export default function RootLayout({
           <AppStoreProvider>
             <AppShell footer={<Footer />}>{children}</AppShell>
             <PrivacyNotice />
-            <Toaster />
+            <Toaster closeButton position="bottom-center" />
           </AppStoreProvider>
         </ThemeProvider>
       </body>

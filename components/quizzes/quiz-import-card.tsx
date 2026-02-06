@@ -39,6 +39,7 @@ export default function QuizImportCard() {
    */
   const handleImportQuiz = () => {
     if (!importPayload.trim()) {
+      toast.error('Paste a JSON quiz payload to import.');
       setImportError('Paste a JSON quiz payload to import.');
       setImportNotice(null);
       return;
@@ -82,8 +83,10 @@ export default function QuizImportCard() {
         .filter(Boolean) as Array<{ title: string; questions: Question[] }>;
 
       if (!drafts.length) {
-        setImportError('No valid quiz data found in that JSON.');
+        const message = 'No valid quiz data found in that JSON.';
+        setImportError(message);
         setImportNotice(null);
+        toast.error(message);
         return;
       }
 
@@ -99,8 +102,10 @@ export default function QuizImportCard() {
       setImportError(null);
       setImportPayload('');
     } catch {
-      setImportError('Invalid JSON. Please check the format and try again.');
+      const message = 'Invalid JSON. Please check the format and try again.';
+      setImportError(message);
       setImportNotice(null);
+      toast.error(message);
     }
   };
 

@@ -93,15 +93,14 @@ export default function StudentForm({
     event.preventDefault();
     const addedCount = addNames(name);
     if (!addedCount) {
+      toast.error('Enter at least one new student name.');
       setError('Enter at least one new student name.');
       return;
     }
     setName('');
     setError(null);
     setImportNotice(null);
-    toast.success(
-      `Added ${addedCount} student${addedCount === 1 ? '' : 's'}.`,
-    );
+    toast.success(`Added ${addedCount} student${addedCount === 1 ? '' : 's'}.`);
   };
 
   /**
@@ -118,6 +117,7 @@ export default function StudentForm({
       const text = await file.text();
       const addedCount = addNames(text);
       if (!addedCount) {
+        toast.error('No new students were found in that file.');
         setImportError('No new students were found in that file.');
         setImportNotice(null);
       } else {
@@ -131,8 +131,10 @@ export default function StudentForm({
       }
     } catch (error) {
       console.error('Failed to import students', error);
-      setImportError('Could not read the file. Please try again.');
+      const message = 'Could not read the file. Please try again.';
+      setImportError(message);
       setImportNotice(null);
+      toast.error(message);
     } finally {
       event.target.value = '';
     }
