@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: 'TeacherBuddy',
       description:
         'Manage students, run quizzes, and organize class activities in one place.',
-      siteName: 'https://teacherbuddy.mrbubbles-src.dev',
+      siteName: 'TeacherBuddy',
       images: [
         {
           url: 'https://teacherbuddy.mrbubbles-src.dev/api/og',
@@ -70,7 +70,7 @@ export default function RootLayout({
       <head>
         <meta
           property="og:url"
-          content="https://teacherbuddy.mrbubbles-src.dev/api/og"
+          content="https://teacherbuddy.mrbubbles-src.dev"
         />
         <link rel="canonical" href="https://teacherbuddy.mrbubbles-src.dev" />
         <script
