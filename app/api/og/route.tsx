@@ -60,11 +60,11 @@ export async function GET() {
         fontFamily: FONT_FAMILY,
       }}>
       <img
-        src="https://teacherbuddy.mrbubbles-src.dev/logo-og.png"
+        src="https://teacherbuddy.mrbubbles-src.dev/logo-og.svg"
         style={{ width: 650, height: 160 }}
         alt="TeacherBuddy Logo"
       />
-      <p style={{ fontSize: 16, fontWeight: 700 }}>
+      <p style={{ fontSize: 24, fontWeight: 700 }}>
         Manage students, run quizzes,
         <br />
         and organize class activities in one place.
