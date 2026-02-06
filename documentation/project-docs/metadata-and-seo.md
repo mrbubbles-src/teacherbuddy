@@ -32,6 +32,7 @@ TeacherBuddy uses a static OG image asset:
 - Declared dimensions: `895x372`
 
 The shared OG and Twitter image path is defined once in `lib/metadata.ts`.
+Social image tags are emitted as absolute URLs derived from `metadataBase` so crawlers can fetch them reliably.
 
 ## Environment Variables
 

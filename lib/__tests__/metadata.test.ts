@@ -48,8 +48,10 @@ describe('resolveMetadataBase', () => {
     );
   });
 
-  it('falls back to localhost when no env URL values exist', () => {
-    expect(resolveMetadataBase().toString()).toBe('http://localhost:3000/');
+  it('falls back to production URL when no env URL values exist', () => {
+    expect(resolveMetadataBase().toString()).toBe(
+      'https://teacherbuddy.mrbubbles-src.dev/',
+    );
   });
 });
 
@@ -66,7 +68,7 @@ describe('buildPageMetadata', () => {
       ...SHARED_OPEN_GRAPH,
       title: 'Student Management',
       description: 'Add students, mark absences, and manage your roster.',
-      url: '/students',
+      url: 'https://teacherbuddy.mrbubbles-src.dev/students',
     });
     expect(metadata.twitter).toMatchObject({
       ...SHARED_TWITTER,
@@ -85,7 +87,7 @@ describe('buildPageMetadata', () => {
       ...SHARED_OPEN_GRAPH,
       title: 'TeacherBuddy',
       description: DEFAULT_SITE_DESCRIPTION,
-      url: '/missing',
+      url: 'https://teacherbuddy.mrbubbles-src.dev/missing',
     });
     expect(metadata.twitter).toMatchObject({
       ...SHARED_TWITTER,
