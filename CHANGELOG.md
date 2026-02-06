@@ -15,12 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Route-aware SEO metadata utility in `lib/metadata.ts` with `resolveMetadataBase()` and `buildPageMetadata(path)`.
-- Shared route metadata source in `lib/page-meta.ts` reused by both in-app page info and SEO metadata.
-- Route-level `generateMetadata()` exports for `/`, `/students`, `/generator`, `/quizzes`, `/play`, `/breakout-rooms`, and `/projects`.
-- Metadata tests in `lib/__tests__/metadata.test.ts` covering metadata base fallback and Open Graph/Twitter composition.
-- New metadata documentation: `documentation/project-docs/metadata-and-seo.md`.
-- Generated Open Graph image route with `next/og`: `app/api/og/route.ts` (`/api/og`).
+- Metadata and SEO
 - Logo to `/` page
 - Logo to Footer
 - Privacy Notice

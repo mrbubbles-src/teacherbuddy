@@ -1,15 +1,20 @@
-import { buildPageMetadata } from '@/lib/metadata';
+import { Metadata } from 'next';
 
 import QuizEditorSkeleton from '@/components/loading/quiz-editor-skeleton';
 import QuizEditor from '@/components/quizzes/quiz-editor';
 
-/**
- * Builds SEO metadata for the quiz builder route.
- */
-export function generateMetadata() {
-  return buildPageMetadata('/quizzes');
-}
-
+export const metadata: Metadata = {
+  title: 'Quiz Builder | TeacherBuddy',
+  description: 'Create and update quizzes with custom questions.',
+  openGraph: {
+    title: 'Quiz Builder | TeacherBuddy',
+    description: 'Create and update quizzes with custom questions.',
+  },
+  twitter: {
+    title: 'Quiz Builder | TeacherBuddy',
+    description: 'Create and update quizzes with custom questions.',
+  },
+};
 /**
  * Renders the quiz authoring route.
  * Provides the editor workflow with a skeleton shown before hydration.

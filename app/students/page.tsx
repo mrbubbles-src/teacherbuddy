@@ -1,16 +1,22 @@
-import { buildPageMetadata } from '@/lib/metadata';
+import { Metadata } from 'next';
 
 import StudentFormSkeleton from '@/components/loading/student-form-skeleton';
 import StudentTableSkeleton from '@/components/loading/student-table-skeleton';
 import StudentForm from '@/components/students/student-form';
 import StudentTable from '@/components/students/student-table';
 
-/**
- * Builds SEO metadata for the student management route.
- */
-export function generateMetadata() {
-  return buildPageMetadata('/students');
-}
+export const metadata: Metadata = {
+  title: 'Student Management | TeacherBuddy',
+  description: 'Add students, mark absences, and manage your roster.',
+  openGraph: {
+    title: 'Student Management | TeacherBuddy',
+    description: 'Add students, mark absences, and manage your roster.',
+  },
+  twitter: {
+    title: 'Student Management | TeacherBuddy',
+    description: 'Add students, mark absences, and manage your roster.',
+  },
+};
 
 /**
  * Renders the student management route with roster form and table.

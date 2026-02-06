@@ -6,7 +6,7 @@ Reference for React components. All feature components are client components unl
 
 | Component    | File                                    | Description                                                                                                               |
 | ------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `AppShell`   | `components/app-shell.tsx`              | Root layout: sidebar (collapsible), route titles, main content. Uses `PAGE_INFO_BY_PATH` for meta; passes `meta` and `info` (currentPath, pages) to `Header`. Optional `footer`. |
+| `AppShell`   | `components/app-shell.tsx`              | Root layout: sidebar (collapsible) with **custom logo** (Next.js `Image` from `public/images/teacherbuddy-icon-transparent.png`, blur placeholder, responsive sizes), route titles, main content. Uses `getPageInfoByPath(pathname)` for meta; passes `meta` and `info` (currentPath, `PAGE_INFOS`) to `Header`. Optional `footer`. |
 | `Header`     | `components/header.tsx`                 | Page title, description, **PageInfoDialog** (help button next to title), sidebar trigger, theme toggle, and **QuizTimerCard** (timer on all pages). Receives `meta` and `info` from AppShell. |
 | `Footer`     | `components/footer.tsx`                 | Credits, source link, Catppuccin attribution. Rendered via `AppShell` footer prop.                                        |
 | `SidebarNav` | `components/navigation/sidebar-nav.tsx` | Primary navigation links; highlights current route by pathname.                                                           |

@@ -1,13 +1,22 @@
-import { buildPageMetadata } from '@/lib/metadata';
+import { Metadata } from 'next';
 
 import BreakoutGroupsCard from '@/components/breakout/breakout-groups-card';
 
 /**
  * Builds SEO metadata for the breakout room generator route.
  */
-export function generateMetadata() {
-  return buildPageMetadata('/breakout-rooms');
-}
+export const metadata: Metadata = {
+  title: 'Breakout Rooms | TeacherBuddy',
+  description: 'Create randomized student groups for breakout sessions.',
+  openGraph: {
+    title: 'Breakout Rooms | TeacherBuddy',
+    description: 'Create randomized student groups for breakout sessions.',
+  },
+  twitter: {
+    title: 'Breakout Rooms | TeacherBuddy',
+    description: 'Create randomized student groups for breakout sessions.',
+  },
+};
 
 /**
  * Renders the breakout room generator workflow.

@@ -4,13 +4,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import './globals.css';
 
-import {
-  DEFAULT_SITE_DESCRIPTION,
-  resolveMetadataBase,
-  SHARED_OPEN_GRAPH,
-  SHARED_TWITTER,
-} from '@/lib/metadata';
-
 import AppShell from '@/components/app-shell';
 import Footer from '@/components/footer';
 import PrivacyNotice from '@/components/privacy-notice';
@@ -27,29 +20,41 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-/**
- * Defines global metadata defaults used by all routes unless overridden.
- * Includes site title template, base URL resolution, and shared social tags.
- */
-export const metadata: Metadata = {
-  metadataBase: resolveMetadataBase(),
-  title: {
-    default: 'TeacherBuddy',
-    template: '%s | TeacherBuddy',
-  },
-  description: DEFAULT_SITE_DESCRIPTION,
-  openGraph: {
-    ...SHARED_OPEN_GRAPH,
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+    ),
     title: 'TeacherBuddy',
-    description: DEFAULT_SITE_DESCRIPTION,
-    url: '/',
-  },
-  twitter: {
-    ...SHARED_TWITTER,
-    title: 'TeacherBuddy',
-    description: DEFAULT_SITE_DESCRIPTION,
-  },
-};
+    description:
+      'Manage students, run quizzes, and organize class activities in one place.',
+    openGraph: {
+      title: 'TeacherBuddy',
+      description:
+        'Manage students, run quizzes, and organize class activities in one place.',
+      siteName: 'https://teacherbuddy.mrbubbles-src.dev',
+      images: [
+        {
+          url: 'https://teacherbuddy.mrbubbles-src.dev/api/og',
+          width: 1200,
+          height: 630,
+          alt: 'TeacherBuddy Logo',
+        },
+      ],
+      type: 'website',
+      locale: 'en_GB',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'TeacherBuddy',
+      description:
+        'Manage students, run quizzes, and organize class activities in one place.',
+      images: ['https://teacherbuddy.mrbubbles-src.dev/api/og'],
+      creator: '@_MstrBubbles',
+    },
+    other: { 'apple-mobile-web-app-title': 'teacherbuddy.mrbubbles-src.dev' },
+  };
+}
 
 /**
  * Renders the shared HTML shell and providers for all application routes.
@@ -63,7 +68,30 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="apple-mobile-web-app-title" content="TeacherBuddy" />
+        <link rel="canonical" href="https://teacherbuddy.mrbubbles-src.dev" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebApplication',
+              name: 'TeacherBuddy',
+              description:
+                'Manage students, run quizzes, and organize class activities in one place.',
+              url: 'https://teacherbuddy.mrbubbles-src.dev',
+              applicationCategory: 'Education',
+              applicationSubCategory: 'Classroom Management',
+              applicationSuite: 'TeacherBuddy',
+              applicationVersion: '1.1.3',
+              applicationInstallUrl:
+                'https://teacherbuddy.mrbubbles-src.dev/install',
+              applicationUpdateUrl:
+                'https://teacherbuddy.mrbubbles-src.dev/update',
+              applicationUpdateVersion: '1.1.3',
+              applicationUpdateStatus: 'available',
+            }),
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
