@@ -14,12 +14,18 @@ const OG_TEXT =
 async function loadGeistFont(weight: 400 | 700): Promise<ArrayBuffer> {
   const url = `https://fonts.googleapis.com/css2?family=Geist:wght@${weight}&text=${encodeURIComponent(OG_TEXT)}`;
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Next.js OG; +https://nextjs.org)' },
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; Next.js OG; +https://nextjs.org)',
+    },
   });
   const css = await res.text();
-  const ttfMatch = css.match(/src: url\(([^)]+)\) format\('(?:opentype|truetype)'\)/);
+  const ttfMatch = css.match(
+    /src: url\(([^)]+)\) format\('(?:opentype|truetype)'\)/,
+  );
   const fallbackMatch = css.match(/src: url\(([^)]+)\)/);
-  const fontUrl = (ttfMatch?.[1] ?? fallbackMatch?.[1])?.trim().replace(/^['"]|['"]$/g, '');
+  const fontUrl = (ttfMatch?.[1] ?? fallbackMatch?.[1])
+    ?.trim()
+    .replace(/^['"]|['"]$/g, '');
   if (fontUrl) {
     const fontRes = await fetch(fontUrl);
     if (fontRes.ok) return fontRes.arrayBuffer();
@@ -40,33 +46,30 @@ export async function GET() {
   ]);
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          padding: 60,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#1e1e2e',
-          color: '#cdd6f4',
-          fontFamily: FONT_FAMILY,
-        }}
-      >
-        <img
-          src="https://teacherbuddy.mrbubbles-src.dev/logo-og.svg"
-          style={{ width: 650, height: 160, display: 'flex' }}
-          alt="TeacherBuddy Logo"
-        />
-        <p style={{ fontSize: 16, fontWeight: 700 }}>
-          Manage students, run quizzes,
-          <br />
-          and organize class activities in one place.
-        </p>
-      </div>
-    ),
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        padding: 60,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#1e1e2e',
+        color: '#cdd6f4',
+        fontFamily: FONT_FAMILY,
+      }}>
+      <img
+        src="https://www.teacherbuddy.mrbubbles-src.dev/logo-og.svg"
+        style={{ width: 650, height: 160, display: 'flex' }}
+        alt="TeacherBuddy Logo"
+      />
+      <p style={{ fontSize: 16, fontWeight: 700 }}>
+        Manage students, run quizzes,
+        <br />
+        and organize class activities in one place.
+      </p>
+    </div>,
     {
       width: 1200,
       height: 630,
