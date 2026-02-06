@@ -22,7 +22,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import Icon from '../public/images/teacherbuddy-icon-transparent.png';
+import Icon from '@/public/images/teacherbuddy-icon-transparent.png';
 import Header from './header';
 
 /**

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Logo from '../public/images/teacherbuddy-logo.png';
+import Logo from '@/public/images/teacherbuddy-logo.png';
 import { Separator } from './ui/separator';
 
 /**
@@ -15,7 +15,7 @@ const Footer = () => {
       <Separator orientation="horizontal" className="my-4 w-full" />
       <section className="max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-2/6">
         <Image
-          src={Logo}
+          src={Logo.src}
           alt="TeacherBuddy Logo"
           width={895}
           height={372}

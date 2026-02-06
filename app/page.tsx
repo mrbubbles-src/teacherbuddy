@@ -4,7 +4,7 @@ import { ROUTE_PAGE_META_BY_PATH } from '@/lib/page-meta';
 import Image from 'next/image';
 
 import DashboardCards from '@/components/dashboard/dashboard-cards';
-import Logo from '../public/images/teacherbuddy-logo.png';
+import Logo from '@/public/images/teacherbuddy-logo.png';
 
 /**
  * Builds SEO metadata for the dashboard route.
