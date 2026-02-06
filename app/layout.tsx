@@ -68,6 +68,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta
+          property="og:url"
+          content="https://teacherbuddy.mrbubbles-src.dev/api/og"
+        />
         <link rel="canonical" href="https://teacherbuddy.mrbubbles-src.dev" />
         <script
           type="application/ld+json"

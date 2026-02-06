@@ -60,8 +60,8 @@ export async function GET() {
         fontFamily: FONT_FAMILY,
       }}>
       <img
-        src="https://teacherbuddy.mrbubbles-src.dev/logo-og.svg"
-        style={{ width: 650, height: 160 }}
+        src="https://teacherbuddy.mrbubbles-src.dev/logo-og.png"
+        style={{ width: 650 }}
         alt="TeacherBuddy Logo"
       />
       <p style={{ fontSize: 24, fontWeight: 700 }}>
