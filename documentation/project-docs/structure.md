@@ -70,7 +70,7 @@ teacherbuddy/
 │   ├── metadata.ts         # SEO metadata utilities (metadataBase, OG/Twitter, page metadata builder)
 │   ├── og-image.tsx        # Shared next/og image renderer
 │   ├── page-meta.ts        # Route title/description source of truth
-│   ├── page-info.tsx       # Page metadata and in-app help content (PAGE_INFOS, PAGE_INFO_BY_PATH)
+│   ├── page-info.tsx       # Page metadata and in-app help (PAGE_INFOS, getPageInfoByPath)
 │   ├── view-transition.ts  # Theme transition helper
 │   └── __tests__/          # Utility tests
 ├── __tests__/              # Global test utilities
@@ -78,6 +78,8 @@ teacherbuddy/
 ├── documentation/          # Project documentation
 │   └── project-docs/       # Detailed docs
 ├── public/                 # Static assets
+│   ├── images/             # App logo and icons (e.g. teacherbuddy-icon-transparent.png for sidebar)
+│   └── sounds/             # Timer and alert sounds
 ├── vitest.config.ts        # Test configuration
 └── vitest.setup.ts         # Test setup and mocks
 ```
@@ -112,8 +114,8 @@ Tests are colocated with source code in `__tests__/` directories:
 | `lib/metadata.ts`          | Shared SEO metadata builders and metadataBase resolution (`buildPageMetadata`, `resolveMetadataBase`)           |
 | `lib/og-image.tsx`         | Shared Open Graph image renderer used by `app/api/og/route.ts`                                                  |
 | `lib/page-meta.ts`         | Route metadata source (`ROUTE_PAGE_META`, `ROUTE_PAGE_META_BY_PATH`) reused by SEO and UI help                  |
-| `lib/page-info.tsx`        | Page metadata and help content (PageInfo, PAGE_INFOS, PAGE_INFO_BY_PATH); drives Header meta and PageInfoDialog |
-| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar nav, Header (meta + info), main content                                        |
+| `lib/page-info.tsx`        | Page metadata and help (PageInfo, PAGE_INFOS, getPageInfoByPath); drives Header meta and PageInfoDialog        |
+| `components/app-shell.tsx` | Layout: SidebarProvider, sidebar with custom logo (Image from public/images), nav, Header (meta + info), main  |
 | `components/header.tsx`    | Page meta, PageInfoDialog, SidebarTrigger, ThemeToggle, QuizTimerCard                                           |
 | `next.config.ts`           | Next config; React Compiler enabled unless `NEXT_DISABLE_REACT_COMPILER=1`                                      |
 | `vitest.config.ts`         | Vitest + jsdom, path alias `@`, coverage for lib/hooks/context                                                  |

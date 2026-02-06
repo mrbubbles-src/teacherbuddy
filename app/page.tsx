@@ -1,23 +1,7 @@
-import { buildPageMetadata, SITE_NAME } from '@/lib/metadata';
-import { ROUTE_PAGE_META_BY_PATH } from '@/lib/page-meta';
-
 import Image from 'next/image';
 
 import DashboardCards from '@/components/dashboard/dashboard-cards';
 import Logo from '@/public/images/teacherbuddy-logo.png';
-
-/**
- * Builds SEO metadata for the dashboard route.
- */
-export function generateMetadata() {
-  const metadata = buildPageMetadata('/');
-  const dashboardTitle = ROUTE_PAGE_META_BY_PATH['/'].title;
-
-  return {
-    ...metadata,
-    title: `${dashboardTitle} | ${SITE_NAME}`,
-  };
-}
 
 /**
  * Renders the dashboard landing page with branding and primary workflow cards.

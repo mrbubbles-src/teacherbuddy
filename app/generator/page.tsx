@@ -1,4 +1,4 @@
-import { buildPageMetadata } from '@/lib/metadata';
+import { Metadata } from 'next';
 
 import GeneratorCard from '@/components/generator/generator-card';
 import GeneratorCardSkeleton from '@/components/loading/generator-card-skeleton';
@@ -6,9 +6,18 @@ import GeneratorCardSkeleton from '@/components/loading/generator-card-skeleton'
 /**
  * Builds SEO metadata for the random generator route.
  */
-export function generateMetadata() {
-  return buildPageMetadata('/generator');
-}
+export const metadata: Metadata = {
+  title: 'Student Generator | TeacherBuddy',
+  description: 'Pick a random student without repeats.',
+  openGraph: {
+    title: 'Student Generator | TeacherBuddy',
+    description: 'Pick a random student without repeats.',
+  },
+  twitter: {
+    title: 'Student Generator | TeacherBuddy',
+    description: 'Pick a random student without repeats.',
+  },
+};
 
 /**
  * Renders the random student generator workflow.
