@@ -25,11 +25,11 @@ This split follows Next.js metadata merge behavior: nested fields like `openGrap
 
 ## Open Graph Image
 
-TeacherBuddy uses a generated OG image route:
+TeacherBuddy uses a static OG image asset:
 
-- Path: `/api/og`
-- API route file: `app/api/og/route.ts`
-- Rendered dimensions: `1200x630`
+- Path: `/images/og.png`
+- Source file: `public/images/og.png`
+- Declared dimensions: `895x372`
 
 The shared OG and Twitter image path is defined once in `lib/metadata.ts`.
 Social image tags are emitted as absolute URLs derived from `metadataBase` so crawlers can fetch them reliably.
