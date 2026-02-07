@@ -17,23 +17,19 @@ import { useEffect, useState } from 'react';
  */
 export default function PrivacyNotice() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    queueMicrotask(() => setMounted(true));
+    if (!isPrivacyNoticeAcknowledged()) {
+      queueMicrotask(() => setOpen(true));
+    }
   }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    queueMicrotask(() => setOpen(!isPrivacyNoticeAcknowledged()));
-  }, [mounted]);
 
   function handleUnderstood() {
     setPrivacyNoticeAcknowledged();
     setOpen(false);
   }
 
-  if (!mounted || !open) return null;
+  if (!open) return null;
 
   return (
     <div

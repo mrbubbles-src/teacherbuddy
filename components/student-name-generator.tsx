@@ -252,7 +252,7 @@ export default function StudentNameGenerator() {
         <p>
           Created by student{" "}
           <a
-            className="font-medium text-primary hover:text-primary/70"
+            className="touch-hitbox font-medium text-primary hover:text-primary/70"
             href="https://github.com/mrbubbles-src"
             target="_blank"
             rel="noreferrer"
@@ -261,7 +261,7 @@ export default function StudentNameGenerator() {
           </a>{" "}
           in class &quot;FBW WD D07 A&quot; of the{" "}
           <a
-            className="font-medium text-primary hover:text-primary/70"
+            className="touch-hitbox font-medium text-primary hover:text-primary/70"
             href="https://digitalcareerinstitute.org/"
             target="_blank"
             rel="noreferrer"
@@ -270,7 +270,7 @@ export default function StudentNameGenerator() {
           </a>
           . Check out the documentation{" "}
           <a
-            className="font-medium text-primary hover:text-primary/70"
+            className="touch-hitbox font-medium text-primary hover:text-primary/70"
             href="https://github.com/mrbubbles-src/random-student-name-generator"
             target="_blank"
             rel="noreferrer"

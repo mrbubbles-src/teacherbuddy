@@ -54,17 +54,25 @@ export default function GeneratorCard({
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-2)', opacity: 0.6 }}
+      />
       <CardHeader className="flex flex-row items-start justify-between gap-2 px-6 xl:px-8">
         <div className="flex flex-col gap-1">
-          <CardTitle className="text-xl">Random Student Pick</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight">Random Student Pick</CardTitle>
           <CardDescription className="text-base/relaxed">
             Generate a random student without repeats until you reset.
           </CardDescription>
         </div>
         <Badge
           variant="outline"
-          className="p-2.5 text-sm border-accent/50 shadow-sm shrink-0">
+          className="rounded-full px-2 py-0.5 text-xs font-medium shrink-0"
+          style={{
+            backgroundColor: 'color-mix(in oklch, var(--chart-2) 10%, transparent)',
+            color: 'var(--chart-2)',
+          }}>
           {remainingStudents.length} remaining
         </Badge>
       </CardHeader>

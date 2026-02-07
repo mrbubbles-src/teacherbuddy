@@ -114,17 +114,25 @@ export default function BreakoutGroupsCard() {
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-4)', opacity: 0.6 }}
+      />
       <CardHeader className="flex flex-row items-start justify-between gap-2 px-6 xl:px-8">
         <div className="flex flex-col gap-1">
-          <CardTitle className="text-xl">Breakout Rooms</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight">Breakout Rooms</CardTitle>
           <CardDescription className="text-base/relaxed">
             Shuffle active students into randomized breakout groups.
           </CardDescription>
         </div>
         <Badge
           variant="outline"
-          className="p-2.5 text-sm border-accent/50 shadow-sm shrink-0">
+          className="rounded-full px-2 py-0.5 text-xs font-medium shrink-0"
+          style={{
+            backgroundColor: 'color-mix(in oklch, var(--chart-4) 10%, transparent)',
+            color: 'var(--chart-4)',
+          }}>
           {activeStudents.length} students
         </Badge>
       </CardHeader>
@@ -186,7 +194,7 @@ export default function BreakoutGroupsCard() {
             {groups.map((group: Student[], index: number) => (
               <div
                 key={`group-${index}`}
-                className="flex flex-col rounded-md border border-border/60 px-3 py-2 w-fit flex-wrap
+                className="flex flex-col rounded-md border border-border/60 px-3 py-2 w-full sm:w-fit flex-wrap
                 ">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm/relaxed font-medium uppercase tracking-[0.2em] text-muted-foreground">

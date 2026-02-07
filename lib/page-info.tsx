@@ -14,7 +14,8 @@ export type PageInfo = RoutePageMeta & {
 };
 
 /**
- * Route help content used by the page info dialog and header guidance UI.
+ * Route help content used by the info panel and header guidance UI.
+ * Written in a warm, practical tone for classroom teachers.
  */
 export const PAGE_INFOS: PageInfo[] = [
   {
@@ -22,34 +23,34 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This page is your main starting point. It gives you one clear place to
-          choose the next teaching task, whether you are preparing materials
-          before class or guiding activities live.
+          Your home base. Everything starts here — pick a tool, jump into a
+          lesson, or check on what you set up earlier. Think of it as your
+          teaching control room.
         </>
       ),
       howTo: [
         <>
-          <strong>Pick the goal first:</strong> Scan the cards and choose the
-          workflow that matches what you need right now.
+          <strong>Glance at the cards</strong> to find what you need — each one
+          is a different classroom tool.
         </>,
         <>
-          <strong>Start with your roster:</strong> If this is your first setup,
-          open Student Management and confirm your student list is ready.
+          <strong>New here?</strong> Head to Students first and get your class
+          roster in. Everything else builds on that.
         </>,
         <>
-          <strong>Move by activity:</strong> Use Generator for fair calling,
-          Breakout Rooms for groups, Quizzes for authoring, Quiz Play for live
-          delivery, and Projects for saved team lists.
+          <strong>Tap any card</strong> to jump straight to that tool. Generator
+          for calling on students, Breakout Rooms for groups, Quizzes for
+          building questions, and so on.
         </>,
         <>
-          <strong>Return here anytime:</strong> Come back to switch workflows
-          quickly as your lesson changes.
+          <strong>Come back anytime</strong> — this page is always just a tap
+          away when you need to switch gears mid-lesson.
         </>,
       ],
       outcome: (
         <>
-          You can move through your full class workflow smoothly without
-          guessing where each tool lives.
+          You always know where to go next, whether you are prepping before
+          class or pivoting during one.
         </>
       ),
     },
@@ -59,32 +60,33 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This is your roster home. Every other feature depends on this list, so
-          keeping names accurate here keeps the rest of the app accurate too.
+          This is where your class list lives. Add names, mark who is absent
+          today, and keep things tidy. Every other tool in the app pulls from
+          this list, so it is worth keeping it up to date.
         </>
       ),
       howTo: [
         <>
-          <strong>Add students quickly:</strong> Type names manually or import
-          multiple names from a comma-separated text file.
+          <strong>Add students</strong> one at a time by typing a name, or paste
+          in a bunch of names at once separated by commas.
         </>,
         <>
-          <strong>Clean up names:</strong> Edit spelling or format so names are
-          consistent and easy to recognize.
+          <strong>Fix a name?</strong> Just tap the edit button next to it and
+          correct the spelling.
         </>,
         <>
-          <strong>Track availability:</strong> Mark students absent when needed
-          so selection and grouping tools reflect who is available.
+          <strong>Student absent today?</strong> Toggle them to absent so they
+          will not show up in the random generator or group maker.
         </>,
         <>
-          <strong>Keep it current:</strong> Remove outdated names so this page
-          stays your single source of truth.
+          <strong>Student left the class?</strong> Delete them to keep the
+          roster clean.
         </>,
       ],
       outcome: (
         <>
-          You get a clean, up-to-date roster that powers Generator, Breakout
-          Rooms, Quizzes, and Projects.
+          A clean, current class list that keeps all your other tools accurate
+          and ready to go.
         </>
       ),
     },
@@ -94,32 +96,29 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          Use this page for fair random calling. It helps you involve everyone
-          and avoids immediate repeats.
+          Need to call on someone? This tool picks a random student from your
+          roster so everyone gets a fair turn — no playing favorites, no
+          forgetting who already went.
         </>
       ),
       howTo: [
         <>
-          <strong>Open when class starts:</strong> Use the generator whenever
-          you are ready to call on students.
+          <strong>Tap &quot;Draw&quot;</strong> to pick a random student. Their name pops
+          up big and clear.
         </>,
         <>
-          <strong>Draw one name:</strong> Each draw picks one student from the
-          current available pool.
+          <strong>Keep going</strong> — each draw picks someone new so nobody
+          gets called twice in a row.
         </>,
         <>
-          <strong>Continue through the lesson:</strong> Keep drawing as class
-          progresses to balance participation.
-        </>,
-        <>
-          <strong>Reset when needed:</strong> Start a fresh cycle whenever you
-          want all students back in the selection pool.
+          <strong>Gone through everyone?</strong> Hit reset to start a fresh
+          round with all students back in the pool.
         </>,
       ],
       outcome: (
         <>
-          You can call on students fairly and keep participation balanced across
-          the room.
+          Fair, random participation without the awkward &quot;who has not gone yet?&quot;
+          moment.
         </>
       ),
     },
@@ -129,32 +128,33 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This page helps you create groups quickly for partner work, stations,
-          and team activities without manual sorting.
+          Splits your class into groups instantly — great for partner work, lab
+          stations, discussion circles, or any activity where you need teams
+          fast.
         </>
       ),
       howTo: [
         <>
-          <strong>Choose your grouping approach:</strong> Pick the setup that
-          fits your activity plan.
+          <strong>Pick how many groups</strong> or how many students per group —
+          whichever is easier for your activity.
         </>,
         <>
-          <strong>Generate first draft groups:</strong> Create groups from your
-          current roster and review the result.
+          <strong>Tap generate</strong> and the app shuffles your roster into
+          random groups.
         </>,
         <>
-          <strong>Adjust by reshuffling:</strong> Regenerate groups if you want
-          a different class mix.
+          <strong>Not happy with the mix?</strong> Just regenerate for a
+          different arrangement.
         </>,
         <>
-          <strong>Run the activity:</strong> Use the final grouping in class and
-          regenerate later when you need a new setup.
+          <strong>Happy with it?</strong> Use those groups for your lesson. Come
+          back and regenerate whenever you need new ones.
         </>,
       ],
       outcome: (
         <>
-          You save setup time and get practical, ready-to-use student groups in
-          seconds.
+          Ready-to-use student groups in seconds, instead of spending five
+          minutes sorting kids into teams.
         </>
       ),
     },
@@ -164,32 +164,33 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          Use this page to prepare quiz content before class so live delivery is
-          smooth and focused.
+          Build your quiz questions here before class so you are not making
+          things up on the fly. Add questions, write answers, and organize
+          everything at your own pace.
         </>
       ),
       howTo: [
         <>
-          <strong>Create a quiz set:</strong> Add clear questions and the
-          answers you expect students to give.
+          <strong>Create a new quiz</strong> and give it a name that helps you
+          find it later (like &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;).
         </>,
         <>
-          <strong>Review quality:</strong> Check wording, order, and difficulty
-          before using the quiz with students.
+          <strong>Add questions one by one</strong> — type the question and the
+          answer you are looking for.
         </>,
         <>
-          <strong>Refine over time:</strong> Update questions as class needs and
-          lesson goals evolve.
+          <strong>Need to import a bunch?</strong> Paste questions from a
+          spreadsheet or document to save time.
         </>,
         <>
-          <strong>Switch to live mode:</strong> Open Quiz Play when your quiz is
-          ready to run in class.
+          <strong>Ready to use it live?</strong> Head over to Quiz Play to run
+          it with your class.
         </>,
       ],
       outcome: (
         <>
-          You have organized quiz sets ready to deliver without last-minute
-          editing.
+          Polished quiz sets you can reuse across classes and semesters —
+          no more scrambling for questions.
         </>
       ),
     },
@@ -199,32 +200,32 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This is the live classroom view for running quizzes with clear pacing
-          and fair participation.
+          The live quiz screen for your classroom. It picks a random student and
+          a question, then lets you reveal the answer when they are ready. Great
+          for reviews, warm-ups, or exit tickets.
         </>
       ),
       howTo: [
         <>
-          <strong>Start a round:</strong> Draw one student and one question from
-          your prepared quiz set.
+          <strong>Pick a quiz</strong> from the dropdown — these are the ones
+          you built in Quiz Builder.
         </>,
         <>
-          <strong>Pause for response:</strong> Give the student time to answer
-          before revealing the correct result.
+          <strong>Tap &quot;Draw&quot;</strong> to get a random student + question combo.
         </>,
         <>
-          <strong>Reveal and continue:</strong> Show the answer, then move to
-          the next round to keep class momentum.
+          <strong>Give them a moment</strong> to think, then tap &quot;Reveal&quot; to
+          show the answer.
         </>,
         <>
-          <strong>Use repeatedly:</strong> Run this flow for quick checks or
-          full quiz sessions.
+          <strong>Keep drawing</strong> for more rounds. The timer up top helps
+          you pace things.
         </>,
       ],
       outcome: (
         <>
-          You can run interactive quiz rounds with less friction and better
-          classroom rhythm.
+          Engaging, fair quiz rounds that keep the whole class on their toes —
+          not just the hand-raisers.
         </>
       ),
     },
@@ -234,32 +235,33 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          Use this page to build and save project team lists you can return to
-          across multiple lessons.
+          Save student lineups for projects that span multiple days. Pick who
+          is on each project, optionally group them into teams, and come back
+          to the same list next week.
         </>
       ),
       howTo: [
         <>
-          <strong>Select who belongs:</strong> Choose the students for a
-          specific project list.
+          <strong>Name your project</strong> and pick a type so you can tell
+          your lists apart (like &quot;Science Fair&quot; or &quot;Book Club Groups&quot;).
         </>,
         <>
-          <strong>Shape team structure:</strong> Group students in a way that
-          supports your assignment goals.
+          <strong>Select the students</strong> who belong on this project. You
+          can pick from your full roster.
         </>,
         <>
-          <strong>Save for later:</strong> Keep the list so you can reuse or
-          adjust it in future sessions.
+          <strong>Want teams?</strong> Turn on grouping and set the group
+          size — the app divides students automatically.
         </>,
         <>
-          <strong>Manage multiple lists:</strong> Maintain different team setups
-          for different classes or units.
+          <strong>Save it</strong> and come back to edit, add students, or
+          create a new list whenever you need.
         </>,
       ],
       outcome: (
         <>
-          You keep project group planning organized, reusable, and easy to
-          maintain.
+          Organized project lists you can pull up anytime — no more sticky notes
+          or lost spreadsheets.
         </>
       ),
     },

@@ -7,7 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton"
  */
 export default function StudentTableSkeleton() {
   return (
-    <Card className="lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div className="absolute left-0 top-0 h-full w-1 rounded-l-xl" style={{ backgroundColor: 'var(--chart-1)', opacity: 0.6 }} />
       <CardHeader className="lg:px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-2">

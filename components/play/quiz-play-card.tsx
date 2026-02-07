@@ -70,9 +70,13 @@ export default function QuizPlayCard({
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-4)', opacity: 0.6 }}
+      />
       <CardHeader className="px-6 xl:px-8">
-        <CardTitle className="text-xl">Quiz Play Mode</CardTitle>
+        <CardTitle className="text-xl font-bold tracking-tight">Quiz Play Mode</CardTitle>
         <CardDescription className="text-base/relaxed">
           Draw a random student and question. Reveal answers when ready.
         </CardDescription>
@@ -87,7 +91,7 @@ export default function QuizPlayCard({
         />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[140px] flex flex-col justify-center">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[100px] md:min-h-[140px] flex flex-col justify-center">
             <p className="text-base/relaxed font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Selected Student
             </p>
@@ -100,7 +104,7 @@ export default function QuizPlayCard({
               {availableStudentIds.length} remaining
             </Badge>
           </div>
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[140px] flex flex-col justify-center">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[100px] md:min-h-[140px] flex flex-col justify-center">
             <p className="text-base/relaxed font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Question
             </p>
