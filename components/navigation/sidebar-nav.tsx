@@ -83,7 +83,8 @@ export function SidebarNav({ pathname }: { pathname: string }) {
                 isActive
                   ? {
                       borderLeft: `3px solid ${item.accentColor}`,
-                      backgroundColor: `color-mix(in oklch, ${item.accentColor} 8%, transparent)`,
+                      backgroundColor: `color-mix(in oklch, ${item.accentColor} 8%, var(--sidebar-background, var(--background)))`,
+                      color: item.accentColor,
                     }
                   : undefined
               }>
