@@ -19,6 +19,7 @@ const QUIZ_INDEX_KEY = "teacherbuddy:quiz-index"
 const PROJECT_LISTS_KEY = "teacherbuddy:project-lists"
 const BREAKOUT_GROUPS_KEY = "teacherbuddy:breakout-groups"
 const TIMER_KEY = "teacherbuddy:timer"
+const TIMER_FAVORITES_KEY = "teacherbuddy:timer-favorites"
 const PRIVACY_NOTICE_ACK_KEY = "teacherbuddy:privacy-notice-acknowledged"
 
 const quizKey = (id: string) => `teacherbuddy:quiz:${id}`
@@ -274,4 +275,34 @@ export function isPrivacyNoticeAcknowledged(): boolean {
 export function setPrivacyNoticeAcknowledged(): void {
   if (typeof window === "undefined") return
   localStorage.setItem(PRIVACY_NOTICE_ACK_KEY, "1")
+}
+
+/**
+ * Loads the user's favorite timer preset values (in seconds) from localStorage.
+ * Returns the default set [60, 300, 900] when nothing is stored or data is invalid.
+ * Allows 0–3 favorites.
+ */
+export function loadTimerFavorites(): number[] {
+  if (typeof window === "undefined") return [60, 300, 900]
+  const parsed = safeParse<unknown>(
+    localStorage.getItem(TIMER_FAVORITES_KEY),
+    null
+  )
+  if (
+    !Array.isArray(parsed) ||
+    parsed.length > 3 ||
+    !parsed.every((v) => typeof v === "number" && v > 0)
+  ) {
+    return [60, 300, 900]
+  }
+  return parsed as number[]
+}
+
+/**
+ * Persists the user's favorite timer preset values (in seconds).
+ * Accepts 0–3 positive numbers.
+ */
+export function saveTimerFavorites(favorites: number[]): void {
+  if (typeof window === "undefined") return
+  localStorage.setItem(TIMER_FAVORITES_KEY, JSON.stringify(favorites))
 }
