@@ -103,7 +103,7 @@ export const PAGE_INFOS: PageInfo[] = [
       ),
       howTo: [
         <>
-          <strong>Tap "Draw"</strong> to pick a random student. Their name pops
+          <strong>Tap &quot;Draw&quot;</strong> to pick a random student. Their name pops
           up big and clear.
         </>,
         <>
@@ -117,7 +117,7 @@ export const PAGE_INFOS: PageInfo[] = [
       ],
       outcome: (
         <>
-          Fair, random participation without the awkward "who has not gone yet?"
+          Fair, random participation without the awkward &quot;who has not gone yet?&quot;
           moment.
         </>
       ),
@@ -172,7 +172,7 @@ export const PAGE_INFOS: PageInfo[] = [
       howTo: [
         <>
           <strong>Create a new quiz</strong> and give it a name that helps you
-          find it later (like "Ch. 5 Vocab" or "Friday Review").
+          find it later (like &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;).
         </>,
         <>
           <strong>Add questions one by one</strong> — type the question and the
@@ -211,10 +211,10 @@ export const PAGE_INFOS: PageInfo[] = [
           you built in Quiz Builder.
         </>,
         <>
-          <strong>Tap "Draw"</strong> to get a random student + question combo.
+          <strong>Tap &quot;Draw&quot;</strong> to get a random student + question combo.
         </>,
         <>
-          <strong>Give them a moment</strong> to think, then tap "Reveal" to
+          <strong>Give them a moment</strong> to think, then tap &quot;Reveal&quot; to
           show the answer.
         </>,
         <>
@@ -243,7 +243,7 @@ export const PAGE_INFOS: PageInfo[] = [
       howTo: [
         <>
           <strong>Name your project</strong> and pick a type so you can tell
-          your lists apart (like "Science Fair" or "Book Club Groups").
+          your lists apart (like &quot;Science Fair&quot; or &quot;Book Club Groups&quot;).
         </>,
         <>
           <strong>Select the students</strong> who belong on this project. You

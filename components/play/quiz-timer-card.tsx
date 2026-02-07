@@ -109,9 +109,9 @@ export default function QuizTimerCard() {
     (Number.parseInt(minutes, 10) || 0) * 60 +
     (Number.parseInt(seconds, 10) || 0);
 
-  // Load favorites from localStorage on mount
+  // Load favorites from localStorage after mount to avoid hydration mismatch; defer setState so it is not synchronous in the effect.
   useEffect(() => {
-    setFavorites(loadTimerFavorites());
+    queueMicrotask(() => setFavorites(loadTimerFavorites()));
   }, []);
 
   // Create audio elements on the client only

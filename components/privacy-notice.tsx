@@ -20,7 +20,7 @@ export default function PrivacyNotice() {
 
   useEffect(() => {
     if (!isPrivacyNoticeAcknowledged()) {
-      setOpen(true);
+      queueMicrotask(() => setOpen(true));
     }
   }, []);
 
