@@ -145,9 +145,13 @@ export default function ProjectListBuilder() {
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-5)', opacity: 0.6 }}
+      />
       <CardHeader className="px-6 xl:px-8">
-        <CardTitle className="text-xl">Create a project list</CardTitle>
+        <CardTitle className="text-xl font-bold tracking-tight">Create a project list</CardTitle>
         <CardDescription className="text-base/relaxed">
           Choose students from your roster and save them as a project-ready list
           or group set.

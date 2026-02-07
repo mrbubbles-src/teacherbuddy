@@ -204,9 +204,13 @@ export default function QuizEditorForm({
   return (
     <>
       <div className="flex flex-col gap-4">
-        <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+          <div
+            className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+            style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
+          />
           <CardHeader className="px-6 xl:px-8">
-            <CardTitle className="text-xl">Quiz Details</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight">Quiz Details</CardTitle>
             <CardDescription className="text-base/relaxed">
               Select an existing quiz or start a new one.
             </CardDescription>
@@ -280,9 +284,13 @@ export default function QuizEditorForm({
           </CardContent>
         </Card>
 
-        <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+          <div
+            className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+            style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
+          />
           <CardHeader className="px-6 xl:px-8">
-            <CardTitle className="text-xl">
+            <CardTitle className="text-xl font-bold tracking-tight">
               {editingQuestion ? 'Edit Question' : 'Add Question'}
             </CardTitle>
             <CardDescription className="text-base/relaxed">
@@ -341,9 +349,13 @@ export default function QuizEditorForm({
         {importCard}
       </div>
 
-      <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <div
+          className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+          style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
+        />
         <CardHeader className="px-6 xl:px-8">
-          <CardTitle className="text-xl">Questions</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight">Questions</CardTitle>
           <CardDescription className="text-base/relaxed">
             {questions.length
               ? `${questions.length} question${questions.length === 1 ? '' : 's'}`

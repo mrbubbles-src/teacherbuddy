@@ -110,9 +110,13 @@ export default function QuizImportCard() {
   };
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
+      />
       <CardHeader className="px-6 xl:px-8">
-        <CardTitle className="text-xl">Import Quiz JSON</CardTitle>
+        <CardTitle className="text-xl font-bold tracking-tight">Import Quiz JSON</CardTitle>
         <CardDescription className="text-base/relaxed">
           Paste a JSON object or array that matches the quiz format.
         </CardDescription>

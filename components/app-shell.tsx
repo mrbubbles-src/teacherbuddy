@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { SparklesIcon } from 'lucide-react';
+
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -27,7 +29,7 @@ import Header from './header';
 
 /**
  * Global app shell that renders the sidebar, header, and page content.
- * Pass the page content as children and an optional footer to render below.
+ * Styled to match the design-6 command center aesthetic with phase-colored navigation.
  */
 export default function AppShell({
   children,
@@ -66,7 +68,7 @@ export default function AppShell({
                   />
                 </span>
 
-                <span className="group-data-[collapsible=icon]:hidden text-lg/relaxed">
+                <span className="group-data-[collapsible=icon]:hidden text-lg/relaxed font-bold tracking-tight">
                   TeacherBuddy
                 </span>
               </SidebarMenuButton>
@@ -82,10 +84,11 @@ export default function AppShell({
         <Separator />
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
-            <span className="group-data-[collapsible=icon]:text-xs">
+            <span className="flex items-center gap-1.5 group-data-[collapsible=icon]:text-xs">
+              <SparklesIcon className="size-3 text-primary group-data-[collapsible=icon]:hidden" />
               v1.1.3
             </span>
-            <span className="uppercase tracking-[0.2em] group-data-[collapsible=icon]:hidden">
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary/60 group-data-[collapsible=icon]:hidden">
               Classroom
             </span>
           </div>

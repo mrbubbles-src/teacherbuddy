@@ -176,9 +176,13 @@ export default function ProjectListView() {
 
   if (!projectLists.length) {
     return (
-      <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+        <div
+          className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+          style={{ backgroundColor: 'var(--chart-5)', opacity: 0.6 }}
+        />
         <CardHeader className="px-6 xl:px-8">
-          <CardTitle className="text-xl">Saved project lists</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight">Saved project lists</CardTitle>
         </CardHeader>
         <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
           <p className="text-sm">Your saved project lists will appear here.</p>
@@ -201,10 +205,14 @@ export default function ProjectListView() {
         return (
           <Card
             key={list.id}
-            className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+            className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+            <div
+              className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+              style={{ backgroundColor: 'var(--chart-5)', opacity: 0.6 }}
+            />
             <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-6 xl:px-8">
               <div className="flex flex-col gap-1">
-                <CardTitle className="text-xl">{list.name}</CardTitle>
+                <CardTitle className="text-xl font-bold tracking-tight">{list.name}</CardTitle>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                   <span className="text-base/relaxed">{createdAt}</span>
                   <span aria-hidden="true">•</span>

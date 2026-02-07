@@ -70,9 +70,13 @@ export default function QuizPlayCard({
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-4)', opacity: 0.6 }}
+      />
       <CardHeader className="px-6 xl:px-8">
-        <CardTitle className="text-xl">Quiz Play Mode</CardTitle>
+        <CardTitle className="text-xl font-bold tracking-tight">Quiz Play Mode</CardTitle>
         <CardDescription className="text-base/relaxed">
           Draw a random student and question. Reveal answers when ready.
         </CardDescription>

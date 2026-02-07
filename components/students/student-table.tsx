@@ -178,11 +178,15 @@ export default function StudentTable({
   }
 
   return (
-    <Card className="shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+    <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
+        style={{ backgroundColor: 'var(--chart-1)', opacity: 0.6 }}
+      />
       <CardHeader className="px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-xl">Student List</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight">Student List</CardTitle>
             <CardDescription className="text-base/relaxed">
               {students.length
                 ? `${activeCount} active · ${
