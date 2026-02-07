@@ -91,7 +91,7 @@ export default function QuizPlayCard({
         />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[140px] flex flex-col justify-center">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[100px] md:min-h-[140px] flex flex-col justify-center">
             <p className="text-base/relaxed font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Selected Student
             </p>
@@ -104,7 +104,7 @@ export default function QuizPlayCard({
               {availableStudentIds.length} remaining
             </Badge>
           </div>
-          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[140px] flex flex-col justify-center">
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/60 px-4 py-6 min-h-[100px] md:min-h-[140px] flex flex-col justify-center">
             <p className="text-base/relaxed font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Question
             </p>

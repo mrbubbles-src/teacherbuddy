@@ -364,47 +364,86 @@ export default function QuizEditorForm({
         </CardHeader>
         <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
           {questions.length ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-base/relaxed">Prompt</TableHead>
-                  <TableHead className="text-base/relaxed">Answer</TableHead>
-                  <TableHead className="text-right text-base/relaxed">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile question cards */}
+              <div className="flex flex-col gap-3 md:hidden">
                 {questions.map((question) => (
-                  <TableRow key={question.id}>
-                    <TableCell className="whitespace-normal text-base/relaxed">
-                      {question.prompt}
-                    </TableCell>
-                    <TableCell className="whitespace-normal text-base/relaxed">
-                      {question.answer}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-2">
+                  <div
+                    key={question.id}
+                    className="rounded-lg border border-border/60 bg-background/40 p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-base/relaxed font-medium text-foreground line-clamp-2 flex-1">
+                        {question.prompt}
+                      </p>
+                      <div className="flex items-center gap-1 shrink-0">
                         <Button
                           variant="ghost"
                           size="icon-sm"
+                          className="min-h-[44px] min-w-[44px]"
                           onClick={() => handleEditQuestion(question.id)}>
-                          <PencilIcon className="size-3.5" />
+                          <PencilIcon className="size-4" />
                           <span className="sr-only">Edit</span>
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon-sm"
+                          className="min-h-[44px] min-w-[44px]"
                           onClick={() => handleRemoveQuestion(question.id)}>
-                          <Trash2Icon className="size-3.5 text-destructive" />
+                          <Trash2Icon className="size-4 text-destructive" />
                           <span className="sr-only">Remove</span>
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                    <p className="mt-1 text-sm/relaxed text-muted-foreground line-clamp-3">
+                      {question.answer}
+                    </p>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+
+              {/* Desktop table */}
+              <Table className="hidden md:table">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-base/relaxed">Prompt</TableHead>
+                    <TableHead className="text-base/relaxed">Answer</TableHead>
+                    <TableHead className="text-right text-base/relaxed">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {questions.map((question) => (
+                    <TableRow key={question.id}>
+                      <TableCell className="whitespace-normal text-base/relaxed">
+                        {question.prompt}
+                      </TableCell>
+                      <TableCell className="whitespace-normal text-base/relaxed">
+                        {question.answer}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleEditQuestion(question.id)}>
+                            <PencilIcon className="size-3.5" />
+                            <span className="sr-only">Edit</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleRemoveQuestion(question.id)}>
+                            <Trash2Icon className="size-3.5 text-destructive" />
+                            <span className="sr-only">Remove</span>
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </>
           ) : (
             <p className="text-base text-muted-foreground">
               No questions yet. Add your first question to get started.

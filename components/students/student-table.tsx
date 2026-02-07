@@ -221,108 +221,198 @@ export default function StudentTable({
       </CardHeader>
       <CardContent className="px-6 xl:px-8 gap-5 xl:gap-6 text-base/relaxed flex flex-col">
         {students.length ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-lg/relaxed px-4 sm:px-3 md:px-2">
-                  Student
-                </TableHead>
-                <TableHead className="text-lg/relaxed px-4 sm:px-3 md:px-2">
-                  Status
-                </TableHead>
-                <TableHead className="text-lg/relaxed text-right px-4 sm:px-3 md:px-2">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <>
+            {/* Mobile card list */}
+            <div className="flex flex-col gap-3 md:hidden">
               {students.map((student) => {
                 const isExcluded = student.status === 'excluded';
                 return (
-                  <TableRow key={student.id}>
-                    <TableCell className="px-4 sm:px-3 md:px-2">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-base/relaxed md:text-lg/relaxed">
+                  <div
+                    key={student.id}
+                    className="rounded-lg border border-border/60 bg-background/40 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <span className="font-medium text-base/relaxed text-foreground truncate">
                           {formatStudentName(student.name)}
                         </span>
-                        <span className="text-sm/relaxed md:text-base/relaxed text-muted-foreground/70">
+                        <span className="text-sm/relaxed text-muted-foreground/70">
                           Added{' '}
                           {new Date(student.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                    </TableCell>
-                    <TableCell className="px-4 sm:px-3 md:px-2">
                       <Badge
                         className={cn(
-                          'p-2.5 text-base/relaxed shadow-sm',
+                          'shrink-0 px-2.5 py-1 text-sm/relaxed shadow-sm',
                           isExcluded
                             ? 'bg-destructive/10 text-destructive border-destructive/50'
                             : 'bg-ctp-latte-green/10 text-ctp-latte-green border-ctp-latte-green/50',
                         )}>
                         {isExcluded ? 'Excluded' : 'Active'}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 sm:px-3 md:px-2">
-                      <div className="flex items-center justify-end gap-3">
-                        <div className="flex items-center gap-2">
-                          <Label className="text-sm/relaxed md:text-base/relaxed">
-                            Absent
-                          </Label>
-                          <Checkbox
-                            checked={isExcluded}
-                            onCheckedChange={() =>
-                              handleToggleExcluded(student.id)
-                            }
-                            aria-label={`Mark ${student.name} as absent`}
-                            className="touch-hitbox cursor-pointer border-accent/25"
-                          />
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleOpenEdit(student.id)}
-                          className="md:text-base/relaxed text-sm/relaxed">
-                          Edit
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger
-                            render={
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                className="md:text-base/relaxed text-sm/relaxed"
-                              />
-                            }>
-                            Delete
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete {student.name}?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This removes the student from the roster and
-                                generator history.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() =>
-                                  handleDeleteStudent(student.id)
-                                }>
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2 border-t border-border/40 pt-3">
+                      <label className="flex items-center gap-2 mr-auto min-h-[44px]">
+                        <Checkbox
+                          checked={isExcluded}
+                          onCheckedChange={() =>
+                            handleToggleExcluded(student.id)
+                          }
+                          aria-label={`Mark ${student.name} as absent`}
+                          className="touch-hitbox cursor-pointer border-accent/25"
+                        />
+                        <span className="text-sm/relaxed text-muted-foreground">
+                          Absent
+                        </span>
+                      </label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleOpenEdit(student.id)}
+                        className="text-sm/relaxed min-h-[44px] min-w-[44px]">
+                        Edit
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          render={
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="text-sm/relaxed min-h-[44px] min-w-[44px]"
+                            />
+                          }>
+                          Delete
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Delete {student.name}?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This removes the student from the roster and
+                              generator history.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDeleteStudent(student.id)
+                              }>
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
                 );
               })}
-            </TableBody>
-          </Table>
+            </div>
+
+            {/* Desktop table */}
+            <Table className="hidden md:table">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-lg/relaxed px-2">
+                    Student
+                  </TableHead>
+                  <TableHead className="text-lg/relaxed px-2">
+                    Status
+                  </TableHead>
+                  <TableHead className="text-lg/relaxed text-right px-2">
+                    Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {students.map((student) => {
+                  const isExcluded = student.status === 'excluded';
+                  return (
+                    <TableRow key={student.id}>
+                      <TableCell className="px-2">
+                        <div className="flex flex-col">
+                          <span className="font-medium text-lg/relaxed">
+                            {formatStudentName(student.name)}
+                          </span>
+                          <span className="text-base/relaxed text-muted-foreground/70">
+                            Added{' '}
+                            {new Date(student.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-2">
+                        <Badge
+                          className={cn(
+                            'p-2.5 text-base/relaxed shadow-sm',
+                            isExcluded
+                              ? 'bg-destructive/10 text-destructive border-destructive/50'
+                              : 'bg-ctp-latte-green/10 text-ctp-latte-green border-ctp-latte-green/50',
+                          )}>
+                          {isExcluded ? 'Excluded' : 'Active'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-2">
+                        <div className="flex items-center justify-end gap-3">
+                          <div className="flex items-center gap-2">
+                            <Label className="text-base/relaxed">
+                              Absent
+                            </Label>
+                            <Checkbox
+                              checked={isExcluded}
+                              onCheckedChange={() =>
+                                handleToggleExcluded(student.id)
+                              }
+                              aria-label={`Mark ${student.name} as absent`}
+                              className="touch-hitbox cursor-pointer border-accent/25"
+                            />
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleOpenEdit(student.id)}
+                            className="text-base/relaxed">
+                            Edit
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              render={
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  className="text-base/relaxed"
+                                />
+                              }>
+                              Delete
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete {student.name}?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This removes the student from the roster and
+                                  generator history.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    handleDeleteStudent(student.id)
+                                  }>
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </>
         ) : (
           <p className="text-base text-muted-foreground">
             Add students to start building your roster.

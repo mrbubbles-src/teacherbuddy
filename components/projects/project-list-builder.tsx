@@ -6,6 +6,9 @@ import { useMemo, useState } from 'react';
 
 import Link from 'next/link';
 
+import { UsersIcon } from 'lucide-react';
+import { toast } from 'sonner';
+
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -32,8 +35,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const DEFAULT_GROUP_SIZE = '3';
 
@@ -45,6 +56,7 @@ type GroupMode = 'none' | 'grouped';
  */
 export default function ProjectListBuilder() {
   const { state, actions } = useAppStore();
+  const isMobile = useIsMobile();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [name, setName] = useState('');
   const [projectType, setProjectType] = useState('');
@@ -54,6 +66,7 @@ export default function ProjectListBuilder() {
   const [includeExcluded, setIncludeExcluded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [studentSheetOpen, setStudentSheetOpen] = useState(false);
 
   const students = useMemo(
     () =>
@@ -94,11 +107,15 @@ export default function ProjectListBuilder() {
     const trimmedName = name.trim();
     const trimmedType = projectType.trim();
     if (!trimmedName || !trimmedType) {
-      setError('Enter both a project name and project type.');
+      const message = 'Enter both a project name and project type.';
+      setError(message);
+      toast.error(message);
       return;
     }
     if (!selectedIds.length) {
-      setError('Select at least one student to continue.');
+      const message = 'Select at least one student to continue.';
+      setError(message);
+      toast.error(message);
       return;
     }
 
@@ -107,7 +124,9 @@ export default function ProjectListBuilder() {
       .map((student) => student.id);
 
     if (!orderedSelectedIds.length) {
-      setError('Select at least one student to continue.');
+      const message = 'Select at least one student to continue.';
+      setError(message);
+      toast.error(message);
       return;
     }
 
@@ -115,7 +134,9 @@ export default function ProjectListBuilder() {
     if (groupMode === 'grouped') {
       const size = Number.parseInt(groupSize, 10);
       if (!size || size < 2) {
-        setError('Enter a group size of 2 or more.');
+        const message = 'Enter a group size of 2 or more.';
+        setError(message);
+        toast.error(message);
         return;
       }
       for (let index = 0; index < orderedSelectedIds.length; index += size) {
@@ -137,6 +158,11 @@ export default function ProjectListBuilder() {
     setGroupMode('none');
     setGroupSize(DEFAULT_GROUP_SIZE);
     setError(null);
+    const groupLabel =
+      groups.length > 0
+        ? `with ${groups.length} group${groups.length === 1 ? '' : 's'}`
+        : '';
+    toast.success(`Project list saved ${groupLabel}`.trim() + '.');
     setNotice('Project list saved.');
   };
 
@@ -225,20 +251,22 @@ export default function ProjectListBuilder() {
               </FieldLabel>
               <FieldContent>
                 <Select
-                  defaultValue="Individual list"
+                  defaultValue="none"
                   value={groupMode}
                   onValueChange={(value) => setGroupMode(value as GroupMode)}>
                   <SelectTrigger className="w-full text-base/relaxed h-9 placeholder:text-muted-foreground/70 placeholder:text-base/relaxed">
-                    <SelectValue placeholder="Choose a grouping" />
+                    <SelectValue>
+                      {groupMode === 'grouped' ? 'Create groups' : 'Individual list'}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem
-                      value="Individual list"
+                      value="none"
                       className="text-base/relaxed">
                       Individual list
                     </SelectItem>
                     <SelectItem
-                      value="Create groups"
+                      value="grouped"
                       className="text-base/relaxed">
                       Create groups
                     </SelectItem>
@@ -272,85 +300,190 @@ export default function ProjectListBuilder() {
                 </FieldContent>
               </Field>
             ) : null}
-          </div>
-          <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/70 p-4">
-            <div className="flex flex-col gap-1">
-              <p className="text-lg/relaxed font-semibold">Selected students</p>
-              <p className="text-base/relaxed text-muted-foreground">
-                {selectedCount}
-                {selectedCount === 1 ? ' student' : ' students'} selected.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
+
+            {/* Mobile: button to open student selection sheet */}
+            {isMobile ? (
               <Button
                 type="button"
-                size="sm"
                 variant="secondary"
-                onClick={handleSelectAll}
-                disabled={!visibleStudents.length}>
-                Select all
+                className="h-11 font-semibold text-base"
+                onClick={() => setStudentSheetOpen(true)}>
+                <UsersIcon className="size-4" />
+                Select Students ({selectedCount})
               </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={handleClearSelection}
-                disabled={!selectedIds.length}>
-                Clear
-              </Button>
-              <Link
-                href="/students"
-                className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-                Add students
-              </Link>
-            </div>
-            <FieldSeparator>Student roster</FieldSeparator>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="include-excluded"
-                checked={includeExcluded}
-                onCheckedChange={(checked) => {
-                  setIncludeExcluded(Boolean(checked));
-                }}
-                className="touch-hitbox cursor-pointer border-accent/25"
-              />
-              <label
-                htmlFor="include-excluded"
-                className="text-base/relaxed text-muted-foreground">
-                Include absent students
-              </label>
-            </div>
-            <div className="max-h-64 overflow-y-auto pr-2">
-              <div className="flex flex-col gap-2">
-                {visibleStudents.length ? (
-                  visibleStudents.map((student) => (
-                    <label
-                      key={student.id}
-                      className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-base/relaxed">
-                      <Checkbox
-                        checked={selectedIds.includes(student.id)}
-                        onCheckedChange={() => toggleSelection(student.id)}
-                        className="touch-hitbox cursor-pointer border-accent/25"
-                      />
-                      <span className="font-medium">
-                        {formatStudentName(student.name)}
-                      </span>
-                      {student.status === 'excluded' ? (
-                        <Badge variant="outline" className="text-xs">
-                          Absent
-                        </Badge>
-                      ) : null}
-                    </label>
-                  ))
-                ) : (
-                  <p className="text-base/relaxed text-muted-foreground">
-                    Add students to your roster to build project lists.
-                  </p>
-                )}
+            ) : null}
+          </div>
+
+          {/* Desktop: inline student selection panel */}
+          {!isMobile ? (
+            <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/70 p-4">
+              <div className="flex flex-col gap-1">
+                <p className="text-lg/relaxed font-semibold">Selected students</p>
+                <p className="text-base/relaxed text-muted-foreground">
+                  {selectedCount}
+                  {selectedCount === 1 ? ' student' : ' students'} selected.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleSelectAll}
+                  disabled={!visibleStudents.length}>
+                  Select all
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleClearSelection}
+                  disabled={!selectedIds.length}>
+                  Clear
+                </Button>
+                <Link
+                  href="/students"
+                  className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                  Add students
+                </Link>
+              </div>
+              <FieldSeparator>Student roster</FieldSeparator>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="include-excluded"
+                  checked={includeExcluded}
+                  onCheckedChange={(checked) => {
+                    setIncludeExcluded(Boolean(checked));
+                  }}
+                  className="touch-hitbox cursor-pointer border-accent/25"
+                />
+                <label
+                  htmlFor="include-excluded"
+                  className="text-base/relaxed text-muted-foreground">
+                  Include absent students
+                </label>
+              </div>
+              <div className="max-h-64 overflow-y-auto pr-2">
+                <div className="flex flex-col gap-2">
+                  {visibleStudents.length ? (
+                    visibleStudents.map((student) => (
+                      <label
+                        key={student.id}
+                        className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-base/relaxed">
+                        <Checkbox
+                          checked={selectedIds.includes(student.id)}
+                          onCheckedChange={() => toggleSelection(student.id)}
+                          className="touch-hitbox cursor-pointer border-accent/25"
+                        />
+                        <span className="font-medium">
+                          {formatStudentName(student.name)}
+                        </span>
+                        {student.status === 'excluded' ? (
+                          <Badge variant="outline" className="text-xs">
+                            Absent
+                          </Badge>
+                        ) : null}
+                      </label>
+                    ))
+                  ) : (
+                    <p className="text-base/relaxed text-muted-foreground">
+                      Add students to your roster to build project lists.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
+
+        {/* Mobile: student selection bottom sheet */}
+        {isMobile ? (
+          <Sheet open={studentSheetOpen} onOpenChange={setStudentSheetOpen}>
+            <SheetContent side="bottom" className="max-h-[85dvh]">
+              <SheetHeader>
+                <SheetTitle>Select Students</SheetTitle>
+                <SheetDescription>
+                  {selectedCount}
+                  {selectedCount === 1 ? ' student' : ' students'} selected.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col gap-3 px-6 pb-6 overflow-y-auto">
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={handleSelectAll}
+                    disabled={!visibleStudents.length}>
+                    Select all
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleClearSelection}
+                    disabled={!selectedIds.length}>
+                    Clear
+                  </Button>
+                  <Link
+                    href="/students"
+                    className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                    Add students
+                  </Link>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="include-excluded-mobile"
+                    checked={includeExcluded}
+                    onCheckedChange={(checked) => {
+                      setIncludeExcluded(Boolean(checked));
+                    }}
+                    className="touch-hitbox cursor-pointer border-accent/25"
+                  />
+                  <label
+                    htmlFor="include-excluded-mobile"
+                    className="text-base/relaxed text-muted-foreground">
+                    Include absent students
+                  </label>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {visibleStudents.length ? (
+                    visibleStudents.map((student) => (
+                      <label
+                        key={student.id}
+                        className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-3 text-base/relaxed min-h-[48px]">
+                        <Checkbox
+                          checked={selectedIds.includes(student.id)}
+                          onCheckedChange={() => toggleSelection(student.id)}
+                          className="touch-hitbox cursor-pointer border-accent/25"
+                        />
+                        <span className="font-medium">
+                          {formatStudentName(student.name)}
+                        </span>
+                        {student.status === 'excluded' ? (
+                          <Badge variant="outline" className="text-xs">
+                            Absent
+                          </Badge>
+                        ) : null}
+                      </label>
+                    ))
+                  ) : (
+                    <p className="text-base/relaxed text-muted-foreground">
+                      Add students to your roster to build project lists.
+                    </p>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  className="h-11 font-semibold text-base mt-2"
+                  onClick={() => setStudentSheetOpen(false)}>
+                  Done ({selectedCount} selected)
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        ) : null}
+
         {error ? <FieldError>{error}</FieldError> : null}
         {notice ? (
           <p className="text-base/relaxed text-muted-foreground">{notice}</p>

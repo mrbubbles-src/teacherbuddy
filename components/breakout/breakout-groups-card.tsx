@@ -194,7 +194,7 @@ export default function BreakoutGroupsCard() {
             {groups.map((group: Student[], index: number) => (
               <div
                 key={`group-${index}`}
-                className="flex flex-col rounded-md border border-border/60 px-3 py-2 w-fit flex-wrap
+                className="flex flex-col rounded-md border border-border/60 px-3 py-2 w-full sm:w-fit flex-wrap
                 ">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm/relaxed font-medium uppercase tracking-[0.2em] text-muted-foreground">

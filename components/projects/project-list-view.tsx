@@ -7,6 +7,8 @@ import { useMemo, useState } from 'react';
 
 import { useTheme } from 'next-themes';
 
+import { UsersIcon } from 'lucide-react';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,8 +39,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
  * Renders saved project lists and inline editing controls.
@@ -47,7 +57,9 @@ import { useAppStore } from '@/context/app-store';
 export default function ProjectListView() {
   const { theme } = useTheme();
   const { state, actions } = useAppStore();
+  const isMobile = useIsMobile();
   const [editingListId, setEditingListId] = useState<string | null>(null);
+  const [addStudentSheetOpen, setAddStudentSheetOpen] = useState(false);
   const [draftName, setDraftName] = useState('');
   const [draftType, setDraftType] = useState('');
   const [draftDescription, setDraftDescription] = useState('');
@@ -289,7 +301,7 @@ export default function ProjectListView() {
             </CardHeader>
             <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
               {isEditing ? (
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
                   <div className="flex flex-col gap-4">
                     <Field>
                       <FieldLabel
@@ -345,63 +357,141 @@ export default function ProjectListView() {
                       </FieldContent>
                     </Field>
                     {error ? <FieldError>{error}</FieldError> : null}
+
+                    {/* Mobile: button to open add-student sheet */}
+                    {isMobile ? (
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="h-11 font-semibold text-base"
+                        onClick={() => setAddStudentSheetOpen(true)}>
+                        <UsersIcon className="size-4" />
+                        Add Students ({availableStudents.length} available)
+                      </Button>
+                    ) : null}
                   </div>
-                  <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/70 p-4">
-                    <div className="flex flex-col gap-1">
-                      <p className="text-lg/relaxed font-semibold">
-                        Selected students
-                      </p>
-                      <p className="text-base/relaxed text-muted-foreground">
-                        {selectedIds.length}
-                        {selectedIds.length === 1
-                          ? ' student'
-                          : ' students'}{' '}
-                        selected.
-                      </p>
-                    </div>
-                    <FieldSeparator>Student roster</FieldSeparator>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id={`include-excluded-${list.id}`}
-                        checked={includeExcluded}
-                        onCheckedChange={(checked) => {
-                          setIncludeExcluded(Boolean(checked));
-                        }}
-                        className="touch-hitbox cursor-pointer border-accent/25"
-                      />
-                      <label
-                        htmlFor={`include-excluded-${list.id}`}
-                        className="text-base/relaxed text-muted-foreground">
-                        Include absent students
-                      </label>
-                    </div>
-                    <div className="max-h-64 overflow-y-auto pr-2">
-                      <div className="flex flex-col gap-2">
-                        {availableStudents.length ? (
-                          availableStudents.map((student) => (
-                            <label
-                              key={student.id}
-                              className="flex items-center justify-between gap-2 rounded-md border border-border/60 px-3 py-2 text-base/relaxed">
-                              <span className="font-medium">
-                                {formatStudentName(student.name)}
-                              </span>
-                              <Button
-                                type="button"
-                                size="sm"
-                                variant="secondary"
-                                onClick={() => addStudentToDraft(student.id)}>
-                                Add
-                              </Button>
-                            </label>
-                          ))
-                        ) : (
-                          <p className="text-base/relaxed text-muted-foreground">
-                            Everyone is already included in this list.
-                          </p>
-                        )}
+
+                  {/* Desktop: inline student roster panel */}
+                  {!isMobile ? (
+                    <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/70 p-4">
+                      <div className="flex flex-col gap-1">
+                        <p className="text-lg/relaxed font-semibold">
+                          Selected students
+                        </p>
+                        <p className="text-base/relaxed text-muted-foreground">
+                          {selectedIds.length}
+                          {selectedIds.length === 1
+                            ? ' student'
+                            : ' students'}{' '}
+                          selected.
+                        </p>
+                      </div>
+                      <FieldSeparator>Student roster</FieldSeparator>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`include-excluded-${list.id}`}
+                          checked={includeExcluded}
+                          onCheckedChange={(checked) => {
+                            setIncludeExcluded(Boolean(checked));
+                          }}
+                          className="touch-hitbox cursor-pointer border-accent/25"
+                        />
+                        <label
+                          htmlFor={`include-excluded-${list.id}`}
+                          className="text-base/relaxed text-muted-foreground">
+                          Include absent students
+                        </label>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto pr-2">
+                        <div className="flex flex-col gap-2">
+                          {availableStudents.length ? (
+                            availableStudents.map((student) => (
+                              <label
+                                key={student.id}
+                                className="flex items-center justify-between gap-2 rounded-md border border-border/60 px-3 py-2 text-base/relaxed">
+                                <span className="font-medium">
+                                  {formatStudentName(student.name)}
+                                </span>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => addStudentToDraft(student.id)}>
+                                  Add
+                                </Button>
+                              </label>
+                            ))
+                          ) : (
+                            <p className="text-base/relaxed text-muted-foreground">
+                              Everyone is already included in this list.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : null}
+
+                  {/* Mobile: add-student bottom sheet */}
+                  {isMobile ? (
+                    <Sheet open={addStudentSheetOpen} onOpenChange={setAddStudentSheetOpen}>
+                      <SheetContent side="bottom" className="max-h-[85dvh]">
+                        <SheetHeader>
+                          <SheetTitle>Add Students</SheetTitle>
+                          <SheetDescription>
+                            {availableStudents.length} available to add.
+                          </SheetDescription>
+                        </SheetHeader>
+                        <div className="flex flex-col gap-3 px-6 pb-6 overflow-y-auto">
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              id={`include-excluded-mobile-${list.id}`}
+                              checked={includeExcluded}
+                              onCheckedChange={(checked) => {
+                                setIncludeExcluded(Boolean(checked));
+                              }}
+                              className="touch-hitbox cursor-pointer border-accent/25"
+                            />
+                            <label
+                              htmlFor={`include-excluded-mobile-${list.id}`}
+                              className="text-base/relaxed text-muted-foreground">
+                              Include absent students
+                            </label>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {availableStudents.length ? (
+                              availableStudents.map((student) => (
+                                <div
+                                  key={student.id}
+                                  className="flex items-center justify-between gap-2 rounded-md border border-border/60 px-3 py-3 text-base/relaxed min-h-[48px]">
+                                  <span className="font-medium">
+                                    {formatStudentName(student.name)}
+                                  </span>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="secondary"
+                                    className="min-h-[44px]"
+                                    onClick={() => addStudentToDraft(student.id)}>
+                                    Add
+                                  </Button>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-base/relaxed text-muted-foreground">
+                                Everyone is already included in this list.
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            className="h-11 font-semibold text-base mt-2"
+                            onClick={() => setAddStudentSheetOpen(false)}>
+                            Done
+                          </Button>
+                        </div>
+                      </SheetContent>
+                    </Sheet>
+                  ) : null}
                 </div>
               ) : null}
               {isGroupedList ? (
