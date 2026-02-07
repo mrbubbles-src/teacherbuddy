@@ -140,6 +140,7 @@ export default function DashboardCards() {
               alt="TeacherBuddy — free classroom management tools for teachers"
               width={895}
               height={372}
+              sizes="(max-width: 768px) 200px, (max-width: 1024px) 240px, 280px"
               priority
               placeholder="blur"
               blurDataURL={Logo.blurDataURL}

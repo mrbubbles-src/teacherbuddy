@@ -31,6 +31,7 @@ const Footer = () => {
             alt="TeacherBuddy logo — classroom tools for teachers"
             width={895}
             height={372}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, (max-width: 1280px) 50vw, 33vw"
             placeholder="blur"
             blurDataURL={Logo.blurDataURL}
           />
