@@ -21,9 +21,11 @@ TeacherBuddy is a Next.js App Router application. The layout renders a client-dr
 ```text
 teacherbuddy/
 ├── app/                    # Routes, layout, global loading and error UI
-│   ├── layout.tsx          # Root layout with providers
+│   ├── layout.tsx          # Root layout: metadata (template, OG, Twitter), ld+json schema, ThemeProvider, AppStoreProvider, AppShell, Footer, PrivacyNotice, Toaster
 │   ├── page.tsx            # Dashboard
-│   ├── api/og/route.ts     # API-style Open Graph image endpoint (next/og)
+│   ├── api/og/route.tsx    # Open Graph image endpoint (next/og)
+│   ├── robots.ts           # robots.txt generation
+│   ├── sitemap.ts          # sitemap.xml generation
 │   ├── loading.tsx         # Global loading state
 │   ├── error.tsx           # Global error boundary
 │   ├── students/           # Student management route
@@ -33,7 +35,7 @@ teacherbuddy/
 │   ├── breakout-rooms/     # Breakout groups route
 │   └── projects/           # Project lists route
 ├── components/             # React components
-│   ├── ui/                 # Shared UI primitives and Base UI wrappers
+│   ├── ui/                 # Shared UI primitives (Button, Card, Dialog, Sonner/Toaster, etc.)
 │   ├── loading/            # Skeletons for hydration states
 │   ├── navigation/         # Sidebar and nav components
 │   ├── dashboard/          # Dashboard cards (server component)
@@ -50,6 +52,7 @@ teacherbuddy/
 │   ├── app-shell.tsx       # Root layout shell
 │   ├── header.tsx          # Page header (timer in header)
 │   ├── footer.tsx          # Credits footer
+│   ├── privacy-notice.tsx  # One-time privacy notice (root layout)
 │   └── student-name-generator.tsx
 ├── context/                # React context providers
 │   ├── app-store.tsx       # Global state and reducer
@@ -106,7 +109,7 @@ Tests are colocated with source code in `__tests__/` directories:
 
 | File                       | Purpose                                                                                                         |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `app/layout.tsx`           | Root layout: fonts (Geist), ThemeProvider, AppStoreProvider, AppShell, Footer                                   |
+| `app/layout.tsx`           | Root layout: metadata (template, OG, Twitter), ld+json WebApplication schema, fonts (Geist), ThemeProvider, AppStoreProvider, AppShell, Footer, PrivacyNotice, Toaster (sonner) |
 | `context/app-store.tsx`    | Central state: reducer, useAppStore, hydration, persistence effects                                             |
 | `lib/storage.ts`           | localStorage read/write and validation                                                                          |
 | `lib/type-guards.ts`       | Runtime type checking for persisted data                                                                        |

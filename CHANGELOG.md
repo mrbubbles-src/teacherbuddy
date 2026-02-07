@@ -7,9 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-02-05
+
 ### Changed
 
 - Rethought Data Security
+
+### Documentation
+
+- Version bumped to 1.1.4 in `package.json` and sidebar (AppShell).
+- Root layout: documented PrivacyNotice, Toaster (sonner), metadata (title template, OG, Twitter), and ld+json WebApplication schema in layout and routes docs.
+- Route pages: documented inline `metadata` export and `skeleton` prop pattern for feature components (StudentForm, QuizEditor, QuizPlayCard, GeneratorCard).
+- Components: added PrivacyNotice and Toaster to layout section; Toaster (sonner) to UI primitives; sonner to dependencies.
+- Structure: added `privacy-notice.tsx`, `robots.ts`, `sitemap.ts`, and Sonner/Toaster in folder structure and key files.
+- Routes: updated App Layout and Route Metadata to reflect current layout content and route-level metadata; Route Components updated for skeleton prop usage.
 
 ## [1.1.3] - 2026-02-05
 

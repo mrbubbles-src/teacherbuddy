@@ -12,6 +12,7 @@
 | `lucide-react` | Icon library |
 | `class-variance-authority` (CVA) | Variant-based component styling |
 | `clsx`, `tailwind-merge` | Conditional class names (`cn()` in `lib/utils.ts`) |
+| `sonner` | Toast notifications; wrapped in `components/ui/sonner.tsx` (Toaster) and rendered in root layout |
 | `tw-animate-css` | Tailwind animation utilities |
 
 ## Development

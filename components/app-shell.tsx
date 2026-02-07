@@ -86,7 +86,7 @@ export default function AppShell({
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-1.5 group-data-[collapsible=icon]:text-xs">
               <SparklesIcon className="size-3 text-primary group-data-[collapsible=icon]:hidden" />
-              v1.1.3
+              v1.1.4
             </span>
             <span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary/60 group-data-[collapsible=icon]:hidden">
               Classroom

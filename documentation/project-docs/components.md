@@ -8,9 +8,11 @@ Reference for React components. All feature components are client components unl
 | ------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `AppShell`   | `components/app-shell.tsx`              | Root layout: sidebar (collapsible) with **custom logo** (Next.js `Image` from `public/images/teacherbuddy-icon-transparent.png`, blur placeholder, responsive sizes), route titles, main content. Uses `getPageInfoByPath(pathname)` for meta; passes `meta` and `info` (currentPath, `PAGE_INFOS`) to `Header`. Optional `footer`. |
 | `Header`     | `components/header.tsx`                 | Page title, description, **PageInfoDialog** (help button next to title), sidebar trigger, theme toggle, and **QuizTimerCard** (timer on all pages). Receives `meta` and `info` from AppShell. |
-| `Footer`     | `components/footer.tsx`                 | Credits, source link, Catppuccin attribution. Rendered via `AppShell` footer prop.                                        |
-| `SidebarNav` | `components/navigation/sidebar-nav.tsx` | Primary navigation links; highlights current route by pathname.                                                           |
-| `AppSidebar` | `components/app-sidebar.tsx`            | Alternative sidebar component (see app-shell for active layout).                                                          |
+| `Footer`         | `components/footer.tsx`                 | Credits, source link, Catppuccin attribution. Rendered via `AppShell` footer prop.                                          |
+| `PrivacyNotice` | `components/privacy-notice.tsx`         | One-time privacy notice bar (bottom center); explains local-only data, no tracking. Dismissal stored in localStorage; rendered in root layout. |
+| `Toaster`       | `components/ui/sonner.tsx`             | Toast notifications (sonner). Rendered in root layout with `closeButton`, `position="bottom-center"`. Theme-aware icons.     |
+| `SidebarNav`     | `components/navigation/sidebar-nav.tsx` | Primary navigation links; highlights current route by pathname.                                                             |
+| `AppSidebar`     | `components/app-sidebar.tsx`            | Alternative sidebar component (see app-shell for active layout).                                                            |
 
 ## Dashboard
 
@@ -72,7 +74,7 @@ Copy-to-clipboard is provided by the `useCopyToClipboard` hook; it is used inlin
 
 ## Loading States
 
-Skeletons in `components/loading/` render while `state.ui.isHydrated` is false:
+Feature pages pass a `skeleton` prop to the main component (e.g. `<StudentForm skeleton={<StudentFormSkeleton />} />`). Skeletons in `components/loading/` render while `state.ui.isHydrated` is false:
 
 | Skeleton                | File                                 | Used By           |
 | ----------------------- | ------------------------------------ | ----------------- |
@@ -100,6 +102,7 @@ Base components in `components/ui/` use Tailwind and (where noted) Base UI / sha
 | `Checkbox`, `Combobox`, `Popover`, `Sheet`       | Headless-style UI.                                               |
 | `DropdownMenu`, `Separator`, `Skeleton`, `Table` | Layout and feedback.                                             |
 | `Sidebar`, `SidebarTrigger`, etc.                | Sidebar layout (used by AppShell).                               |
+| `Toaster` (sonner)                               | Toast notifications; used in root layout.                        |
 | `Tooltip`                                        | Accessibility-friendly tooltips.                                 |
 
 ### Server-Safe Variants
