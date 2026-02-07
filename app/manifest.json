@@ -1,6 +1,8 @@
 {
   "name": "TeacherBuddy",
   "short_name": "TB",
+  "description": "Manage students, run quizzes, and organise class activities in one place.",
+  "start_url": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

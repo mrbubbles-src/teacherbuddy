@@ -137,7 +137,7 @@ export default function DashboardCards() {
           <div className="w-full max-w-[200px] shrink-0 md:max-w-[240px] lg:max-w-[280px]">
             <Image
               src={Logo}
-              alt="TeacherBuddy Logo"
+              alt="TeacherBuddy — free classroom management tools for teachers"
               width={895}
               height={372}
               priority

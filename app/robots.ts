@@ -1,21 +1,20 @@
 import type { MetadataRoute } from 'next';
 
-import { resolveMetadataBase } from '@/lib/metadata';
+import { resolveSiteUrl } from '@/lib/site-url';
 
 /**
  * Generates robots directives for crawlable public routes.
  * Next.js serves this metadata route automatically at `/robots.txt`.
  */
 export default function robots(): MetadataRoute.Robots {
-  const metadataBase = resolveMetadataBase();
-  const host = metadataBase.origin;
+  const base = resolveSiteUrl();
 
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: new URL('/sitemap.xml', metadataBase).toString(),
-    host,
+    sitemap: new URL('/sitemap.xml', base).toString(),
+    host: base.origin,
   };
 }

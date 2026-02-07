@@ -28,7 +28,7 @@ const Footer = () => {
         <section className="max-w-full md:max-w-2/3 lg:max-w-2/4 xl:max-w-2/6">
           <Image
             src={Logo.src}
-            alt="TeacherBuddy Logo"
+            alt="TeacherBuddy logo — classroom tools for teachers"
             width={895}
             height={372}
             placeholder="blur"

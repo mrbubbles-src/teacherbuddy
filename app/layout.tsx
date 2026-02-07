@@ -21,41 +21,37 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-    ),
-    title: 'TeacherBuddy',
-    description:
-      'Manage students, run quizzes, and organize class activities in one place.',
-    openGraph: {
-      title: 'TeacherBuddy',
-      description:
-        'Manage students, run quizzes, and organize class activities in one place.',
-      siteName: 'TeacherBuddy',
-      images: [
-        {
-          url: 'https://teacherbuddy.mrbubbles-src.dev/api/og',
-          width: 1200,
-          height: 630,
-          alt: 'TeacherBuddy Logo',
-        },
-      ],
-      type: 'website',
-      locale: 'en_GB',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: 'TeacherBuddy',
-      description:
-        'Manage students, run quizzes, and organize class activities in one place.',
-      images: ['https://teacherbuddy.mrbubbles-src.dev/api/og'],
-      creator: '@_MstrBubbles',
-    },
-    other: { 'apple-mobile-web-app-title': 'teacherbuddy.mrbubbles-src.dev' },
-  };
-}
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      'https://teacherbuddy.mrbubbles-src.dev',
+  ),
+  title: {
+    template: '%s | TeacherBuddy',
+    default: 'TeacherBuddy — Free Classroom Tools for Teachers',
+  },
+  description:
+    'Manage students, run quizzes, and organize class activities in one place.',
+  openGraph: {
+    siteName: 'TeacherBuddy',
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'TeacherBuddy — free classroom management dashboard',
+      },
+    ],
+    type: 'website',
+    locale: 'en_GB',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/api/og'],
+    creator: '@_MstrBubbles',
+  },
+  other: { 'apple-mobile-web-app-title': 'TeacherBuddy' },
+};
 
 /**
  * Renders the shared HTML shell and providers for all application routes.
@@ -67,13 +63,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en_GB" suppressHydrationWarning>
       <head>
-        <meta
-          property="og:url"
-          content="https://teacherbuddy.mrbubbles-src.dev"
-        />
-        <link rel="canonical" href="https://teacherbuddy.mrbubbles-src.dev" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -84,16 +75,14 @@ export default function RootLayout({
               description:
                 'Manage students, run quizzes, and organize class activities in one place.',
               url: 'https://teacherbuddy.mrbubbles-src.dev',
-              applicationCategory: 'Education',
+              applicationCategory: 'EducationalApplication',
               applicationSubCategory: 'Classroom Management',
-              applicationSuite: 'TeacherBuddy',
-              applicationVersion: '1.1.3',
-              applicationInstallUrl:
-                'https://teacherbuddy.mrbubbles-src.dev/install',
-              applicationUpdateUrl:
-                'https://teacherbuddy.mrbubbles-src.dev/update',
-              applicationUpdateVersion: '1.1.3',
-              applicationUpdateStatus: 'available',
+              operatingSystem: 'Web',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'EUR',
+              },
             }),
           }}
         />
