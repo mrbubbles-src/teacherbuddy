@@ -4,18 +4,15 @@ import type { PageInfo } from '@/lib/page-info';
 
 import { useMemo, useState } from 'react';
 
-import { CircleHelpIcon, XIcon } from 'lucide-react';
+import {
+  BookOpenIcon,
+  CircleHelpIcon,
+  LightbulbIcon,
+  ListChecksIcon,
+  SparklesIcon,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -23,6 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -32,36 +37,44 @@ type PageInfoDialogProps = {
 };
 
 /**
- * Renders a readable tutorial block for one page.
- * It explains the page purpose, then gives clear action steps and the
- * expected result.
+ * Renders a friendly help block for one page with visual section markers.
+ * Three sections: purpose (what it does), how-to (steps), and outcome (what you get).
  */
 const HelpGuide = ({ help, id }: { help: PageInfo['help']; id: string }) => {
   return (
-    <div className="space-y-4">
-      <section className="space-y-1">
-        <h3 className="text-xl/relaxed font-semibold text-foreground">
-          What this page does
-        </h3>
-        <p className="text-lg/relaxed text-pretty text-foreground/85">
+    <div className="space-y-5">
+      <section className="space-y-1.5">
+        <div className="flex items-center gap-2 text-primary">
+          <LightbulbIcon className="size-4 shrink-0" />
+          <h3 className="text-lg/relaxed font-semibold">
+            In a nutshell
+          </h3>
+        </div>
+        <p className="text-base/relaxed text-pretty text-foreground/85 pl-6">
           {help.purpose}
         </p>
       </section>
-      <section className="space-y-1">
-        <h3 className="text-xl/relaxed font-semibold text-foreground">
-          What to do
-        </h3>
-        <ol className="list-decimal space-y-1 pl-5 text-lg/relaxed text-pretty text-foreground/85">
+      <section className="space-y-1.5">
+        <div className="flex items-center gap-2 text-primary">
+          <ListChecksIcon className="size-4 shrink-0" />
+          <h3 className="text-lg/relaxed font-semibold">
+            How to use it
+          </h3>
+        </div>
+        <ol className="list-decimal space-y-1.5 pl-10 text-base/relaxed text-pretty text-foreground/85 marker:text-primary/60 marker:font-semibold">
           {help.howTo.map((step, index) => (
             <li key={`${id}-step-${index + 1}`}>{step}</li>
           ))}
         </ol>
       </section>
-      <section className="space-y-1">
-        <h3 className="text-xl/relaxed font-semibold text-foreground">
-          What you get
-        </h3>
-        <p className="text-lg/relaxed text-pretty text-foreground/85">
+      <section className="space-y-1.5">
+        <div className="flex items-center gap-2 text-primary">
+          <SparklesIcon className="size-4 shrink-0" />
+          <h3 className="text-lg/relaxed font-semibold">
+            What you will get
+          </h3>
+        </div>
+        <p className="text-base/relaxed text-pretty text-foreground/85 pl-6">
           {help.outcome}
         </p>
       </section>
@@ -70,15 +83,16 @@ const HelpGuide = ({ help, id }: { help: PageInfo['help']; id: string }) => {
 };
 
 /**
- * Header info button + modal that explains the current page.
- * Provide the current pathname and the page info list; it returns null when
- * the path does not match any page.
+ * Header info button + slide-in panel that explains the current page.
+ * Uses a bottom sheet on mobile/tablet and a right-side panel on desktop.
+ * On the dashboard, shows all workflows with tab/select switching.
  */
 const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
   const dashboardPages = useMemo(() => pages, [pages]);
   const dashboardPage = dashboardPages.find((page) => page.path === '/');
   const defaultTab = dashboardPage?.id ?? dashboardPages[0]?.id ?? 'dashboard';
-  const useDropdownSelector = useIsMobile(1280);
+  const useCompactSelector = useIsMobile(1024);
+  const useBottomSheet = useIsMobile();
   const [activeGuideId, setActiveGuideId] = useState<string>(defaultTab);
 
   const currentPage = pages.find((page) => page.path === currentPath);
@@ -95,8 +109,8 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
     currentPage;
 
   return (
-    <Dialog disablePointerDismissal={false}>
-      <DialogTrigger
+    <Sheet>
+      <SheetTrigger
         render={
           <Button
             variant="ghost"
@@ -106,36 +120,34 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
           />
         }>
         <CircleHelpIcon className="size-4" />
-      </DialogTrigger>
-      <DialogContent className="top-0 left-0 h-dvh w-screen max-w-none translate-x-0 translate-y-0 rounded-none p-0 md:top-1/2 md:left-1/2 md:h-auto md:max-h-[88dvh] md:w-[min(94vw,52rem)] md:max-w-208 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl lg:w-[min(92vw,64rem)] lg:max-w-5xl xl:max-h-[90dvh] xl:w-[min(90vw,72rem)] xl:max-w-6xl">
-        <DialogClose
-          render={
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-3 right-3 z-10"
-              aria-label="Close info dialog"
-            />
-          }>
-          <XIcon className="size-4" />
-          <span className="sr-only">Close info dialog</span>
-        </DialogClose>
-        <div className="flex h-full min-h-0 flex-col">
-          <DialogHeader className="px-4 pb-2 pt-4 pr-14 text-left md:px-6 md:pt-6 md:pr-16">
-            <DialogTitle className="text-2xl/relaxed">
+      </SheetTrigger>
+      <SheetContent
+        side={useBottomSheet ? 'bottom' : 'right'}
+        className={
+          useBottomSheet
+            ? 'max-h-[85dvh] rounded-t-2xl'
+            : 'w-full sm:max-w-md md:max-w-lg lg:max-w-xl'
+        }>
+        <SheetHeader className="pr-12">
+          <div className="flex items-center gap-2">
+            <BookOpenIcon className="size-4 shrink-0 text-primary" />
+            <SheetTitle className="text-xl/relaxed font-bold">
               {isDashboard
-                ? 'TeacherBuddy Workflows'
-                : `About ${currentPage.title}`}
-            </DialogTitle>
-            <DialogDescription className="text-base/relaxed text-foreground/80">
-              {isDashboard
-                ? 'Select a workflow tab to see what each tool does.'
-                : 'Follow this quick guide to understand the page and what to do next.'}
-            </DialogDescription>
-          </DialogHeader>
-          {isDashboard ? (
-            <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 md:px-6 md:pb-6">
-              {useDropdownSelector ? (
+                ? 'How TeacherBuddy Works'
+                : currentPage.title}
+            </SheetTitle>
+          </div>
+          <SheetDescription className="text-sm/relaxed">
+            {isDashboard
+              ? 'Pick a tool below to see what it does and how to use it.'
+              : currentPage.description}
+          </SheetDescription>
+        </SheetHeader>
+
+        {isDashboard ? (
+          <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-6 pb-6">
+            {useCompactSelector ? (
+              <>
                 <Select
                   value={activeGuide.id}
                   onValueChange={(value) => {
@@ -143,7 +155,7 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
                     setActiveGuideId(value);
                   }}>
                   <SelectTrigger className="h-9 w-full text-base/relaxed">
-                    <SelectValue placeholder="Select a workflow">
+                    <SelectValue placeholder="Select a tool">
                       {activeGuide.title}
                     </SelectValue>
                   </SelectTrigger>
@@ -155,55 +167,49 @@ const PageInfoDialog = ({ currentPath, pages }: PageInfoDialogProps) => {
                     ))}
                   </SelectContent>
                 </Select>
-              ) : null}
-              {useDropdownSelector ? (
-                <div className="min-h-0 flex-1 overflow-y-auto mt-2">
-                  <div className="px-2 py-1 text-base/relaxed text-foreground/85">
-                    <HelpGuide help={activeGuide.help} id={activeGuide.id} />
-                  </div>
+                <div className="min-h-0 flex-1 overflow-y-auto">
+                  <HelpGuide help={activeGuide.help} id={activeGuide.id} />
                 </div>
-              ) : (
-                <Tabs
-                  value={activeGuide.id}
-                  onValueChange={(value) => setActiveGuideId(String(value))}
-                  className="min-h-0 flex-1 gap-3">
-                  <div className="w-full overflow-x-auto pb-1">
-                    <TabsList
-                      variant="line"
-                      className="h-auto w-max min-w-full justify-start whitespace-nowrap">
-                      {dashboardPages.map((page) => (
-                        <TabsTrigger
-                          key={page.id}
-                          value={page.id}
-                          className="flex-none shrink-0 text-lg/relaxed text-foreground/80 data-active:text-primary dark:data-active:text-primary">
-                          {page.title}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                  </div>
-                  <div className="min-h-0 flex-1 overflow-y-auto">
+              </>
+            ) : (
+              <Tabs
+                value={activeGuide.id}
+                onValueChange={(value) => setActiveGuideId(String(value))}
+                className="min-h-0 flex-1 gap-3">
+                <div className="w-full overflow-x-auto pb-1">
+                  <TabsList
+                    variant="line"
+                    className="h-auto w-max min-w-full justify-start whitespace-nowrap">
                     {dashboardPages.map((page) => (
-                      <TabsContent
+                      <TabsTrigger
                         key={page.id}
                         value={page.id}
-                        className="px-2 py-1 text-base/relaxed text-foreground/85">
-                        <HelpGuide help={page.help} id={page.id} />
-                      </TabsContent>
+                        className="flex-none shrink-0 text-base/relaxed text-foreground/80 data-active:text-primary dark:data-active:text-primary">
+                        {page.title}
+                      </TabsTrigger>
                     ))}
-                  </div>
-                </Tabs>
-              )}
-            </div>
-          ) : (
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 md:px-6 md:pb-6">
-              <div className="px-2 py-1 text-base/relaxed text-foreground/85">
-                <HelpGuide help={currentPage.help} id={currentPage.id} />
-              </div>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+                  </TabsList>
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto">
+                  {dashboardPages.map((page) => (
+                    <TabsContent
+                      key={page.id}
+                      value={page.id}
+                      className="text-base/relaxed text-foreground/85">
+                      <HelpGuide help={page.help} id={page.id} />
+                    </TabsContent>
+                  ))}
+                </div>
+              </Tabs>
+            )}
+          </div>
+        ) : (
+          <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-6">
+            <HelpGuide help={currentPage.help} id={currentPage.id} />
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 };
 

@@ -77,7 +77,7 @@ describe("PageInfoDialog", () => {
     setViewportWidth(1280)
   })
 
-  it("opens from trigger and closes from top-right X", async () => {
+  it("opens from trigger and closes from close button", async () => {
     const user = userEvent.setup()
 
     render(<PageInfoDialog currentPath="/" pages={PAGE_INFOS} />)
@@ -85,14 +85,14 @@ describe("PageInfoDialog", () => {
     await user.click(screen.getByRole("button", { name: /open page info/i }))
     expect(screen.getByRole("dialog")).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: /close info dialog/i }))
+    await user.click(screen.getByRole("button", { name: /close/i }))
 
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     })
   })
 
-  it("closes when clicking outside the dialog", async () => {
+  it("closes when clicking outside the panel", async () => {
     const user = userEvent.setup()
 
     render(<PageInfoDialog currentPath="/" pages={PAGE_INFOS} />)
@@ -100,7 +100,7 @@ describe("PageInfoDialog", () => {
     await user.click(screen.getByRole("button", { name: /open page info/i }))
     expect(screen.getByRole("dialog")).toBeInTheDocument()
 
-    const overlay = document.querySelector("[data-slot='dialog-overlay']")
+    const overlay = document.querySelector("[data-slot='sheet-overlay']")
     expect(overlay).toBeInstanceOf(HTMLElement)
 
     await user.click(overlay as HTMLElement)
@@ -125,9 +125,9 @@ describe("PageInfoDialog", () => {
     })
   })
 
-  it("uses dropdown workflow selector on laptop and below (<xl)", async () => {
+  it("uses dropdown workflow selector on smaller screens (<1024)", async () => {
     const user = userEvent.setup()
-    setViewportWidth(1100)
+    setViewportWidth(900)
 
     render(<PageInfoDialog currentPath="/" pages={PAGE_INFOS} />)
 
@@ -141,12 +141,12 @@ describe("PageInfoDialog", () => {
 
     expect(
       screen.getByText((content) =>
-        content.includes("live classroom view for running quizzes"),
+        content.includes("live quiz screen for your classroom"),
       ),
     ).toBeInTheDocument()
   })
 
-  it("uses tabs workflow selector on large screens (>=lg)", async () => {
+  it("uses tabs workflow selector on large screens (>=1024)", async () => {
     const user = userEvent.setup()
     setViewportWidth(1280)
 
@@ -161,7 +161,7 @@ describe("PageInfoDialog", () => {
 
     expect(
       screen.getByText((content) =>
-        content.includes("live classroom view for running quizzes"),
+        content.includes("live quiz screen for your classroom"),
       ),
     ).toBeInTheDocument()
   })
