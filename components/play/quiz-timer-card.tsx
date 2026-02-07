@@ -447,7 +447,7 @@ export default function QuizTimerCard() {
                 value={Math.round(volume * 100)}
                 onChange={handleVolumeChange}
                 style={{ '--slider-pct': `${Math.round(volume * 100)}%` } as React.CSSProperties}
-                className="timer-volume-slider h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted"
+                className="timer-volume-slider touch-hitbox h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted"
                 aria-label="Timer volume"
               />
               <span className="w-8 text-right text-sm tabular-nums text-muted-foreground">

@@ -220,7 +220,7 @@ export default function DashboardCards() {
                       <Link
                         key={feature.title}
                         href={feature.href}
-                        className="group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-border active:scale-[0.98]">
+                        className="touch-hitbox group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-border active:scale-[0.98]">
                         {/* Subtle left accent */}
                         <div
                           className="absolute left-0 top-0 h-full w-1 rounded-l-xl"

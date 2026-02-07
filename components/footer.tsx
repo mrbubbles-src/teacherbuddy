@@ -42,7 +42,7 @@ const Footer = () => {
               href="https://mrbubbles-src.dev"
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-primary hover:text-primary/70">
+              className="touch-hitbox font-medium text-primary hover:text-primary/70">
               mrbubbles-src
             </Link>
           </p>
@@ -56,7 +56,7 @@ const Footer = () => {
               href="https://github.com/mrbubbles-src/teacherbuddy"
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-primary hover:text-primary/70">
+              className="touch-hitbox font-medium text-primary hover:text-primary/70">
               TeacherBuddy
             </Link>
           </p>
@@ -69,7 +69,7 @@ const Footer = () => {
               href="https://github.com/catppuccin/catppuccin"
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-primary hover:text-primary/70">
+              className="touch-hitbox font-medium text-primary hover:text-primary/70">
               Catppuccin
             </Link>
           </p>
@@ -79,7 +79,7 @@ const Footer = () => {
             href="https://mrbubbles-src.dev/de/impressum"
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-primary hover:text-primary/70">
+            className="touch-hitbox font-medium text-primary hover:text-primary/70">
             Privacy Policy
           </Link>
           <Separator orientation="vertical" className="h-4 shrink-0" />
@@ -87,7 +87,7 @@ const Footer = () => {
             href="https://mrbubbles-src.dev/de/datenschutz"
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-primary hover:text-primary/70">
+            className="touch-hitbox font-medium text-primary hover:text-primary/70">
             Legal Notice
           </Link>
         </section>
