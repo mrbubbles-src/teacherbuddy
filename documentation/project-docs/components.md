@@ -24,9 +24,15 @@ Reference for React components. All feature components are client components unl
 
 | Component              | File                                    | Description                                                |
 | ---------------------- | --------------------------------------- | ---------------------------------------------------------- |
-| `StudentForm`          | `components/students/student-form.tsx`  | Add and import students (comma-separated or file).         |
-| `StudentTable`         | `components/students/student-table.tsx` | Edit, exclude, delete students.                            |
+| `StudentForm`          | `components/students/student-form.tsx`  | Manage classes, import full class files (`.txt`/`.json`), add/import students to active class. |
+| `StudentTable`         | `components/students/student-table.tsx` | Mobile-style roster cards on all breakpoints: edit, exclude, delete students. |
 | `StudentNameGenerator` | `components/student-name-generator.tsx` | Standalone name generator utility (root of `components/`). |
+
+## Classes
+
+| Component       | File                                  | Description                                                        |
+| --------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| `ClassSelector` | `components/classes/class-selector.tsx` | Shared class dropdown used across students, generator, play, breakout, and projects. |
 
 ## Generator
 

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
  */
 export default function Page() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start">
       <StudentForm skeleton={<StudentFormSkeleton />} />
       <StudentTable skeleton={<StudentTableSkeleton />} />
     </div>
