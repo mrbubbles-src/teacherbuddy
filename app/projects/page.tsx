@@ -14,9 +14,9 @@ export const metadata: Metadata = {
  */
 export default function Page() {
   return (
-    <>
-      <ProjectListBuilder />
+    <div className="flex flex-col gap-4">
       <ProjectListView />
-    </>
+      <ProjectListBuilder />
+    </div>
   );
 }
