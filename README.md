@@ -36,16 +36,18 @@ Open [http://localhost:3000](http://localhost:3000) and use the dashboard to nav
 | Route             | Description                                          |
 | ----------------- | ---------------------------------------------------- |
 | `/`               | Dashboard with links to all features                 |
-| `/students`       | Add, import, edit, and manage student roster         |
-| `/generator`      | Draw random students with no-repeat logic            |
+| `/students`       | Manage classes and class-scoped student rosters      |
+| `/generator`      | Draw random students with no-repeat logic per class  |
 | `/quizzes`        | Build and edit quiz question sets                    |
-| `/play`           | Run live quiz sessions with question/student pairing |
-| `/breakout-rooms` | Generate random student groups                       |
-| `/projects`       | Create and manage project lists                      |
+| `/play`           | Run live quiz sessions scoped to selected class      |
+| `/breakout-rooms` | Generate random student groups per class             |
+| `/projects`       | Create and manage project lists per class            |
 
 ### Usage Examples
 
-- **Add students**: Go to `/students`, type names (comma-separated for bulk) or import a `.txt` file.
+- **Import full classes**: Go to `/students` and import `.txt` with `Class Name: Student A, Student B` lines, or `.json` with `{ className, students }` objects.
+- **Quick-add students**: In `/students`, use the student input or student `.txt` import to add names to the currently selected class.
+- **Class-aware tools**: `/generator`, `/breakout-rooms`, `/projects`, and `/play` all use the active class selected in the class dropdown.
 - **Random draw**: Go to `/generator` and click "Draw" to select a random active student (no repeats until reset).
 - **Quiz play**: In `/play`, select a quiz, then draw question/student pairs and click to reveal answers.
 - **Timer**: Use the **timer in the header** (on every page): set time, start countdown; alerts at 10min, 5min, 1min, and 0 (with optional sound).
@@ -73,6 +75,7 @@ teacherbuddy/
 │   ├── navigation/        # Sidebar navigation
 │   ├── dashboard/         # Dashboard cards (server component)
 │   ├── students/          # Student management
+│   ├── classes/           # Class selector
 │   ├── quizzes/           # Quiz builder
 │   ├── play/              # Quiz play + timer card
 │   ├── breakout/          # Breakout groups

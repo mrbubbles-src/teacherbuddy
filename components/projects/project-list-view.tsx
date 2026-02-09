@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes';
 
 import { UsersIcon } from 'lucide-react';
 
+import ClassSelector from '@/components/classes/class-selector';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,6 +58,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 export default function ProjectListView() {
   const { theme } = useTheme();
   const { state, actions } = useAppStore();
+  const activeClassId = state.persisted.activeClassId;
   const isMobile = useIsMobile();
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [addStudentSheetOpen, setAddStudentSheetOpen] = useState(false);
@@ -74,6 +76,10 @@ export default function ProjectListView() {
         (a, b) => b.createdAt - a.createdAt,
       ),
     [state.persisted.projectLists],
+  );
+  const visibleProjectLists = useMemo(
+    () => projectLists.filter((list) => list.classId === activeClassId),
+    [activeClassId, projectLists],
   );
 
   const studentMap = useMemo(() => {
@@ -186,7 +192,7 @@ export default function ProjectListView() {
     return null;
   }
 
-  if (!projectLists.length) {
+  if (!visibleProjectLists.length) {
     return (
       <Card className="relative overflow-hidden rounded-xl border-border/50 shadow-md py-6 xl:py-8 lg:gap-6 xl:gap-8">
         <div
@@ -195,6 +201,7 @@ export default function ProjectListView() {
         />
         <CardHeader className="px-6 xl:px-8">
           <CardTitle className="text-xl font-bold tracking-tight">Saved project lists</CardTitle>
+          <ClassSelector compact />
         </CardHeader>
         <CardContent className="px-6 xl:px-8 text-base/relaxed text-muted-foreground">
           <p className="text-sm">Your saved project lists will appear here.</p>
@@ -205,7 +212,8 @@ export default function ProjectListView() {
 
   return (
     <div className="flex flex-col gap-4">
-      {projectLists.map((list) => {
+      <ClassSelector />
+      {visibleProjectLists.map((list) => {
         const createdAt = new Date(list.createdAt).toLocaleDateString();
         const isEditing = editingListId === list.id;
         const isGroupedList = list.groups.length > 0;

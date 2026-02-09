@@ -1,22 +1,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
-function PlaceholderCard({ titleWidth }: { titleWidth: string }) {
+/**
+ * Renders one placeholder card matching the merged quiz builder form card.
+ */
+function BuilderPlaceholderCard() {
   return (
     <Card className="relative overflow-hidden rounded-xl border-border/50 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
       <div className="absolute left-0 top-0 h-full w-1 rounded-l-xl" style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }} />
       <CardHeader className="lg:px-6 xl:px-8">
         <CardTitle className="lg:text-lg">
-          <Skeleton className={`h-4 ${titleWidth}`} />
+          <Skeleton className="h-4 w-32" />
         </CardTitle>
         <CardDescription className="lg:text-base/relaxed">
-          <Skeleton className="h-3 w-56" />
+          <Skeleton className="h-3 w-72" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 lg:px-6 xl:px-8 lg:text-base/relaxed">
         <Skeleton className="h-7 w-full" />
         <Skeleton className="h-7 w-full" />
+        <Skeleton className="h-7 w-5/12" />
+        <Skeleton className="h-2.5 w-16" />
         <Skeleton className="h-7 w-full" />
+        <Skeleton className="h-14 w-full" />
+        <Skeleton className="h-7 w-6/12" />
+        <Skeleton className="h-2.5 w-14" />
+        <Skeleton className="h-7 w-full" />
+        <Skeleton className="h-16 w-full" />
       </CardContent>
     </Card>
   )
@@ -28,12 +38,8 @@ function PlaceholderCard({ titleWidth }: { titleWidth: string }) {
  */
 export default function QuizEditorSkeleton() {
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
-      <div className="flex flex-col gap-4">
-        <PlaceholderCard titleWidth="w-28" />
-        <PlaceholderCard titleWidth="w-32" />
-        <PlaceholderCard titleWidth="w-40" />
-      </div>
+    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <BuilderPlaceholderCard />
       <Card className="relative overflow-hidden rounded-xl border-border/50 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
         <div className="absolute left-0 top-0 h-full w-1 rounded-l-xl" style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }} />
         <CardHeader className="lg:px-6 xl:px-8">
@@ -45,7 +51,7 @@ export default function QuizEditorSkeleton() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 lg:px-6 xl:px-8 lg:text-base/relaxed">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 7 }).map((_, index) => (
             <Skeleton key={index} className="h-5 w-full" />
           ))}
         </CardContent>

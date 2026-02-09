@@ -2,7 +2,6 @@
 
 import { useAppStore } from '@/context/app-store';
 import QuizEditorForm from '@/components/quizzes/quiz-editor-form';
-import QuizImportCard from '@/components/quizzes/quiz-import-card';
 
 /**
  * Quiz editor wrapper: shows server-rendered skeleton until hydrated, then the editor.
@@ -22,13 +21,12 @@ export default function QuizEditor({
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* Key pattern: reset all form state when quiz changes */}
       <QuizEditorForm
         key={activeQuizId ?? "new"}
         quiz={activeQuiz}
         quizId={activeQuizId}
-        importCard={<QuizImportCard />}
       />
     </div>
   )

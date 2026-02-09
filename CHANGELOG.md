@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2026-02-09
+
+### Added
+
+- Class-aware state foundations: `Classroom` model support, class utilities (`lib/classes.ts`), and class-focused storage/test coverage.
+- Shared `ClassSelector` component for class selection across students, generator, play, breakout rooms, and projects.
+- Unified quiz editor test coverage for form + import workflows (`components/quizzes/__tests__/quiz-editor-form.test.tsx`).
+- Shared select wrapper tests for popup alignment defaults (`components/ui/__tests__/select.test.tsx`).
+
+### Changed
+
+- Student workflow expanded to class-first management: create/select classes, import full class rosters, and manage students in the active class.
+- Generator, quiz play, breakout groups, and project lists now run with active-class scoping.
+- Quiz editing/import flow consolidated into `QuizEditorForm`; legacy `quiz-import-card` removed.
+- Quiz question list card behavior refined for better overflow/height handling.
+- Shared `SelectContent` now defaults to popper-style content-fit behavior and supports explicit trigger-aligned positioning via `alignItemWithTrigger={true}` where needed.
+- App version updated to `1.1.5` in `package.json`.
+- Sidebar version label now reads version dynamically from `package.json` via server layout prop wiring.
+- Dependency/version refresh from the `main..HEAD` baseline commits (including `package.json` and `bun.lock` updates from `e9d61c2`).
+
+### Tests
+
+- Expanded reducer/storage/type-guard coverage for class-aware persistence and migration paths.
+- Added class utility tests (`lib/__tests__/classes.test.ts`) and updated student/reducer expectations.
+- Added select alignment behavior tests in `components/ui/__tests__/select.test.tsx`.
+
+### Documentation
+
+- Updated README and project docs for class-scoped workflows and unified quiz editing/import.
+- Updated component docs to describe select popup auto-sizing defaults and trigger-alignment override.
+
 ## [1.1.4] - 2026-02-05
 
 ### Changed

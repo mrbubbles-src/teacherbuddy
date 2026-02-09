@@ -30,11 +30,17 @@ import Header from './header';
 /**
  * Global app shell that renders the sidebar, header, and page content.
  * Styled to match the design-6 command center aesthetic with phase-colored navigation.
+ * Provide `appVersion` from server layout so the sidebar version stays in sync with package metadata.
+ * Provide `defaultSidebarOpen` from server cookie state so refreshes preserve sidebar preference.
  */
 export default function AppShell({
+  appVersion,
+  defaultSidebarOpen,
   children,
   footer,
 }: {
+  appVersion: string;
+  defaultSidebarOpen: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
 }) {
@@ -46,7 +52,7 @@ export default function AppShell({
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>
@@ -86,7 +92,7 @@ export default function AppShell({
           <div className="flex items-center justify-between gap-2 px-2 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-1.5 group-data-[collapsible=icon]:text-xs">
               <SparklesIcon className="size-3 text-primary group-data-[collapsible=icon]:hidden" />
-              v1.1.4
+              v{appVersion}
             </span>
             <span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary/60 group-data-[collapsible=icon]:hidden">
               Classroom
@@ -100,7 +106,7 @@ export default function AppShell({
           meta={meta}
           info={{ currentPath: pathname, pages: PAGE_INFOS }}
         />
-        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
+        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto h-dvh">
           {children}
         </main>
         {footer ?? null}

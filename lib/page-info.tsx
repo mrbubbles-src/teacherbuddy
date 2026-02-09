@@ -60,33 +60,37 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This is where your class list lives. Add names, mark who is absent
-          today, and keep things tidy. Every other tool in the app pulls from
-          this list, so it is worth keeping it up to date.
+          This is where your classes and rosters live. Create classes, import
+          full class files, add students, and mark who is absent today. Every
+          other tool uses the class you pick here.
         </>
       ),
       howTo: [
         <>
-          <strong>Add students</strong> one at a time by typing a name, or paste
-          in a bunch of names at once separated by commas.
+          <strong>Choose your setup style</strong>: add class names manually, or
+          import a full class file that includes both class name and students.
         </>,
         <>
-          <strong>Fix a name?</strong> Just tap the edit button next to it and
-          correct the spelling.
+          <strong>Importing full classes?</strong> Use `.txt` lines like
+          `Class Name: Student A, Student B` or a `.json` class object. If the
+          class name already exists, that class roster is replaced with the
+          imported students.
         </>,
         <>
-          <strong>Student absent today?</strong> Toggle them to absent so they
-          will not show up in the random generator or group maker.
+          <strong>Use the class dropdown</strong> to switch between rosters.
+          Student imports from `.txt` add names only to the class you currently
+          selected.
         </>,
         <>
-          <strong>Student left the class?</strong> Delete them to keep the
-          roster clean.
+          <strong>Need to clean up?</strong> Edit, delete, mark absent, or
+          remove the selected class or all classes from the controls beside the
+          class selector.
         </>,
       ],
       outcome: (
         <>
-          A clean, current class list that keeps all your other tools accurate
-          and ready to go.
+          Clear, class-by-class rosters that keep generator picks, breakout
+          groups, quiz play, and project lists accurate.
         </>
       ),
     },
@@ -102,6 +106,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Select a class first</strong> so the draw uses the right
+          roster for this lesson.
+        </>,
         <>
           <strong>Tap &quot;Draw&quot;</strong> to pick a random student. Their name pops
           up big and clear.
@@ -135,6 +143,10 @@ export const PAGE_INFOS: PageInfo[] = [
       ),
       howTo: [
         <>
+          <strong>Pick your class</strong> from the dropdown first so groups are
+          built from the right roster.
+        </>,
+        <>
           <strong>Pick how many groups</strong> or how many students per group —
           whichever is easier for your activity.
         </>,
@@ -164,23 +176,26 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          Build your quiz questions here before class so you are not making
-          things up on the fly. Add questions, write answers, and organize
-          everything at your own pace.
+          Build and organize quiz sets before class so your live review runs
+          smoothly. Write questions by hand, add optional quiz notes, and keep
+          everything ready to reuse.
         </>
       ),
       howTo: [
         <>
-          <strong>Create a new quiz</strong> and give it a name that helps you
-          find it later (like &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;).
+          <strong>Create a new quiz</strong> and give it a clear name (like
+          &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;). Add an optional description if you
+          want quick context later.
         </>,
         <>
-          <strong>Add questions one by one</strong> — type the question and the
-          answer you are looking for.
+          <strong>Add questions one by one</strong> with a prompt and answer.
+          Questions show up in an easy-to-scan card list where you can edit or
+          remove them fast.
         </>,
         <>
-          <strong>Need to import a bunch?</strong> Paste questions from a
-          spreadsheet or document to save time.
+          <strong>Need to import a bunch?</strong> Upload a JSON file. One quiz
+          object loads into your draft (then tap Save Quiz to keep it). An
+          array of quiz objects saves multiple quizzes right away.
         </>,
         <>
           <strong>Ready to use it live?</strong> Head over to Quiz Play to run
@@ -189,8 +204,8 @@ export const PAGE_INFOS: PageInfo[] = [
       ],
       outcome: (
         <>
-          Polished quiz sets you can reuse across classes and semesters —
-          no more scrambling for questions.
+          Polished quiz sets you can run immediately, reuse next term, and
+          update in seconds when your lesson plan changes.
         </>
       ),
     },
@@ -206,6 +221,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Select your class first</strong> so quiz draws use the right
+          students for that period.
+        </>,
         <>
           <strong>Pick a quiz</strong> from the dropdown — these are the ones
           you built in Quiz Builder.
@@ -241,6 +260,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Pick your class first</strong> so this project list stays tied
+          to the right roster.
+        </>,
         <>
           <strong>Name your project</strong> and pick a type so you can tell
           your lists apart (like &quot;Science Fair&quot; or &quot;Book Club Groups&quot;).

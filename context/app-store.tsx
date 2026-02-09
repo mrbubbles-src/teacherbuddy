@@ -4,6 +4,7 @@ import * as React from "react"
 
 import type {
   BreakoutGroups,
+  Classroom,
   ProjectList,
   Question,
   Quiz,
@@ -13,19 +14,24 @@ import type {
 import {
   loadPersistedState,
   persistAllQuizzes,
-  saveBreakoutGroups,
+  saveActiveClassId,
+  saveBreakoutGroupsByClass,
+  saveClasses,
   saveProjectLists,
   saveQuizIndex,
   saveStudents,
 } from "@/lib/storage"
+import { normalizeClassName, type ImportedClassRecord } from "@/lib/classes"
 import { normalizeStudentName, studentNameKey } from "@/lib/students"
 
 export type PersistedState = {
+  classes: Classroom[]
+  activeClassId: string | null
   students: Student[]
   quizIndex: QuizIndexEntry[]
   quizzes: Record<string, Quiz>
   projectLists: ProjectList[]
-  breakoutGroups: BreakoutGroups | null
+  breakoutGroupsByClass: Record<string, BreakoutGroups>
 }
 
 export type GeneratorState = {
@@ -61,11 +67,13 @@ export type AppState = {
 
 const initialState: AppState = {
   persisted: {
+    classes: [],
+    activeClassId: null,
     students: [],
     quizIndex: [],
     quizzes: {},
     projectLists: [],
-    breakoutGroups: null,
+    breakoutGroupsByClass: {},
   },
   domain: {
     generator: {
@@ -92,11 +100,19 @@ const initialState: AppState = {
 
 type AppAction =
   | { type: "HYDRATE_PERSISTED"; payload: PersistedState }
+  | { type: "ADD_CLASS"; payload: { id: string; name: string } }
+  | { type: "SELECT_ACTIVE_CLASS"; payload: { id: string | null } }
+  | { type: "DELETE_CLASS"; payload: { id: string } }
+  | { type: "CLEAR_CLASSES" }
+  | { type: "IMPORT_CLASS_RECORDS"; payload: { classes: ImportedClassRecord[] } }
   | { type: "ADD_STUDENT"; payload: { id: string; name: string } }
   | { type: "TOGGLE_STUDENT_EXCLUDED"; payload: { id: string } }
   | { type: "DELETE_STUDENT"; payload: { id: string } }
   | { type: "CLEAR_STUDENTS" }
-  | { type: "UPDATE_STUDENT"; payload: { id: string; name: string } }
+  | {
+      type: "UPDATE_STUDENT"
+      payload: { id: string; name: string; classId: string | null }
+    }
   | {
       type: "CREATE_PROJECT_LIST"
       payload: {
@@ -126,11 +142,21 @@ type AppAction =
   | { type: "DRAW_STUDENT" }
   | {
       type: "CREATE_QUIZ"
-      payload: { id: string; title: string; questions: Question[] }
+      payload: {
+        id: string
+        title: string
+        description?: string
+        questions: Question[]
+      }
     }
   | {
       type: "UPDATE_QUIZ"
-      payload: { id: string; title: string; questions: Question[] }
+      payload: {
+        id: string
+        title: string
+        description?: string
+        questions: Question[]
+      }
     }
   | { type: "DELETE_QUIZ"; payload: { id: string } }
   | { type: "SELECT_QUIZ_FOR_EDITOR"; payload: { id: string | null } }
@@ -140,14 +166,41 @@ type AppAction =
   | { type: "REVEAL_ANSWER" }
   | { type: "RESET_QUIZ_PLAY" }
 
+/**
+ * Returns students that belong to the provided class.
+ * Used to scope roster-driven tools to the active class.
+ */
+const getStudentsForClass = (students: Student[], classId: string | null) => {
+  if (!classId) return []
+  return students.filter((student) => student.classId === classId)
+}
+
+/**
+ * Resolves a valid active class ID from available classes.
+ * Falls back to the first class or null when no classes exist.
+ */
+const resolveActiveClassId = (
+  classes: Classroom[],
+  activeClassId: string | null
+): string | null => {
+  if (!classes.length) return null
+  if (activeClassId && classes.some((entry) => entry.id === activeClassId)) {
+    return activeClassId
+  }
+  return classes[0].id
+}
+
 const getStudentIdSet = (students: Student[]) =>
   new Set(students.map((student) => student.id))
 
-const pruneGeneratorState = (generator: GeneratorState, students: Student[]) => {
-  const studentIds = getStudentIdSet(students)
-  const usedStudentIds = generator.usedStudentIds.filter((id) =>
-    studentIds.has(id)
-  )
+const pruneGeneratorState = (
+  generator: GeneratorState,
+  students: Student[],
+  activeClassId: string | null
+) => {
+  const classStudents = getStudentsForClass(students, activeClassId)
+  const studentIds = getStudentIdSet(classStudents)
+  const usedStudentIds = generator.usedStudentIds.filter((id) => studentIds.has(id))
   const currentStudentId =
     generator.currentStudentId && studentIds.has(generator.currentStudentId)
       ? generator.currentStudentId
@@ -161,12 +214,12 @@ const pruneGeneratorState = (generator: GeneratorState, students: Student[]) => 
 const pruneQuizPlayState = (
   quizPlay: QuizPlayState,
   students: Student[],
-  quizzes: Record<string, Quiz>
+  quizzes: Record<string, Quiz>,
+  activeClassId: string | null
 ) => {
-  const studentIds = getStudentIdSet(students)
-  const selectedQuiz = quizPlay.selectedQuizId
-    ? quizzes[quizPlay.selectedQuizId]
-    : null
+  const classStudents = getStudentsForClass(students, activeClassId)
+  const studentIds = getStudentIdSet(classStudents)
+  const selectedQuiz = quizPlay.selectedQuizId ? quizzes[quizPlay.selectedQuizId] : null
 
   if (!selectedQuiz) {
     return {
@@ -180,12 +233,8 @@ const pruneQuizPlayState = (
   }
 
   const questionIds = new Set(selectedQuiz.questions.map((question) => question.id))
-  const usedQuestionIds = quizPlay.usedQuestionIds.filter((id) =>
-    questionIds.has(id)
-  )
-  const usedStudentIds = quizPlay.usedStudentIds.filter((id) =>
-    studentIds.has(id)
-  )
+  const usedQuestionIds = quizPlay.usedQuestionIds.filter((id) => questionIds.has(id))
+  const usedStudentIds = quizPlay.usedStudentIds.filter((id) => studentIds.has(id))
   const currentQuestionId =
     quizPlay.currentQuestionId && questionIds.has(quizPlay.currentQuestionId)
       ? quizPlay.currentQuestionId
@@ -209,14 +258,26 @@ const pruneQuizPlayState = (
 const pruneDomainState = (
   domain: AppState["domain"],
   students: Student[],
-  quizzes: Record<string, Quiz>
+  quizzes: Record<string, Quiz>,
+  activeClassId: string | null
 ) => ({
-  generator: pruneGeneratorState(domain.generator, students),
-  quizPlay: pruneQuizPlayState(domain.quizPlay, students, quizzes),
+  generator: pruneGeneratorState(domain.generator, students, activeClassId),
+  quizPlay: pruneQuizPlayState(domain.quizPlay, students, quizzes, activeClassId),
 })
 
 const getSortedQuizIndex = (index: QuizIndexEntry[]) =>
   [...index].sort((a, b) => b.createdAt - a.createdAt)
+
+/**
+ * Trims optional description input and drops empty values.
+ *
+ * @param description - Raw description text from quiz actions.
+ * @returns Normalized non-empty description or `undefined`.
+ */
+const normalizeOptionalDescription = (description?: string) => {
+  const normalized = description?.trim()
+  return normalized ? normalized : undefined
+}
 
 const toggleStudentStatus = (status: Student["status"]): Student["status"] =>
   status === "active" ? "excluded" : "active"
@@ -225,22 +286,220 @@ function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "HYDRATE_PERSISTED": {
       const persisted = action.payload
+      const activeClassId = resolveActiveClassId(
+        persisted.classes,
+        persisted.activeClassId
+      )
       return {
         ...state,
-        persisted,
-        domain: pruneDomainState(state.domain, persisted.students, persisted.quizzes),
+        persisted: {
+          ...persisted,
+          activeClassId,
+        },
+        domain: pruneDomainState(
+          state.domain,
+          persisted.students,
+          persisted.quizzes,
+          activeClassId
+        ),
         ui: {
           ...state.ui,
           isHydrated: true,
         },
       }
     }
+    case "ADD_CLASS": {
+      const normalized = normalizeClassName(action.payload.name)
+      if (!normalized) return state
+
+      const exists = state.persisted.classes.some(
+        (entry) => normalizeClassName(entry.name).toLocaleLowerCase() === normalized.toLocaleLowerCase()
+      )
+      if (exists) return state
+
+      const classes = [
+        ...state.persisted.classes,
+        {
+          id: action.payload.id,
+          name: normalized,
+          createdAt: Date.now(),
+        },
+      ]
+      const activeClassId = state.persisted.activeClassId ?? action.payload.id
+
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          classes,
+          activeClassId,
+        },
+      }
+    }
+    case "SELECT_ACTIVE_CLASS": {
+      const activeClassId = resolveActiveClassId(
+        state.persisted.classes,
+        action.payload.id
+      )
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          activeClassId,
+        },
+        domain: pruneDomainState(
+          state.domain,
+          state.persisted.students,
+          state.persisted.quizzes,
+          activeClassId
+        ),
+      }
+    }
+    case "DELETE_CLASS": {
+      const classes = state.persisted.classes.filter(
+        (entry) => entry.id !== action.payload.id
+      )
+      const activeClassId = resolveActiveClassId(
+        classes,
+        state.persisted.activeClassId === action.payload.id
+          ? null
+          : state.persisted.activeClassId
+      )
+
+      const students = state.persisted.students.filter(
+        (student) => student.classId !== action.payload.id
+      )
+      const projectLists = state.persisted.projectLists.filter(
+        (list) => list.classId !== action.payload.id
+      )
+
+      const breakoutGroupsByClass = { ...state.persisted.breakoutGroupsByClass }
+      delete breakoutGroupsByClass[action.payload.id]
+
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          classes,
+          activeClassId,
+          students,
+          projectLists,
+          breakoutGroupsByClass,
+        },
+        domain: pruneDomainState(state.domain, students, state.persisted.quizzes, activeClassId),
+      }
+    }
+    case "CLEAR_CLASSES": {
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          classes: [],
+          activeClassId: null,
+          students: [],
+          projectLists: [],
+          breakoutGroupsByClass: {},
+        },
+        domain: pruneDomainState(state.domain, [], state.persisted.quizzes, null),
+      }
+    }
+    case "IMPORT_CLASS_RECORDS": {
+      let classes = [...state.persisted.classes]
+      let students = [...state.persisted.students]
+
+      const classNameToId = new Map(
+        classes.map((entry) => [normalizeClassName(entry.name).toLocaleLowerCase(), entry.id])
+      )
+
+      const classIdSet = new Set(classes.map((entry) => entry.id))
+      const studentIdSet = new Set(students.map((student) => student.id))
+
+      for (const classRecord of action.payload.classes) {
+        const normalizedClassName = normalizeClassName(classRecord.className)
+        if (!normalizedClassName) continue
+
+        const classKey = normalizedClassName.toLocaleLowerCase()
+        let classId = classNameToId.get(classKey) ?? null
+
+        if (!classId) {
+          const hintedId =
+            classRecord.idHint && !classIdSet.has(classRecord.idHint)
+              ? classRecord.idHint
+              : null
+          classId = hintedId ?? crypto.randomUUID()
+          classIdSet.add(classId)
+          classNameToId.set(classKey, classId)
+          classes = [
+            ...classes,
+            {
+              id: classId,
+              name: normalizedClassName,
+              createdAt: Date.now(),
+            },
+          ]
+        }
+
+        const dedupeByName = new Set<string>()
+        const importedStudents: Student[] = []
+
+        for (const studentRecord of classRecord.students) {
+          const normalizedStudentName = normalizeStudentName(studentRecord.name)
+          if (!normalizedStudentName) continue
+
+          const studentKey = studentNameKey(normalizedStudentName)
+          if (dedupeByName.has(studentKey)) continue
+          dedupeByName.add(studentKey)
+
+          const hintedStudentId =
+            studentRecord.idHint && !studentIdSet.has(studentRecord.idHint)
+              ? studentRecord.idHint
+              : null
+          const studentId = hintedStudentId ?? crypto.randomUUID()
+          studentIdSet.add(studentId)
+
+          importedStudents.push({
+            id: studentId,
+            name: normalizedStudentName,
+            status: "active",
+            classId,
+            createdAt: Date.now(),
+          })
+        }
+
+        students = [
+          ...students.filter((student) => student.classId !== classId),
+          ...importedStudents,
+        ]
+      }
+
+      const activeClassId = resolveActiveClassId(
+        classes,
+        state.persisted.activeClassId
+      )
+
+      return {
+        ...state,
+        persisted: {
+          ...state.persisted,
+          classes,
+          students,
+          activeClassId,
+        },
+        domain: pruneDomainState(state.domain, students, state.persisted.quizzes, activeClassId),
+      }
+    }
     case "ADD_STUDENT": {
+      const activeClassId = state.persisted.activeClassId
+      if (!activeClassId) return state
+
       const normalized = normalizeStudentName(action.payload.name)
       if (!normalized) return state
+
       const nextKey = studentNameKey(normalized)
       const alreadyExists = state.persisted.students.some(
-        (student) => studentNameKey(student.name) === nextKey
+        (student) =>
+          student.classId === activeClassId &&
+          studentNameKey(student.name) === nextKey
       )
       if (alreadyExists) return state
 
@@ -248,6 +507,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         id: action.payload.id,
         name: normalized,
         status: "active",
+        classId: activeClassId,
         createdAt: Date.now(),
       }
       const students = [...state.persisted.students, nextStudent]
@@ -257,7 +517,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           ...state.persisted,
           students,
         },
-        domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          students,
+          state.persisted.quizzes,
+          activeClassId
+        ),
       }
     }
     case "TOGGLE_STUDENT_EXCLUDED": {
@@ -275,7 +540,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           ...state.persisted,
           students,
         },
-        domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          students,
+          state.persisted.quizzes,
+          state.persisted.activeClassId
+        ),
       }
     }
     case "DELETE_STUDENT": {
@@ -288,44 +558,92 @@ function appReducer(state: AppState, action: AppAction): AppState {
           ...state.persisted,
           students,
         },
-        domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          students,
+          state.persisted.quizzes,
+          state.persisted.activeClassId
+        ),
       }
     }
     case "UPDATE_STUDENT": {
-      const normalized = normalizeStudentName(action.payload.name)
-      if (!normalized) return state
-      const nextKey = studentNameKey(normalized)
+      const existingStudent = state.persisted.students.find(
+        (student) => student.id === action.payload.id
+      )
+      if (!existingStudent) return state
+
+      const normalizedName = normalizeStudentName(action.payload.name)
+      if (!normalizedName) return state
+
+      const nextClassId =
+        action.payload.classId &&
+        state.persisted.classes.some((entry) => entry.id === action.payload.classId)
+          ? action.payload.classId
+          : existingStudent.classId
+
+      const nextKey = studentNameKey(normalizedName)
       const hasDuplicate = state.persisted.students.some(
         (student) =>
           student.id !== action.payload.id &&
+          student.classId === nextClassId &&
           studentNameKey(student.name) === nextKey
       )
       if (hasDuplicate) return state
 
       const students = state.persisted.students.map((student) =>
-        student.id === action.payload.id ? { ...student, name: normalized } : student
+        student.id === action.payload.id
+          ? { ...student, name: normalizedName, classId: nextClassId }
+          : student
       )
+
       return {
         ...state,
         persisted: {
           ...state.persisted,
           students,
         },
-        domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          students,
+          state.persisted.quizzes,
+          state.persisted.activeClassId
+        ),
       }
     }
     case "CLEAR_STUDENTS": {
-      const students: Student[] = []
+      const activeClassId = state.persisted.activeClassId
+      if (!activeClassId) return state
+
+      const students = state.persisted.students.filter(
+        (student) => student.classId !== activeClassId
+      )
+
+      const projectLists = state.persisted.projectLists.filter(
+        (list) => list.classId !== activeClassId
+      )
+
+      const breakoutGroupsByClass = { ...state.persisted.breakoutGroupsByClass }
+      delete breakoutGroupsByClass[activeClassId]
+
       return {
         ...state,
         persisted: {
           ...state.persisted,
           students,
+          projectLists,
+          breakoutGroupsByClass,
         },
-        domain: pruneDomainState(state.domain, students, state.persisted.quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          students,
+          state.persisted.quizzes,
+          activeClassId
+        ),
       }
     }
     case "CREATE_PROJECT_LIST": {
+      const classId = state.persisted.activeClassId
+      if (!classId) return state
       const name = action.payload.name.trim()
       const projectType = action.payload.projectType.trim()
       if (!name || !projectType) return state
@@ -333,6 +651,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
       if (!studentIds.length) return state
       const projectList: ProjectList = {
         id: action.payload.id,
+        classId,
         name,
         projectType,
         description: action.payload.description.trim(),
@@ -349,6 +668,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
       }
     }
     case "UPDATE_PROJECT_LIST": {
+      const existing = state.persisted.projectLists.find(
+        (list) => list.id === action.payload.id
+      )
+      if (!existing) return state
       const name = action.payload.name.trim()
       const projectType = action.payload.projectType.trim()
       if (!name || !projectType) return state
@@ -358,6 +681,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         list.id === action.payload.id
           ? {
               ...list,
+              classId: existing.classId,
               name,
               projectType,
               description: action.payload.description.trim(),
@@ -379,7 +703,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         persisted: {
           ...state.persisted,
-          breakoutGroups: action.payload,
+          breakoutGroupsByClass: {
+            ...state.persisted.breakoutGroupsByClass,
+            [action.payload.classId]: action.payload,
+          },
         },
       }
     }
@@ -396,11 +723,15 @@ function appReducer(state: AppState, action: AppAction): AppState {
       }
     }
     case "CLEAR_BREAKOUT_GROUPS": {
+      const activeClassId = state.persisted.activeClassId
+      if (!activeClassId) return state
+      const breakoutGroupsByClass = { ...state.persisted.breakoutGroupsByClass }
+      delete breakoutGroupsByClass[activeClassId]
       return {
         ...state,
         persisted: {
           ...state.persisted,
-          breakoutGroups: null,
+          breakoutGroupsByClass,
         },
       }
     }
@@ -417,20 +748,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
       }
     }
     case "DRAW_STUDENT": {
-      const availableStudentIds = state.persisted.students
+      const activeClassId = state.persisted.activeClassId
+      const availableStudentIds = getStudentsForClass(
+        state.persisted.students,
+        activeClassId
+      )
         .filter((student) => student.status === "active")
-        .filter(
-          (student) =>
-            !state.domain.generator.usedStudentIds.includes(student.id)
-        )
+        .filter((student) => !state.domain.generator.usedStudentIds.includes(student.id))
         .map((student) => student.id)
 
       if (!availableStudentIds.length) return state
 
       const nextStudentId =
-        availableStudentIds[
-          Math.floor(Math.random() * availableStudentIds.length)
-        ]
+        availableStudentIds[Math.floor(Math.random() * availableStudentIds.length)]
 
       return {
         ...state,
@@ -438,10 +768,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
           ...state.domain,
           generator: {
             currentStudentId: nextStudentId,
-            usedStudentIds: [
-              ...state.domain.generator.usedStudentIds,
-              nextStudentId,
-            ],
+            usedStudentIds: [...state.domain.generator.usedStudentIds, nextStudentId],
           },
         },
       }
@@ -449,10 +776,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case "CREATE_QUIZ": {
       const title = action.payload.title.trim()
       if (!title) return state
+      const description = normalizeOptionalDescription(action.payload.description)
       const timestamp = Date.now()
       const quiz: Quiz = {
         id: action.payload.id,
         title,
+        ...(description ? { description } : {}),
         questions: action.payload.questions,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -462,10 +791,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         title: quiz.title,
         createdAt: quiz.createdAt,
       }
-      const quizIndex = getSortedQuizIndex([
-        ...state.persisted.quizIndex,
-        quizIndexEntry,
-      ])
+      const quizIndex = getSortedQuizIndex([...state.persisted.quizIndex, quizIndexEntry])
       const quizzes = {
         ...state.persisted.quizzes,
         [quiz.id]: quiz,
@@ -477,7 +803,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           quizIndex,
           quizzes,
         },
-        domain: pruneDomainState(state.domain, state.persisted.students, quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          state.persisted.students,
+          quizzes,
+          state.persisted.activeClassId
+        ),
         ui: {
           ...state.ui,
           quizEditor: {
@@ -493,11 +824,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
       if (!existing) return state
       const title = action.payload.title.trim()
       if (!title) return state
+      const description = normalizeOptionalDescription(action.payload.description)
       const updated: Quiz = {
         ...existing,
         title,
         questions: action.payload.questions,
         updatedAt: Date.now(),
+      }
+      if (description) {
+        updated.description = description
+      } else {
+        delete updated.description
       }
       const quizzes = {
         ...state.persisted.quizzes,
@@ -515,7 +852,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           quizIndex,
           quizzes,
         },
-        domain: pruneDomainState(state.domain, state.persisted.students, quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          state.persisted.students,
+          quizzes,
+          state.persisted.activeClassId
+        ),
       }
     }
     case "DELETE_QUIZ": {
@@ -537,7 +879,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           quizIndex,
           quizzes,
         },
-        domain: pruneDomainState(state.domain, state.persisted.students, quizzes),
+        domain: pruneDomainState(
+          state.domain,
+          state.persisted.students,
+          quizzes,
+          state.persisted.activeClassId
+        ),
         ui: {
           ...state.ui,
           quizEditor: {
@@ -606,7 +953,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
       const availableQuestionIds = quiz.questions
         .filter((question) => !state.domain.quizPlay.usedQuestionIds.includes(question.id))
         .map((question) => question.id)
-      const availableStudentIds = state.persisted.students
+
+      const availableStudentIds = getStudentsForClass(
+        state.persisted.students,
+        state.persisted.activeClassId
+      )
         .filter((student) => student.status === "active")
         .filter((student) => !state.domain.quizPlay.usedStudentIds.includes(student.id))
         .map((student) => student.id)
@@ -614,13 +965,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
       if (!availableQuestionIds.length || !availableStudentIds.length) return state
 
       const nextQuestionId =
-        availableQuestionIds[
-          Math.floor(Math.random() * availableQuestionIds.length)
-        ]
+        availableQuestionIds[Math.floor(Math.random() * availableQuestionIds.length)]
       const nextStudentId =
-        availableStudentIds[
-          Math.floor(Math.random() * availableStudentIds.length)
-        ]
+        availableStudentIds[Math.floor(Math.random() * availableStudentIds.length)]
 
       return {
         ...state,
@@ -674,11 +1021,16 @@ function appReducer(state: AppState, action: AppAction): AppState {
 const AppStoreContext = React.createContext<{
   state: AppState
   actions: {
+    addClass: (name: string) => void
+    selectActiveClass: (id: string | null) => void
+    deleteClass: (id: string) => void
+    clearClasses: () => void
+    importClassRecords: (classes: ImportedClassRecord[]) => void
     addStudent: (name: string) => void
     toggleStudentExcluded: (id: string) => void
     deleteStudent: (id: string) => void
     clearStudents: () => void
-    updateStudent: (id: string, name: string) => void
+    updateStudent: (id: string, name: string, classId: string | null) => void
     createProjectList: (
       name: string,
       projectType: string,
@@ -699,8 +1051,17 @@ const AppStoreContext = React.createContext<{
     clearBreakoutGroups: () => void
     resetGenerator: () => void
     drawStudent: () => void
-    createQuiz: (title: string, questions: Question[]) => void
-    updateQuiz: (id: string, title: string, questions: Question[]) => void
+    createQuiz: (
+      title: string,
+      questions: Question[],
+      description?: string
+    ) => void
+    updateQuiz: (
+      id: string,
+      title: string,
+      questions: Question[],
+      description?: string
+    ) => void
     deleteQuiz: (id: string) => void
     selectQuizForEditor: (id: string | null) => void
     setEditingQuestion: (id: string | null) => void
@@ -713,7 +1074,7 @@ const AppStoreContext = React.createContext<{
 
 /**
  * Provides global TeacherBuddy state and actions to all child components.
- * Mount once near the app root so hooks can access persisted/domain state.
+ * Mount once near the app root so hooks can access persisted and class-scoped state.
  */
 export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = React.useReducer(appReducer, initialState)
@@ -725,15 +1086,28 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!state.ui.isHydrated) return
+    saveClasses(state.persisted.classes)
+    saveActiveClassId(state.persisted.activeClassId)
     saveStudents(state.persisted.students)
     saveQuizIndex(state.persisted.quizIndex)
     persistAllQuizzes(state.persisted.quizIndex, state.persisted.quizzes)
     saveProjectLists(state.persisted.projectLists)
-    saveBreakoutGroups(state.persisted.breakoutGroups)
+    saveBreakoutGroupsByClass(state.persisted.breakoutGroupsByClass)
   }, [state.persisted, state.ui.isHydrated])
 
   const actions = React.useMemo(
     () => ({
+      addClass: (name: string) =>
+        dispatch({
+          type: "ADD_CLASS",
+          payload: { id: crypto.randomUUID(), name },
+        }),
+      selectActiveClass: (id: string | null) =>
+        dispatch({ type: "SELECT_ACTIVE_CLASS", payload: { id } }),
+      deleteClass: (id: string) => dispatch({ type: "DELETE_CLASS", payload: { id } }),
+      clearClasses: () => dispatch({ type: "CLEAR_CLASSES" }),
+      importClassRecords: (classes: ImportedClassRecord[]) =>
+        dispatch({ type: "IMPORT_CLASS_RECORDS", payload: { classes } }),
       addStudent: (name: string) =>
         dispatch({
           type: "ADD_STUDENT",
@@ -741,11 +1115,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
         }),
       toggleStudentExcluded: (id: string) =>
         dispatch({ type: "TOGGLE_STUDENT_EXCLUDED", payload: { id } }),
-      deleteStudent: (id: string) =>
-        dispatch({ type: "DELETE_STUDENT", payload: { id } }),
+      deleteStudent: (id: string) => dispatch({ type: "DELETE_STUDENT", payload: { id } }),
       clearStudents: () => dispatch({ type: "CLEAR_STUDENTS" }),
-      updateStudent: (id: string, name: string) =>
-        dispatch({ type: "UPDATE_STUDENT", payload: { id, name } }),
+      updateStudent: (id: string, name: string, classId: string | null) =>
+        dispatch({ type: "UPDATE_STUDENT", payload: { id, name, classId } }),
       createProjectList: (
         name: string,
         projectType: string,
@@ -790,18 +1163,26 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       clearBreakoutGroups: () => dispatch({ type: "CLEAR_BREAKOUT_GROUPS" }),
       resetGenerator: () => dispatch({ type: "RESET_GENERATOR" }),
       drawStudent: () => dispatch({ type: "DRAW_STUDENT" }),
-      createQuiz: (title: string, questions: Question[]) =>
+      createQuiz: (
+        title: string,
+        questions: Question[],
+        description?: string
+      ) =>
         dispatch({
           type: "CREATE_QUIZ",
-          payload: { id: crypto.randomUUID(), title, questions },
+          payload: { id: crypto.randomUUID(), title, questions, description },
         }),
-      updateQuiz: (id: string, title: string, questions: Question[]) =>
+      updateQuiz: (
+        id: string,
+        title: string,
+        questions: Question[],
+        description?: string
+      ) =>
         dispatch({
           type: "UPDATE_QUIZ",
-          payload: { id, title, questions },
+          payload: { id, title, questions, description },
         }),
-      deleteQuiz: (id: string) =>
-        dispatch({ type: "DELETE_QUIZ", payload: { id } }),
+      deleteQuiz: (id: string) => dispatch({ type: "DELETE_QUIZ", payload: { id } }),
       selectQuizForEditor: (id: string | null) =>
         dispatch({ type: "SELECT_QUIZ_FOR_EDITOR", payload: { id } }),
       setEditingQuestion: (id: string | null) =>
@@ -815,11 +1196,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     []
   )
 
-  return (
-    <AppStoreContext.Provider value={{ state, actions }}>
-      {children}
-    </AppStoreContext.Provider>
-  )
+  return <AppStoreContext.Provider value={{ state, actions }}>{children}</AppStoreContext.Provider>
 }
 
 /**

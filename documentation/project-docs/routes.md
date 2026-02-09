@@ -13,12 +13,12 @@
 | Route             | File                          | Description                                    |
 | ----------------- | ----------------------------- | ---------------------------------------------- |
 | `/`               | `app/page.tsx`                | Dashboard with feature cards (server-rendered) |
-| `/students`       | `app/students/page.tsx`       | Student management: add, import, edit, exclude |
-| `/generator`      | `app/generator/page.tsx`      | Random student generator with no-repeat logic  |
+| `/students`       | `app/students/page.tsx`       | Class + roster management: full class import, student add/edit/exclude |
+| `/generator`      | `app/generator/page.tsx`      | Random student generator with class-scoped no-repeat logic |
 | `/quizzes`        | `app/quizzes/page.tsx`        | Quiz builder: create, edit, import questions   |
-| `/play`           | `app/play/page.tsx`           | Quiz play mode with question/student pairing   |
-| `/breakout-rooms` | `app/breakout-rooms/page.tsx` | Random group generator                         |
-| `/projects`       | `app/projects/page.tsx`       | Project lists management                       |
+| `/play`           | `app/play/page.tsx`           | Quiz play mode with class-scoped question/student pairing |
+| `/breakout-rooms` | `app/breakout-rooms/page.tsx` | Class-scoped random group generator            |
+| `/projects`       | `app/projects/page.tsx`       | Class-scoped project list management           |
 
 ## Route Metadata
 

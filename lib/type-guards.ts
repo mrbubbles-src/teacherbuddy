@@ -1,5 +1,6 @@
 import type {
   BreakoutGroups,
+  Classroom,
   ProjectList,
   Question,
   Quiz,
@@ -20,6 +21,21 @@ export function isStudent(value: unknown): value is Student {
     typeof obj.name === "string" &&
     typeof obj.status === "string" &&
     (obj.status === "active" || obj.status === "excluded") &&
+    typeof obj.createdAt === "number" &&
+    typeof obj.classId === "string"
+  )
+}
+
+/**
+ * Checks whether a value matches a persisted `Classroom` record.
+ * Validates class id, name, and creation timestamp.
+ */
+export function isClassroom(value: unknown): value is Classroom {
+  if (!value || typeof value !== "object") return false
+  const obj = value as Record<string, unknown>
+  return (
+    typeof obj.id === "string" &&
+    typeof obj.name === "string" &&
     typeof obj.createdAt === "number"
   )
 }
@@ -62,6 +78,7 @@ export function isQuiz(value: unknown): value is Quiz {
   return (
     typeof obj.id === "string" &&
     typeof obj.title === "string" &&
+    (obj.description === undefined || typeof obj.description === "string") &&
     Array.isArray(obj.questions) &&
     typeof obj.createdAt === "number" &&
     typeof obj.updatedAt === "number"
@@ -76,6 +93,7 @@ export function isBreakoutGroups(value: unknown): value is BreakoutGroups {
   if (!value || typeof value !== "object") return false
   const obj = value as Record<string, unknown>
   if (
+    typeof obj.classId !== "string" ||
     typeof obj.groupSize !== "number" ||
     !Array.isArray(obj.groupIds) ||
     typeof obj.createdAt !== "number"
@@ -97,6 +115,7 @@ export function isProjectList(value: unknown): value is ProjectList {
   const obj = value as Record<string, unknown>
   return (
     typeof obj.id === "string" &&
+    typeof obj.classId === "string" &&
     typeof obj.name === "string" &&
     typeof obj.projectType === "string" &&
     Array.isArray(obj.studentIds) &&

@@ -22,6 +22,53 @@ describe("appReducer", () => {
     vi.clearAllMocks()
   })
 
+  describe("Class actions", () => {
+    it("CLEAR_CLASSES removes classes and class-scoped records", async () => {
+      const { result } = renderAppStore()
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      act(() => {
+        result.current.actions.addStudent("John Doe")
+      })
+
+      const studentId = result.current.state.persisted.students[0]?.id
+      if (!studentId) {
+        throw new Error("Expected a student to exist after addStudent")
+      }
+
+      act(() => {
+        result.current.actions.createProjectList("Group Work", "Team", "desc", [studentId], [[studentId]])
+      })
+
+      const activeClassId = result.current.state.persisted.activeClassId
+      if (!activeClassId) {
+        throw new Error("Expected active class to exist in hydrated state")
+      }
+
+      act(() => {
+        result.current.actions.setBreakoutGroups({
+          classId: activeClassId,
+          groupSize: 2,
+          groupIds: [[studentId]],
+          createdAt: Date.now(),
+        })
+      })
+
+      act(() => {
+        result.current.actions.clearClasses()
+      })
+
+      expect(result.current.state.persisted.classes).toEqual([])
+      expect(result.current.state.persisted.activeClassId).toBeNull()
+      expect(result.current.state.persisted.students).toEqual([])
+      expect(result.current.state.persisted.projectLists).toEqual([])
+      expect(result.current.state.persisted.breakoutGroupsByClass).toEqual({})
+    })
+  })
+
   describe("Student actions", () => {
     it("ADD_STUDENT adds new student", async () => {
       const { result } = renderAppStore()
@@ -117,7 +164,7 @@ describe("appReducer", () => {
       const studentId = result.current.state.persisted.students[0].id
 
       act(() => {
-        result.current.actions.updateStudent(studentId, "Jane Doe")
+        result.current.actions.updateStudent(studentId, "Jane Doe", null)
       })
 
       expect(result.current.state.persisted.students[0].name).toBe("Jane Doe")
@@ -138,7 +185,7 @@ describe("appReducer", () => {
       const johnId = result.current.state.persisted.students[0].id
 
       act(() => {
-        result.current.actions.updateStudent(johnId, "Jane Smith")
+        result.current.actions.updateStudent(johnId, "Jane Smith", null)
       })
 
       // Name should not have changed
@@ -265,6 +312,23 @@ describe("appReducer", () => {
       expect(result.current.state.ui.quizEditor.activeQuizId).toBe(quizId)
     })
 
+    it("CREATE_QUIZ stores optional description", async () => {
+      const { result } = renderAppStore()
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      act(() => {
+        result.current.actions.createQuiz("Math Quiz", [], "Chapter 3 review")
+      })
+
+      const quizId = result.current.state.persisted.quizIndex[0].id
+      expect(result.current.state.persisted.quizzes[quizId].description).toBe(
+        "Chapter 3 review"
+      )
+    })
+
     it("UPDATE_QUIZ updates existing quiz", async () => {
       const { result } = renderAppStore()
 
@@ -286,6 +350,26 @@ describe("appReducer", () => {
 
       expect(result.current.state.persisted.quizzes[quizId].title).toBe("Updated Quiz")
       expect(result.current.state.persisted.quizzes[quizId].questions).toHaveLength(1)
+    })
+
+    it("UPDATE_QUIZ clears description when empty", async () => {
+      const { result } = renderAppStore()
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      act(() => {
+        result.current.actions.createQuiz("Math Quiz", [], "Has description")
+      })
+
+      const quizId = result.current.state.persisted.quizIndex[0].id
+
+      act(() => {
+        result.current.actions.updateQuiz(quizId, "Math Quiz", [], "   ")
+      })
+
+      expect(result.current.state.persisted.quizzes[quizId].description).toBeUndefined()
     })
 
     it("UPDATE_QUIZ does nothing for non-existent quiz", async () => {
@@ -679,6 +763,7 @@ describe("appReducer", () => {
       })
 
       const groups = {
+        classId: result.current.state.persisted.activeClassId ?? "class-1",
         groupSize: 3,
         groupIds: [["id1", "id2", "id3"]],
         createdAt: Date.now(),
@@ -688,7 +773,9 @@ describe("appReducer", () => {
         result.current.actions.setBreakoutGroups(groups)
       })
 
-      expect(result.current.state.persisted.breakoutGroups).toEqual(groups)
+      expect(
+        result.current.state.persisted.breakoutGroupsByClass[groups.classId]
+      ).toEqual(groups)
     })
 
     it("CLEAR_BREAKOUT_GROUPS removes groups", async () => {
@@ -700,6 +787,7 @@ describe("appReducer", () => {
 
       act(() => {
         result.current.actions.setBreakoutGroups({
+          classId: result.current.state.persisted.activeClassId ?? "class-1",
           groupSize: 2,
           groupIds: [["id1"]],
           createdAt: Date.now(),
@@ -710,7 +798,12 @@ describe("appReducer", () => {
         result.current.actions.clearBreakoutGroups()
       })
 
-      expect(result.current.state.persisted.breakoutGroups).toBeNull()
+      const activeClassId = result.current.state.persisted.activeClassId
+      if (!activeClassId) {
+        expect(result.current.state.persisted.breakoutGroupsByClass).toEqual({})
+      } else {
+        expect(result.current.state.persisted.breakoutGroupsByClass[activeClassId]).toBeUndefined()
+      }
     })
 
     it("CREATE_PROJECT_LIST creates list", async () => {

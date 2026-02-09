@@ -24,9 +24,15 @@ Reference for React components. All feature components are client components unl
 
 | Component              | File                                    | Description                                                |
 | ---------------------- | --------------------------------------- | ---------------------------------------------------------- |
-| `StudentForm`          | `components/students/student-form.tsx`  | Add and import students (comma-separated or file).         |
-| `StudentTable`         | `components/students/student-table.tsx` | Edit, exclude, delete students.                            |
+| `StudentForm`          | `components/students/student-form.tsx`  | Manage classes, import full class files (`.txt`/`.json`), add/import students to active class. |
+| `StudentTable`         | `components/students/student-table.tsx` | Mobile-style roster cards on all breakpoints: edit, exclude, delete students. |
 | `StudentNameGenerator` | `components/student-name-generator.tsx` | Standalone name generator utility (root of `components/`). |
+
+## Classes
+
+| Component       | File                                  | Description                                                        |
+| --------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| `ClassSelector` | `components/classes/class-selector.tsx` | Shared class dropdown used across students, generator, play, breakout, and projects. |
 
 ## Generator
 
@@ -38,10 +44,9 @@ Reference for React components. All feature components are client components unl
 
 | Component        | File                                      | Description                             |
 | ---------------- | ----------------------------------------- | --------------------------------------- |
-| `QuizEditor`     | `components/quizzes/quiz-editor.tsx`      | Wrapper for create/edit/import quizzes. |
-| `QuizEditorForm` | `components/quizzes/quiz-editor-form.tsx` | Quiz title and questions form.          |
+| `QuizEditor`     | `components/quizzes/quiz-editor.tsx`      | Wrapper for create/edit quiz workflows. |
+| `QuizEditorForm` | `components/quizzes/quiz-editor-form.tsx` | Unified quiz details, optional description, question editing, and JSON file import (single or bulk quiz payloads). Questions render as card rows across all breakpoints with overflow scrolling capped to builder card height. |
 | `QuizSelector`   | `components/quizzes/quiz-selector.tsx`    | Shared quiz picker (dropdown).          |
-| `QuizImportCard` | `components/quizzes/quiz-import-card.tsx` | Import quiz from file.                  |
 
 ## Play
 
@@ -94,7 +99,7 @@ Base components in `components/ui/` use Tailwind and (where noted) Base UI / sha
 | `Button`                                         | CVA variants; use `button-variants.ts` for server-safe variants. |
 | `Card`, `CardHeader`, etc.                       | Layout primitives.                                               |
 | `Input`, `Textarea`                              | Form inputs.                                                     |
-| `Select`, `Label`, `Field`                       | Form field wrappers.                                             |
+| `Select`, `Label`, `Field`                       | Form field wrappers. `SelectContent` defaults to popper-style content-fit behavior; pass `alignItemWithTrigger={true}` for trigger-aligned positioning. |
 | `Dialog`, `DialogContent`, `DialogTrigger`, etc. | Modal dialogs (used by PageInfoDialog, etc.).                    |
 | `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | Tabbed content.                                                  |
 | `AlertDialog`                                    | Confirmation dialogs.                                            |
@@ -119,6 +124,7 @@ import { buttonVariants } from '@/components/ui/button-variants';
 Component tests:
 
 - `StudentForm` – `components/students/__tests__/student-form.test.tsx`
+- `Select` – `components/ui/__tests__/select.test.tsx`
 - `QuizSelector` – `components/quizzes/__tests__/quiz-selector.test.tsx`
 - `PageInfoDialog` – `components/utility/__tests__/page-info-dialog.test.tsx`
 
