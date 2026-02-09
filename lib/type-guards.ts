@@ -78,6 +78,7 @@ export function isQuiz(value: unknown): value is Quiz {
   return (
     typeof obj.id === "string" &&
     typeof obj.title === "string" &&
+    (obj.description === undefined || typeof obj.description === "string") &&
     Array.isArray(obj.questions) &&
     typeof obj.createdAt === "number" &&
     typeof obj.updatedAt === "number"

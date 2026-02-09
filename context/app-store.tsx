@@ -142,11 +142,21 @@ type AppAction =
   | { type: "DRAW_STUDENT" }
   | {
       type: "CREATE_QUIZ"
-      payload: { id: string; title: string; questions: Question[] }
+      payload: {
+        id: string
+        title: string
+        description?: string
+        questions: Question[]
+      }
     }
   | {
       type: "UPDATE_QUIZ"
-      payload: { id: string; title: string; questions: Question[] }
+      payload: {
+        id: string
+        title: string
+        description?: string
+        questions: Question[]
+      }
     }
   | { type: "DELETE_QUIZ"; payload: { id: string } }
   | { type: "SELECT_QUIZ_FOR_EDITOR"; payload: { id: string | null } }
@@ -257,6 +267,17 @@ const pruneDomainState = (
 
 const getSortedQuizIndex = (index: QuizIndexEntry[]) =>
   [...index].sort((a, b) => b.createdAt - a.createdAt)
+
+/**
+ * Trims optional description input and drops empty values.
+ *
+ * @param description - Raw description text from quiz actions.
+ * @returns Normalized non-empty description or `undefined`.
+ */
+const normalizeOptionalDescription = (description?: string) => {
+  const normalized = description?.trim()
+  return normalized ? normalized : undefined
+}
 
 const toggleStudentStatus = (status: Student["status"]): Student["status"] =>
   status === "active" ? "excluded" : "active"
@@ -755,10 +776,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case "CREATE_QUIZ": {
       const title = action.payload.title.trim()
       if (!title) return state
+      const description = normalizeOptionalDescription(action.payload.description)
       const timestamp = Date.now()
       const quiz: Quiz = {
         id: action.payload.id,
         title,
+        ...(description ? { description } : {}),
         questions: action.payload.questions,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -801,11 +824,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
       if (!existing) return state
       const title = action.payload.title.trim()
       if (!title) return state
+      const description = normalizeOptionalDescription(action.payload.description)
       const updated: Quiz = {
         ...existing,
         title,
         questions: action.payload.questions,
         updatedAt: Date.now(),
+      }
+      if (description) {
+        updated.description = description
+      } else {
+        delete updated.description
       }
       const quizzes = {
         ...state.persisted.quizzes,
@@ -1022,8 +1051,17 @@ const AppStoreContext = React.createContext<{
     clearBreakoutGroups: () => void
     resetGenerator: () => void
     drawStudent: () => void
-    createQuiz: (title: string, questions: Question[]) => void
-    updateQuiz: (id: string, title: string, questions: Question[]) => void
+    createQuiz: (
+      title: string,
+      questions: Question[],
+      description?: string
+    ) => void
+    updateQuiz: (
+      id: string,
+      title: string,
+      questions: Question[],
+      description?: string
+    ) => void
     deleteQuiz: (id: string) => void
     selectQuizForEditor: (id: string | null) => void
     setEditingQuestion: (id: string | null) => void
@@ -1125,15 +1163,24 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       clearBreakoutGroups: () => dispatch({ type: "CLEAR_BREAKOUT_GROUPS" }),
       resetGenerator: () => dispatch({ type: "RESET_GENERATOR" }),
       drawStudent: () => dispatch({ type: "DRAW_STUDENT" }),
-      createQuiz: (title: string, questions: Question[]) =>
+      createQuiz: (
+        title: string,
+        questions: Question[],
+        description?: string
+      ) =>
         dispatch({
           type: "CREATE_QUIZ",
-          payload: { id: crypto.randomUUID(), title, questions },
+          payload: { id: crypto.randomUUID(), title, questions, description },
         }),
-      updateQuiz: (id: string, title: string, questions: Question[]) =>
+      updateQuiz: (
+        id: string,
+        title: string,
+        questions: Question[],
+        description?: string
+      ) =>
         dispatch({
           type: "UPDATE_QUIZ",
-          payload: { id, title, questions },
+          payload: { id, title, questions, description },
         }),
       deleteQuiz: (id: string) => dispatch({ type: "DELETE_QUIZ", payload: { id } }),
       selectQuizForEditor: (id: string | null) =>

@@ -312,6 +312,23 @@ describe("appReducer", () => {
       expect(result.current.state.ui.quizEditor.activeQuizId).toBe(quizId)
     })
 
+    it("CREATE_QUIZ stores optional description", async () => {
+      const { result } = renderAppStore()
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      act(() => {
+        result.current.actions.createQuiz("Math Quiz", [], "Chapter 3 review")
+      })
+
+      const quizId = result.current.state.persisted.quizIndex[0].id
+      expect(result.current.state.persisted.quizzes[quizId].description).toBe(
+        "Chapter 3 review"
+      )
+    })
+
     it("UPDATE_QUIZ updates existing quiz", async () => {
       const { result } = renderAppStore()
 
@@ -333,6 +350,26 @@ describe("appReducer", () => {
 
       expect(result.current.state.persisted.quizzes[quizId].title).toBe("Updated Quiz")
       expect(result.current.state.persisted.quizzes[quizId].questions).toHaveLength(1)
+    })
+
+    it("UPDATE_QUIZ clears description when empty", async () => {
+      const { result } = renderAppStore()
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      act(() => {
+        result.current.actions.createQuiz("Math Quiz", [], "Has description")
+      })
+
+      const quizId = result.current.state.persisted.quizIndex[0].id
+
+      act(() => {
+        result.current.actions.updateQuiz(quizId, "Math Quiz", [], "   ")
+      })
+
+      expect(result.current.state.persisted.quizzes[quizId].description).toBeUndefined()
     })
 
     it("UPDATE_QUIZ does nothing for non-existent quiz", async () => {

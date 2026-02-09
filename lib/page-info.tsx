@@ -176,23 +176,26 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          Build your quiz questions here before class so you are not making
-          things up on the fly. Add questions, write answers, and organize
-          everything at your own pace.
+          Build and organize quiz sets before class so your live review runs
+          smoothly. Write questions by hand, add optional quiz notes, and keep
+          everything ready to reuse.
         </>
       ),
       howTo: [
         <>
-          <strong>Create a new quiz</strong> and give it a name that helps you
-          find it later (like &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;).
+          <strong>Create a new quiz</strong> and give it a clear name (like
+          &quot;Ch. 5 Vocab&quot; or &quot;Friday Review&quot;). Add an optional description if you
+          want quick context later.
         </>,
         <>
-          <strong>Add questions one by one</strong> — type the question and the
-          answer you are looking for.
+          <strong>Add questions one by one</strong> with a prompt and answer.
+          Questions show up in an easy-to-scan card list where you can edit or
+          remove them fast.
         </>,
         <>
-          <strong>Need to import a bunch?</strong> Paste questions from a
-          spreadsheet or document to save time.
+          <strong>Need to import a bunch?</strong> Upload a JSON file. One quiz
+          object loads into your draft (then tap Save Quiz to keep it). An
+          array of quiz objects saves multiple quizzes right away.
         </>,
         <>
           <strong>Ready to use it live?</strong> Head over to Quiz Play to run
@@ -201,8 +204,8 @@ export const PAGE_INFOS: PageInfo[] = [
       ],
       outcome: (
         <>
-          Polished quiz sets you can reuse across classes and semesters —
-          no more scrambling for questions.
+          Polished quiz sets you can run immediately, reuse next term, and
+          update in seconds when your lesson plan changes.
         </>
       ),
     },
