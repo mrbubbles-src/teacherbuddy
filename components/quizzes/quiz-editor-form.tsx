@@ -484,8 +484,8 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
 
   return (
     <>
-      <div ref={builderCardRef}>
-      <Card className="relative h-full overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8">
+      <div ref={builderCardRef} className="min-w-0 w-full">
+      <Card className="relative h-full min-w-0 w-full overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8">
         <div
           className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
           style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
@@ -675,7 +675,7 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
       </div>
 
       <Card
-        className="relative flex min-h-0 flex-col overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8"
+        className="relative flex min-h-0 min-w-0 w-full flex-col overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8"
         style={
           builderCardHeight
             ? { maxHeight: `${builderCardHeight}px` }

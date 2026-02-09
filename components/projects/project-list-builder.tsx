@@ -503,7 +503,7 @@ export default function ProjectListBuilder() {
           <Button
             type="button"
             onClick={handleCreateList}
-            className="h-9 font-semibold text-base">
+            className="h-9 w-full font-semibold text-base sm:w-auto">
             Save Project List
           </Button>
         </div>
