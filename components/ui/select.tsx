@@ -57,6 +57,13 @@ function SelectTrigger({
   )
 }
 
+/**
+ * Renders the positioned select popup and option list.
+ * By default, the popup uses popper-style positioning so menu height tracks
+ * content naturally while still respecting the shared max-height cap.
+ * Callers can opt into trigger-aligned positioning with
+ * `alignItemWithTrigger={true}` when needed.
+ */
 function SelectContent({
   className,
   children,
@@ -64,7 +71,7 @@ function SelectContent({
   sideOffset = 4,
   align = "center",
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  alignItemWithTrigger = false,
   ...props
 }: SelectPrimitive.Popup.Props &
   Pick<
@@ -87,9 +94,9 @@ function SelectContent({
           className={cn("bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-32 rounded-lg shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 relative isolate z-50 h-fit max-h-[min(18rem,var(--available-height))] w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none", className )}
           {...props}
         >
-          <SelectScrollUpButton />
+          {alignItemWithTrigger ? <SelectScrollUpButton /> : null}
           <SelectPrimitive.List>{children}</SelectPrimitive.List>
-          <SelectScrollDownButton />
+          {alignItemWithTrigger ? <SelectScrollDownButton /> : null}
         </SelectPrimitive.Popup>
       </SelectPrimitive.Positioner>
     </SelectPrimitive.Portal>

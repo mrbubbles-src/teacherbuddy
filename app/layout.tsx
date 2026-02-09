@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import './globals.css';
+import packageJson from '@/package.json';
 
 import AppShell from '@/components/app-shell';
 import Footer from '@/components/footer';
@@ -62,6 +63,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const appVersion = packageJson.version;
+
   return (
     <html lang="en_GB" suppressHydrationWarning>
       <head>
@@ -91,7 +94,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AppStoreProvider>
-            <AppShell footer={<Footer />}>{children}</AppShell>
+            <AppShell appVersion={appVersion} footer={<Footer />}>
+              {children}
+            </AppShell>
             <PrivacyNotice />
             <Toaster closeButton position="bottom-center" />
           </AppStoreProvider>

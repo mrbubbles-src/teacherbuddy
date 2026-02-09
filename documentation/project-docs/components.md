@@ -99,7 +99,7 @@ Base components in `components/ui/` use Tailwind and (where noted) Base UI / sha
 | `Button`                                         | CVA variants; use `button-variants.ts` for server-safe variants. |
 | `Card`, `CardHeader`, etc.                       | Layout primitives.                                               |
 | `Input`, `Textarea`                              | Form inputs.                                                     |
-| `Select`, `Label`, `Field`                       | Form field wrappers.                                             |
+| `Select`, `Label`, `Field`                       | Form field wrappers. `SelectContent` defaults to popper-style content-fit behavior; pass `alignItemWithTrigger={true}` for trigger-aligned positioning. |
 | `Dialog`, `DialogContent`, `DialogTrigger`, etc. | Modal dialogs (used by PageInfoDialog, etc.).                    |
 | `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | Tabbed content.                                                  |
 | `AlertDialog`                                    | Confirmation dialogs.                                            |
@@ -124,6 +124,7 @@ import { buttonVariants } from '@/components/ui/button-variants';
 Component tests:
 
 - `StudentForm` – `components/students/__tests__/student-form.test.tsx`
+- `Select` – `components/ui/__tests__/select.test.tsx`
 - `QuizSelector` – `components/quizzes/__tests__/quiz-selector.test.tsx`
 - `PageInfoDialog` – `components/utility/__tests__/page-info-dialog.test.tsx`
 
