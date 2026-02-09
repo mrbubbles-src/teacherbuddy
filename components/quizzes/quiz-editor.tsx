@@ -21,7 +21,7 @@ export default function QuizEditor({
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* Key pattern: reset all form state when quiz changes */}
       <QuizEditorForm
         key={activeQuizId ?? "new"}

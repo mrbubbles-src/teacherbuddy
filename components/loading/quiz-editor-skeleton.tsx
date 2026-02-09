@@ -38,7 +38,7 @@ function BuilderPlaceholderCard() {
  */
 export default function QuizEditorSkeleton() {
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <BuilderPlaceholderCard />
       <Card className="relative overflow-hidden rounded-xl border-border/50 lg:py-6 xl:py-8 lg:gap-6 xl:gap-8">
         <div className="absolute left-0 top-0 h-full w-1 rounded-l-xl" style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }} />

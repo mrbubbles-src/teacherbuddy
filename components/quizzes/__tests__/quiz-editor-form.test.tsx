@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { toast } from 'sonner';
 
 import { renderWithProvider } from '@/__tests__/test-utils';
 import QuizEditorForm from '@/components/quizzes/quiz-editor-form';
@@ -62,7 +63,11 @@ describe('QuizEditorForm', () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue('Math Quiz')).toBeInTheDocument();
       expect(screen.getByDisplayValue('optional')).toBeInTheDocument();
-      expect(screen.getByText('Loaded 2 questions into the draft.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Loaded 2 questions into the draft. Click "Save Quiz" to keep it.',
+        ),
+      ).toBeInTheDocument();
       expect(screen.getAllByText('What is 2 + 2?').length).toBeGreaterThan(0);
       expect(container.querySelector('.overflow-y-auto')).toBeInTheDocument();
     });
@@ -99,8 +104,47 @@ describe('QuizEditorForm', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Import must match: title + questions[{prompt,answer}].'),
+        screen.getByText(
+          'Import must match quiz objects with title and questions[{prompt,answer}].',
+        ),
       ).toBeInTheDocument();
+    });
+  });
+
+  it('imports multiple quizzes from a json array', async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    const fileInput = screen.getByLabelText(/import quiz from json/i);
+    const file = new File(
+      [
+        JSON.stringify([
+          {
+            title: 'Quiz A',
+            description: 'Set A',
+            questions: [{ prompt: '1+1?', answer: '2' }],
+          },
+          {
+            title: 'Quiz B',
+            description: 'Set B',
+            questions: [{ prompt: '2+2?', answer: '4' }],
+          },
+        ]),
+      ],
+      'bulk.json',
+      { type: 'application/json' },
+    );
+
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(
+        vi.mocked(toast.success).mock.calls.some(
+          ([message]) =>
+            message ===
+            'Saved 2 quizzes from file. The last imported quiz is selected.',
+        ),
+      ).toBe(true);
     });
   });
 });

@@ -2,7 +2,7 @@
 
 import type { Question, Quiz } from '@/lib/models';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { toast } from 'sonner';
@@ -36,14 +36,6 @@ import {
   FieldSeparator,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/context/app-store';
 
@@ -66,10 +58,9 @@ type ImportedQuizDraft = {
   questions: ImportedQuestionDraft[];
 };
 type QuizImportResult =
-  | { status: 'success'; draft: ImportedQuizDraft }
+  | { status: 'success'; drafts: ImportedQuizDraft[] }
   | { status: 'invalid-json' }
-  | { status: 'invalid-schema' }
-  | { status: 'no-valid-questions' };
+  | { status: 'invalid-schema' };
 type InputChangeEvent = Parameters<
   NonNullable<React.ComponentProps<'input'>['onChange']>
 >[0];
@@ -121,10 +112,51 @@ const parseImportedQuestions = (value: JsonValue): ImportedQuestionDraft[] => {
 };
 
 /**
+ * Parses one quiz object from JSON into a normalized draft.
+ *
+ * @param value - Raw JSON value expected to match one quiz payload.
+ * @returns A normalized draft when valid, otherwise `null`.
+ */
+const parseImportedQuizDraft = (value: JsonValue): ImportedQuizDraft | null => {
+  if (!isJsonObject(value)) {
+    return null;
+  }
+
+  const rawTitle = getJsonStringField(value, 'title');
+  const descriptionValue = value.description;
+  if (descriptionValue !== undefined && typeof descriptionValue !== 'string') {
+    return null;
+  }
+  const questionsValue = value.questions;
+  if (!rawTitle || !questionsValue) {
+    return null;
+  }
+
+  const title = rawTitle.trim();
+  const description =
+    typeof descriptionValue === 'string' ? descriptionValue.trim() : '';
+  if (!title) {
+    return null;
+  }
+
+  const questions = parseImportedQuestions(questionsValue);
+  if (!questions.length) {
+    return null;
+  }
+
+  return {
+    title,
+    ...(description ? { description } : {}),
+    questions,
+  };
+};
+
+/**
  * Validates raw import text against the quiz import schema.
  *
- * Expected shape:
- * `{ "title": string, "description"?: string, "questions": [{ "prompt": string, "answer": string }] }`
+ * Expected shapes:
+ * 1) `{ "title": string, "description"?: string, "questions": [{ "prompt": string, "answer": string }] }`
+ * 2) An array of the same quiz object shape for bulk import.
  *
  * @param payload - UTF-8 text read from the uploaded JSON file.
  * @returns A discriminated result describing success or validation failure.
@@ -137,40 +169,26 @@ const parseQuizImportPayload = (payload: string): QuizImportResult => {
     return { status: 'invalid-json' };
   }
 
-  if (!isJsonObject(parsed)) {
-    return { status: 'invalid-schema' };
+  if (Array.isArray(parsed)) {
+    if (!parsed.length) {
+      return { status: 'invalid-schema' };
+    }
+    const drafts: ImportedQuizDraft[] = [];
+    for (const entry of parsed) {
+      const parsedDraft = parseImportedQuizDraft(entry);
+      if (!parsedDraft) {
+        return { status: 'invalid-schema' };
+      }
+      drafts.push(parsedDraft);
+    }
+    return { status: 'success', drafts };
   }
 
-  const rawTitle = getJsonStringField(parsed, 'title');
-  const descriptionValue = parsed.description;
-  if (descriptionValue !== undefined && typeof descriptionValue !== 'string') {
+  const parsedDraft = parseImportedQuizDraft(parsed);
+  if (!parsedDraft) {
     return { status: 'invalid-schema' };
   }
-  const questionsValue = parsed.questions;
-  if (!rawTitle || !questionsValue) {
-    return { status: 'invalid-schema' };
-  }
-
-  const title = rawTitle.trim();
-  const description =
-    typeof descriptionValue === 'string' ? descriptionValue.trim() : '';
-  if (!title) {
-    return { status: 'invalid-schema' };
-  }
-
-  const questions = parseImportedQuestions(questionsValue);
-  if (!questions.length) {
-    return { status: 'no-valid-questions' };
-  }
-
-  return {
-    status: 'success',
-    draft: {
-      title,
-      ...(description ? { description } : {}),
-      questions,
-    },
-  };
+  return { status: 'success', drafts: [parsedDraft] };
 };
 
 /**
@@ -207,6 +225,7 @@ const readFileAsText = (file: File): Promise<string> => {
  */
 export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
   const { state, actions } = useAppStore();
+  const builderCardRef = useRef<HTMLDivElement | null>(null);
 
   // Form state - initialized from props, reset via key pattern in parent
   const [title, setTitle] = useState(quiz?.title ?? '');
@@ -218,6 +237,9 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
   const [questionError, setQuestionError] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
+  const [builderCardHeight, setBuilderCardHeight] = useState<number | null>(
+    null,
+  );
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
     null,
   );
@@ -227,6 +249,41 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
       questions.find((question) => question.id === editingQuestionId) ?? null,
     [questions, editingQuestionId],
   );
+
+  /**
+   * Tracks builder card height so the questions card can scroll instead of
+   * growing taller than the builder panel.
+   */
+  useEffect(() => {
+    const element = builderCardRef.current;
+    if (!element) {
+      return;
+    }
+
+    const measureHeight = () => {
+      const nextHeight = Math.round(element.getBoundingClientRect().height);
+      setBuilderCardHeight(nextHeight);
+    };
+
+    measureHeight();
+    const rafId = window.requestAnimationFrame(measureHeight);
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(measureHeight);
+      observer.observe(element);
+      return () => {
+        window.cancelAnimationFrame(rafId);
+        observer.disconnect();
+      };
+    }
+
+    window.addEventListener('resize', measureHeight);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', measureHeight);
+    };
+  }, []);
 
   /**
    * Validates quiz metadata, saves changes, and confirms with a toast.
@@ -371,21 +428,30 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
       }
       if (result.status === 'invalid-schema') {
         const message =
-          'Import must match: title + questions[{prompt,answer}].';
+          'Import must match quiz objects with title and questions[{prompt,answer}].';
         setImportError(message);
         setImportNotice(null);
         toast.error(message);
         return;
       }
-      if (result.status === 'no-valid-questions') {
-        const message = 'No valid questions found in import file.';
-        setImportError(message);
-        setImportNotice(null);
-        toast.error(message);
+      if (result.drafts.length > 1) {
+        for (const draft of result.drafts) {
+          const nextQuestions: Question[] = draft.questions.map((question) => ({
+            id: crypto.randomUUID(),
+            prompt: question.prompt,
+            answer: question.answer,
+          }));
+          actions.createQuiz(draft.title, nextQuestions, draft.description);
+        }
+        const message = `Saved ${result.drafts.length} quizzes from file. The last imported quiz is selected.`;
+        setImportError(null);
+        setImportNotice(message);
+        toast.success(message);
         return;
       }
 
-      const importedQuestions: Question[] = result.draft.questions.map(
+      const singleDraft = result.drafts[0];
+      const importedQuestions: Question[] = singleDraft.questions.map(
         (question) => ({
           id: crypto.randomUUID(),
           prompt: question.prompt,
@@ -393,8 +459,8 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
         }),
       );
 
-      setTitle(result.draft.title);
-      setDescription(result.draft.description ?? '');
+      setTitle(singleDraft.title);
+      setDescription(singleDraft.description ?? '');
       setQuestions(importedQuestions);
       setPrompt('');
       setAnswer('');
@@ -402,10 +468,9 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
       setQuestionError(null);
       setEditingQuestionId(null);
       setImportError(null);
-      setImportNotice(
-        `Loaded ${importedQuestions.length} question${importedQuestions.length === 1 ? '' : 's'} into the draft.`,
-      );
-      toast.success('Quiz file imported into draft.');
+      const draftMessage = `Loaded ${importedQuestions.length} question${importedQuestions.length === 1 ? '' : 's'} into the draft. Click "Save Quiz" to keep it.`;
+      setImportNotice(draftMessage);
+      toast.success('Loaded quiz into draft. Not saved yet.');
     } catch (error) {
       console.error('Failed to import quiz file', error);
       const message = 'Could not read the file. Please try again.';
@@ -419,6 +484,7 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
 
   return (
     <>
+      <div ref={builderCardRef}>
       <Card className="relative h-full overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8">
         <div
           className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
@@ -580,9 +646,12 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
                 className="h-10 max-w-full text-base/relaxed file:my-1 file:mr-5 file:cursor-pointer file:rounded-md file:border-accent/50 file:bg-accent/10 file:px-5 file:text-base/relaxed file:text-muted-foreground/70"
               />
               <FieldDescription className="text-base/relaxed text-muted-foreground/70">
-                Expected JSON has <code>title</code>, optional{' '}
-                <code>description</code> and <code>questions</code> with{' '}
-                <code>prompt</code> and <code>answer</code>.
+                Import one quiz object or an array of quiz objects. Each quiz
+                needs <code>title</code>, optional <code>description</code>, and{' '}
+                <code>questions</code> with <code>prompt</code> and{' '}
+                <code>answer</code>. Single quiz files load into your draft
+                (not saved until you click Save Quiz). Arrays save quizzes right
+                away.
               </FieldDescription>
               <pre className="overflow-x-auto rounded-md border border-border/60 bg-background/40 p-3 text-sm/relaxed text-foreground">
                 {`{
@@ -603,8 +672,15 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
           </Field>
         </CardContent>
       </Card>
+      </div>
 
-      <Card className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8">
+      <Card
+        className="relative flex min-h-0 flex-col overflow-hidden rounded-xl border-border/50 py-6 shadow-md lg:gap-6 xl:gap-8 xl:py-8"
+        style={
+          builderCardHeight
+            ? { maxHeight: `${builderCardHeight}px` }
+            : undefined
+        }>
         <div
           className="absolute left-0 top-0 h-full w-1 rounded-l-xl"
           style={{ backgroundColor: 'var(--chart-3)', opacity: 0.6 }}
@@ -621,8 +697,8 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
         </CardHeader>
         <CardContent className="flex min-h-0 flex-1 flex-col px-6 text-base/relaxed text-muted-foreground xl:px-8">
           {questions.length ? (
-            <div className="h-full min-h-0 overflow-y-auto pr-1">
-              <div className="flex flex-col gap-2 md:hidden">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1 shadow-inner">
+              <div className="flex flex-col gap-2">
                 {questions.map((question) => (
                   <div
                     key={question.id}
@@ -656,48 +732,6 @@ export default function QuizEditorForm({ quiz, quizId }: QuizEditorFormProps) {
                   </div>
                 ))}
               </div>
-
-              <Table className="hidden md:table">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-base/relaxed">Prompt</TableHead>
-                    <TableHead className="text-base/relaxed">Answer</TableHead>
-                    <TableHead className="text-right text-base/relaxed">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {questions.map((question) => (
-                    <TableRow key={question.id}>
-                      <TableCell className="whitespace-normal text-base/relaxed">
-                        {question.prompt}
-                      </TableCell>
-                      <TableCell className="whitespace-normal text-base/relaxed">
-                        {question.answer}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => handleEditQuestion(question.id)}>
-                            <PencilIcon className="size-3.5" />
-                            <span className="sr-only">Edit</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => handleRemoveQuestion(question.id)}>
-                            <Trash2Icon className="size-3.5 text-destructive" />
-                            <span className="sr-only">Remove</span>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
             </div>
           ) : (
             <p className="text-base text-muted-foreground">
