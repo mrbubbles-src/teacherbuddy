@@ -60,33 +60,37 @@ export const PAGE_INFOS: PageInfo[] = [
     help: {
       purpose: (
         <>
-          This is where your class list lives. Add names, mark who is absent
-          today, and keep things tidy. Every other tool in the app pulls from
-          this list, so it is worth keeping it up to date.
+          This is where your classes and rosters live. Create classes, import
+          full class files, add students, and mark who is absent today. Every
+          other tool uses the class you pick here.
         </>
       ),
       howTo: [
         <>
-          <strong>Add students</strong> one at a time by typing a name, or paste
-          in a bunch of names at once separated by commas.
+          <strong>Choose your setup style</strong>: add class names manually, or
+          import a full class file that includes both class name and students.
         </>,
         <>
-          <strong>Fix a name?</strong> Just tap the edit button next to it and
-          correct the spelling.
+          <strong>Importing full classes?</strong> Use `.txt` lines like
+          `Class Name: Student A, Student B` or a `.json` class object. If the
+          class name already exists, that class roster is replaced with the
+          imported students.
         </>,
         <>
-          <strong>Student absent today?</strong> Toggle them to absent so they
-          will not show up in the random generator or group maker.
+          <strong>Use the class dropdown</strong> to switch between rosters.
+          Student imports from `.txt` add names only to the class you currently
+          selected.
         </>,
         <>
-          <strong>Student left the class?</strong> Delete them to keep the
-          roster clean.
+          <strong>Need to clean up?</strong> Edit, delete, mark absent, or
+          remove the selected class or all classes from the controls beside the
+          class selector.
         </>,
       ],
       outcome: (
         <>
-          A clean, current class list that keeps all your other tools accurate
-          and ready to go.
+          Clear, class-by-class rosters that keep generator picks, breakout
+          groups, quiz play, and project lists accurate.
         </>
       ),
     },
@@ -102,6 +106,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Select a class first</strong> so the draw uses the right
+          roster for this lesson.
+        </>,
         <>
           <strong>Tap &quot;Draw&quot;</strong> to pick a random student. Their name pops
           up big and clear.
@@ -134,6 +142,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Pick your class</strong> from the dropdown first so groups are
+          built from the right roster.
+        </>,
         <>
           <strong>Pick how many groups</strong> or how many students per group —
           whichever is easier for your activity.
@@ -207,6 +219,10 @@ export const PAGE_INFOS: PageInfo[] = [
       ),
       howTo: [
         <>
+          <strong>Select your class first</strong> so quiz draws use the right
+          students for that period.
+        </>,
+        <>
           <strong>Pick a quiz</strong> from the dropdown — these are the ones
           you built in Quiz Builder.
         </>,
@@ -241,6 +257,10 @@ export const PAGE_INFOS: PageInfo[] = [
         </>
       ),
       howTo: [
+        <>
+          <strong>Pick your class first</strong> so this project list stays tied
+          to the right roster.
+        </>,
         <>
           <strong>Name your project</strong> and pick a type so you can tell
           your lists apart (like &quot;Science Fair&quot; or &quot;Book Club Groups&quot;).

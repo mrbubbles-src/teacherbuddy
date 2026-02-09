@@ -1,10 +1,17 @@
 export type StudentStatus = "active" | "excluded"
 
+export type Classroom = {
+  id: string
+  name: string
+  createdAt: number
+}
+
 export type Student = {
   id: string
   name: string
   status: StudentStatus
   createdAt: number
+  classId: string
 }
 
 export type Question = {
@@ -29,6 +36,7 @@ export type QuizIndexEntry = {
 
 export type ProjectList = {
   id: string
+  classId: string
   name: string
   projectType: string
   description: string
@@ -38,6 +46,7 @@ export type ProjectList = {
 }
 
 export type BreakoutGroups = {
+  classId: string
   groupSize: number
   groupIds: string[][]
   createdAt: number

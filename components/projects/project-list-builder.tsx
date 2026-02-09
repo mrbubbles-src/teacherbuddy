@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { UsersIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
+import ClassSelector from '@/components/classes/class-selector';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -56,6 +57,7 @@ type GroupMode = 'none' | 'grouped';
  */
 export default function ProjectListBuilder() {
   const { state, actions } = useAppStore();
+  const activeClassId = state.persisted.activeClassId;
   const isMobile = useIsMobile();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [name, setName] = useState('');
@@ -70,10 +72,12 @@ export default function ProjectListBuilder() {
 
   const students = useMemo(
     () =>
-      [...state.persisted.students].sort((a, b) =>
+      [...state.persisted.students]
+        .filter((student) => student.classId === activeClassId)
+        .sort((a, b) =>
         a.name.localeCompare(b.name),
-      ),
-    [state.persisted.students],
+        ),
+    [activeClassId, state.persisted.students],
   );
 
   const visibleStudents = useMemo(
@@ -104,6 +108,12 @@ export default function ProjectListBuilder() {
   };
 
   const handleCreateList = () => {
+    if (!activeClassId) {
+      const message = 'Create and select a class before building a project list.';
+      setError(message);
+      toast.error(message);
+      return;
+    }
     const trimmedName = name.trim();
     const trimmedType = projectType.trim();
     if (!trimmedName || !trimmedType) {
@@ -182,6 +192,7 @@ export default function ProjectListBuilder() {
           Choose students from your roster and save them as a project-ready list
           or group set.
         </CardDescription>
+        <ClassSelector compact />
       </CardHeader>
       <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">

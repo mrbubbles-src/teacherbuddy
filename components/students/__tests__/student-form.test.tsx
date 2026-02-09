@@ -145,9 +145,11 @@ describe("StudentForm", () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/import from/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/import students from/i)).toBeInTheDocument()
     })
 
-    expect(screen.getByText(/upload a .txt file/i)).toBeInTheDocument()
+    expect(
+      screen.getByLabelText(/import students from \.txt/i)
+    ).toBeInTheDocument()
   })
 })

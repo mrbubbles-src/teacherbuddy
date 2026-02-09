@@ -4,6 +4,7 @@ import { formatStudentName } from '@/lib/students';
 
 import { useMemo } from 'react';
 
+import ClassSelector from '@/components/classes/class-selector';
 import QuizSelector from '@/components/quizzes/quiz-selector';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,14 +28,17 @@ export default function QuizPlayCard({
   skeleton: React.ReactNode;
 }) {
   const { state, actions } = useAppStore();
+  const activeClassId = state.persisted.activeClassId;
 
   const selectedQuizId = state.domain.quizPlay.selectedQuizId;
   const quiz = selectedQuizId ? state.persisted.quizzes[selectedQuizId] : null;
 
   const activeStudents = useMemo(
     () =>
-      state.persisted.students.filter((student) => student.status === 'active'),
-    [state.persisted.students],
+      state.persisted.students.filter(
+        (student) => student.classId === activeClassId && student.status === 'active',
+      ),
+    [activeClassId, state.persisted.students],
   );
 
   const availableQuestionIds = useMemo(() => {
@@ -59,7 +63,9 @@ export default function QuizPlayCard({
     (question) => question.id === state.domain.quizPlay.currentQuestionId,
   );
   const currentStudent = state.persisted.students.find(
-    (student) => student.id === state.domain.quizPlay.currentStudentId,
+    (student) =>
+      student.id === state.domain.quizPlay.currentStudentId &&
+      student.classId === activeClassId,
   );
 
   const canDraw =
@@ -82,6 +88,7 @@ export default function QuizPlayCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 px-6 xl:px-8 lg:gap-5 xl:gap-6 text-base/relaxed text-muted-foreground">
+        <ClassSelector compact />
         <QuizSelector
           label="Select quiz"
           value={selectedQuizId}
