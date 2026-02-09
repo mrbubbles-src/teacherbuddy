@@ -186,7 +186,9 @@ export default function StudentTable({
       <CardHeader className="px-6 xl:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-xl font-bold tracking-tight">Student List</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight">
+              Student List
+            </CardTitle>
             <CardDescription className="text-base/relaxed">
               {students.length
                 ? `${activeCount} active · ${
@@ -208,12 +210,12 @@ export default function StudentTable({
                     This will permanently remove every student from the roster.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleClearStudents}>
-                      Delete All
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleClearStudents}>
+                    Delete All
+                  </AlertDialogAction>
+                </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           ) : null}
@@ -295,9 +297,7 @@ export default function StudentTable({
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() =>
-                                handleDeleteStudent(student.id)
-                              }>
+                              onClick={() => handleDeleteStudent(student.id)}>
                               Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -316,9 +316,7 @@ export default function StudentTable({
                   <TableHead className="text-lg/relaxed px-2">
                     Student
                   </TableHead>
-                  <TableHead className="text-lg/relaxed px-2">
-                    Status
-                  </TableHead>
+                  <TableHead className="text-lg/relaxed px-2">Status</TableHead>
                   <TableHead className="text-lg/relaxed text-right px-2">
                     Actions
                   </TableHead>
@@ -354,9 +352,7 @@ export default function StudentTable({
                       <TableCell className="px-2">
                         <div className="flex items-center justify-end gap-3">
                           <div className="flex items-center gap-2">
-                            <Label className="text-base/relaxed">
-                              Absent
-                            </Label>
+                            <Label className="text-base/relaxed">Absent</Label>
                             <Checkbox
                               checked={isExcluded}
                               onCheckedChange={() =>
