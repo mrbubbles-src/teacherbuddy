@@ -16,6 +16,7 @@ export type Question = {
 export type Quiz = {
   id: string
   title: string
+  description?: string
   questions: Question[]
   createdAt: number
   updatedAt: number
