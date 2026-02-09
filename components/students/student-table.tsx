@@ -85,6 +85,9 @@ export default function StudentTable({
         (student) => student.id === editingStudentId,
       ) ?? null)
     : null;
+  const selectedEditClass = editClassId
+    ? (state.persisted.classes.find((entry) => entry.id === editClassId) ?? null)
+    : null;
 
   /**
    * Keeps the student list card height aligned to the form card on desktop widths.
@@ -414,7 +417,9 @@ export default function StudentTable({
                   if (editError) setEditError(null);
                 }}>
                 <SelectTrigger id="edit-student-class">
-                  <SelectValue placeholder="Select class" />
+                  <SelectValue placeholder="Select class">
+                    {selectedEditClass?.name ?? 'Select class'}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {state.persisted.classes.map((entry) => (

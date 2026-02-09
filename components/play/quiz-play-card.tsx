@@ -138,25 +138,25 @@ export default function QuizPlayCard({
         </div>
       </CardContent>
       <CardFooter className="px-6 xl:px-8">
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Button
             onClick={actions.drawQuizPair}
             disabled={!canDraw}
-            className="h-9 font-semibold text-base sm:min-w-32">
+            className="h-9 w-full font-semibold text-base sm:min-w-32 sm:w-auto">
             Draw Student + Question
           </Button>
           <Button
             variant="secondary"
             onClick={actions.revealAnswer}
             disabled={!currentQuestion || state.domain.quizPlay.answerRevealed}
-            className="h-9 font-semibold text-base sm:min-w-32">
+            className="h-9 w-full font-semibold text-base sm:min-w-32 sm:w-auto">
             Reveal Answer
           </Button>
           <Button
             variant="ghost"
             onClick={actions.resetQuizPlay}
             disabled={!selectedQuizId}
-            className="h-9 font-semibold text-base sm:min-w-32">
+            className="h-9 w-full font-semibold text-base sm:min-w-32 sm:w-auto">
             Reset Round
           </Button>
         </div>

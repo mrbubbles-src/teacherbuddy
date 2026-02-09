@@ -13,9 +13,5 @@ export const metadata: Metadata = {
  * Provides the editor workflow with a skeleton shown before hydration.
  */
 export default function Page() {
-  return (
-    <div className="flex flex-col gap-4">
-      <QuizEditor skeleton={<QuizEditorSkeleton />} />
-    </div>
-  );
+  return <QuizEditor skeleton={<QuizEditorSkeleton />} />;
 }
