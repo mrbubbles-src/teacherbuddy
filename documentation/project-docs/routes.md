@@ -15,7 +15,7 @@
 | `/`               | `app/page.tsx`                | Dashboard with feature cards (server-rendered) |
 | `/students`       | `app/students/page.tsx`       | Student management: add, import, edit, exclude |
 | `/generator`      | `app/generator/page.tsx`      | Random student generator with no-repeat logic  |
-| `/quizzes`        | `app/quizzes/page.tsx`        | Quiz builder: create, edit, import questions   |
+| `/quizzes`        | `app/quizzes/page.tsx`        | Quiz builder: create/edit quizzes, manage question cards, import one or many quizzes from JSON |
 | `/play`           | `app/play/page.tsx`           | Quiz play mode with question/student pairing   |
 | `/breakout-rooms` | `app/breakout-rooms/page.tsx` | Random group generator                         |
 | `/projects`       | `app/projects/page.tsx`       | Project lists management                       |

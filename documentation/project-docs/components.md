@@ -38,10 +38,9 @@ Reference for React components. All feature components are client components unl
 
 | Component        | File                                      | Description                             |
 | ---------------- | ----------------------------------------- | --------------------------------------- |
-| `QuizEditor`     | `components/quizzes/quiz-editor.tsx`      | Wrapper for create/edit/import quizzes. |
-| `QuizEditorForm` | `components/quizzes/quiz-editor-form.tsx` | Quiz title and questions form.          |
+| `QuizEditor`     | `components/quizzes/quiz-editor.tsx`      | Wrapper for create/edit quiz workflows. |
+| `QuizEditorForm` | `components/quizzes/quiz-editor-form.tsx` | Unified quiz details, optional description, question editing, and JSON file import (single or bulk quiz payloads). Questions render as card rows across all breakpoints with overflow scrolling capped to builder card height. |
 | `QuizSelector`   | `components/quizzes/quiz-selector.tsx`    | Shared quiz picker (dropdown).          |
-| `QuizImportCard` | `components/quizzes/quiz-import-card.tsx` | Import quiz from file.                  |
 
 ## Play
 
