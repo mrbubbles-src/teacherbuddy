@@ -103,7 +103,7 @@ export default function AppShell({
           meta={meta}
           info={{ currentPath: pathname, pages: PAGE_INFOS }}
         />
-        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto max-w-6xl h-dvh">
+        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8 container mx-auto h-dvh">
           {children}
         </main>
         {footer ?? null}

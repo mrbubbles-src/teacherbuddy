@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Metadata } from 'next';
 
 import GeneratorCard from '@/components/generator/generator-card';
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
  */
 export default function Page() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="max-w-6xl mx-auto">
       <GeneratorCard skeleton={<GeneratorCardSkeleton />} />
     </div>
   );
