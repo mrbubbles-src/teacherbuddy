@@ -31,13 +31,16 @@ import Header from './header';
  * Global app shell that renders the sidebar, header, and page content.
  * Styled to match the design-6 command center aesthetic with phase-colored navigation.
  * Provide `appVersion` from server layout so the sidebar version stays in sync with package metadata.
+ * Provide `defaultSidebarOpen` from server cookie state so refreshes preserve sidebar preference.
  */
 export default function AppShell({
   appVersion,
+  defaultSidebarOpen,
   children,
   footer,
 }: {
   appVersion: string;
+  defaultSidebarOpen: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
 }) {
@@ -49,7 +52,7 @@ export default function AppShell({
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>

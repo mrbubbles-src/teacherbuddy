@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { Geist, Geist_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 import './globals.css';
 import packageJson from '@/package.json';
@@ -58,12 +59,19 @@ export const metadata: Metadata = {
  * Renders the shared HTML shell and providers for all application routes.
  * Wrap page content in this layout so theme, state, sidebar, and footer stay consistent.
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const appVersion = packageJson.version;
+  const cookieStore = await cookies();
+  const sidebarCookieValue =
+    cookieStore.get('teacherbuddy_sidebar_state')?.value ??
+    cookieStore.get('sidebar_state')?.value ??
+    cookieStore.get('teacherbuddy:sidebar_state')?.value;
+  const defaultSidebarOpen =
+    sidebarCookieValue === undefined ? true : sidebarCookieValue === 'true';
 
   return (
     <html lang="en_GB" suppressHydrationWarning>
@@ -94,7 +102,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AppStoreProvider>
-            <AppShell appVersion={appVersion} footer={<Footer />}>
+            <AppShell
+              appVersion={appVersion}
+              defaultSidebarOpen={defaultSidebarOpen}
+              footer={<Footer />}>
               {children}
             </AppShell>
             <PrivacyNotice />

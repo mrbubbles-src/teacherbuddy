@@ -29,7 +29,9 @@ import {
 } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const SIDEBAR_COOKIE_NAME = 'teacherbuddy:sidebar_state';
+const SIDEBAR_COOKIE_NAME = 'teacherbuddy_sidebar_state';
+const SIDEBAR_LEGACY_COOKIE_NAME = 'sidebar_state';
+const SIDEBAR_LEGACY_COOKIE_NAME_COLON = 'teacherbuddy:sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = '16rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
@@ -39,7 +41,9 @@ const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 type SidebarContextProps = {
   state: 'expanded' | 'collapsed';
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (
+    open: boolean | ((open: boolean) => boolean),
+  ) => void;
   openMobile: boolean;
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
@@ -55,6 +59,17 @@ function useSidebar() {
   }
 
   return context;
+}
+
+/**
+ * Resolves the next sidebar open state from either a boolean or updater callback.
+ * Use this helper to keep `setOpen` behavior consistent with React state setters.
+ */
+function resolveSidebarOpenState(
+  value: boolean | ((value: boolean) => boolean),
+  current: boolean,
+) {
+  return typeof value === 'function' ? value(current) : value;
 }
 
 function SidebarProvider({
@@ -77,9 +92,15 @@ function SidebarProvider({
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
+  const openRef = React.useRef(open);
+
+  React.useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === 'function' ? value(open) : value;
+      const openState = resolveSidebarOpenState(value, openRef.current);
       if (setOpenProp) {
         setOpenProp(openState);
       } else {
@@ -87,9 +108,12 @@ function SidebarProvider({
       }
 
       // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; samesite=lax`;
+      // Remove deprecated cookie key to avoid stale state confusion.
+      document.cookie = `${SIDEBAR_LEGACY_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
+      document.cookie = `${SIDEBAR_LEGACY_COOKIE_NAME_COLON}=; path=/; max-age=0; samesite=lax`;
     },
-    [setOpenProp, open],
+    [setOpenProp],
   );
 
   // Helper to toggle the sidebar.
